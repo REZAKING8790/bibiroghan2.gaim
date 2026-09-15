@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>🛢️ بی‌بی روغن</title>
+<title>🛢️ بی‌بی روغن - نسخه پیشرفته</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tahoma,sans-serif;overscroll-behavior:none;position:fixed}
@@ -11,24 +11,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 
 #hud{position:fixed;top:6px;left:6px;right:6px;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;font-size:12px;color:#fff}
 .hud-box{background:rgba(0,0,0,.8);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 9px;box-shadow:0 4px 12px rgba(0,0,0,.5)}
-#hp{width:120px;height:14px;background:rgba(0,0,0,.6);border:2px solid #8a1a1a;border-radius:7px;overflow:hidden;position:relative}
+#hp{width:130px;height:15px;background:rgba(0,0,0,.6);border:2px solid #8a1a1a;border-radius:7px;overflow:hidden;position:relative}
 #hpFill{height:100%;background:linear-gradient(90deg,#ff3030,#ff6b6b);width:100%;transition:width .15s}
 #hpTxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold}
-#mp{width:120px;height:8px;background:rgba(0,0,0,.6);border:2px solid #1a5a8a;border-radius:4px;overflow:hidden;margin-top:3px}
+#mp{width:130px;height:8px;background:rgba(0,0,0,.6);border:2px solid #1a5a8a;border-radius:4px;overflow:hidden;margin-top:3px}
 #mpFill{height:100%;background:linear-gradient(90deg,#4aa8d0,#7fe3ff);width:100%;transition:width .15s}
 #coinBox{font-size:14px;font-weight:bold;color:#ffd700}
 
 #bossBar{position:fixed;top:50px;left:50%;transform:translateX(-50%);width:min(80vw,500px);height:22px;background:rgba(0,0,0,.85);border:3px solid #ff3030;border-radius:12px;overflow:hidden;z-index:12;display:none;box-shadow:0 0 30px rgba(255,0,0,.6)}
-#bossBar.on{display:block;animation:bp 1s infinite}
-@keyframes bp{0%,100%{box-shadow:0 0 30px rgba(255,0,0,.6)}50%{box-shadow:0 0 50px rgba(255,0,0,1)}}
+#bossBar.on{display:block}
 #bossFill{height:100%;background:linear-gradient(90deg,#8a0000,#ff3030,#ff6b6b);width:100%;transition:width .2s}
-#bossTxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:bold;text-shadow:0 2px 4px #000}
+#bossTxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:bold}
 
 #joy{position:fixed;width:130px;height:130px;border-radius:50%;border:4px solid rgba(255,215,0,.8);background:rgba(0,0,0,.5);opacity:0;pointer-events:none;z-index:25;transition:opacity .12s;box-shadow:0 0 25px rgba(255,215,0,.6)}
 #joy.on{opacity:1}
 #knob{position:absolute;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.6)}
 
-.btn{position:fixed;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.6);border:3px solid;z-index:30;touch-action:manipulation;-webkit-user-select:none;user-select:none;transition:transform .08s}
+.btn{position:fixed;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.6);border:3px solid;z-index:30;touch-action:manipulation}
 .btn:active{transform:scale(.92)}
 #atk{right:16px;bottom:150px;width:80px;height:80px;background:radial-gradient(circle at 30% 30%,#ff9e4a,#e67520);border-color:#7a3a00;font-size:38px}
 #atk::after{content:'🛢️'}
@@ -51,15 +50,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 #dlg::before{content:attr(data-sp);position:absolute;top:-12px;right:14px;background:#ffd700;color:#3a1a00;padding:2px 10px;border-radius:8px;font-size:11px}
 
 #mini{position:fixed;top:54px;right:8px;width:100px;height:80px;background:rgba(0,0,0,.6);border:2px solid rgba(255,215,0,.5);border-radius:8px;z-index:15;overflow:hidden;pointer-events:none}
-#lvlInfo{position:fixed;top:54px;left:8px;z-index:11;background:rgba(0,0,0,.75);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;font-weight:bold;display:none;pointer-events:none}
+#lvlInfo{position:fixed;top:54px;left:8px;z-index:11;background:rgba(0,0,0,.75);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;font-weight:bold;display:none;pointer-events:none;max-width:200px}
 #lvlInfo.on{display:block}
-#autohunt{position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,60,0,.9);border:3px solid #ffd700;border-radius:12px;padding:6px 16px;color:#fff;font-size:13px;font-weight:bold;display:none;animation:ah 1s infinite;pointer-events:none}
+#autohunt{position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,60,0,.9);border:3px solid #ffd700;border-radius:12px;padding:6px 16px;color:#fff;font-size:13px;font-weight:bold;display:none;pointer-events:none}
 #autohunt.on{display:block}
-@keyframes ah{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
+
+/* Pets display */
+#pets{position:fixed;bottom:8px;left:8px;z-index:20;display:flex;gap:6px;pointer-events:none}
+.petIcon{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.7);border:2px solid #ffd700;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 15px rgba(255,215,0,.5)}
 
 .panel{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:150;display:none;flex-direction:column;color:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:12px 12px 90px}
 .panel.on{display:flex}
-.panel h2{font-size:20px;text-align:center;color:#ffd700;margin-bottom:8px;position:sticky;top:0;background:rgba(0,0,0,.96);padding:8px 0;z-index:2;text-shadow:0 0 20px rgba(255,215,0,.7)}
+.panel h2{font-size:20px;text-align:center;color:#ffd700;margin-bottom:8px;position:sticky;top:0;background:rgba(0,0,0,.96);padding:8px 0;z-index:2}
 .panel-coins{text-align:center;font-size:16px;color:#ffe066;margin-bottom:10px;font-weight:bold}
 .tabs{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;justify-content:center;position:sticky;top:44px;background:rgba(0,0,0,.96);padding:6px 0;z-index:2}
 .tab{padding:7px 12px;background:rgba(60,40,20,.8);border:2px solid rgba(255,200,100,.4);border-radius:8px;cursor:pointer;font-size:12px;font-weight:bold;color:#fff;touch-action:manipulation}
@@ -74,28 +76,55 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 .sItem .pr{font-size:11px;color:#ffe066;font-weight:bold;margin-bottom:5px}
 .sItem button{width:100%;padding:6px;font-family:inherit;font-size:11px;font-weight:bold;color:#fff;background:rgba(120,60,200,.9);border:2px solid rgba(255,255,255,.3);border-radius:7px;cursor:pointer;touch-action:manipulation}
 .sItem button:disabled{background:rgba(60,60,60,.9);cursor:not-allowed}
-.closeBtn{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);padding:12px 40px;font-family:inherit;font-size:15px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:14px;cursor:pointer;box-shadow:0 6px 20px rgba(255,180,0,.5);z-index:151;touch-action:manipulation;display:none}
+.closeBtn{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);padding:12px 40px;font-family:inherit;font-size:15px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:14px;cursor:pointer;z-index:151;touch-action:manipulation;display:none}
 .closeBtn.on{display:block}
 
 #menuPanel{position:fixed;top:54px;left:8px;z-index:50;display:none;flex-direction:column;gap:6px}
 #menuPanel.on{display:flex}
 #menuPanel button{padding:9px 14px;font-family:inherit;font-size:13px;font-weight:bold;color:#fff;background:rgba(40,20,10,.95);border:2px solid rgba(255,200,100,.6);border-radius:10px;cursor:pointer;touch-action:manipulation}
 
-#start{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:14px;transition:opacity .5s}
-#start.off{opacity:0;pointer-events:none}
-#start .big{font-size:80px;animation:bn 1.5s infinite alternate}
+/* Main menu */
+#mainMenu{position:fixed;inset:0;background:linear-gradient(180deg,#0a1a2a,#1a0a2a,#0a1a2a);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:14px;overflow-y:auto}
+#mainMenu.off{display:none}
+#mainMenu .logo{font-size:90px;animation:bn 1.5s infinite alternate}
 @keyframes bn{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-15px) rotate(5deg)}}
-#start h1{font-size:24px;background:linear-gradient(45deg,#ffd700,#ff9e4a,#ff6b9d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#mainMenu h1{font-size:28px;background:linear-gradient(45deg,#ffd700,#ff9e4a,#ff6b9d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+.modeBtn{width:min(90vw,360px);padding:20px;font-size:18px;font-weight:bold;font-family:inherit;color:#fff;border:3px solid;border-radius:20px;cursor:pointer;touch-action:manipulation;text-align:right;display:flex;align-items:center;gap:14px;transition:transform .15s;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.modeBtn:active{transform:scale(.96)}
+.modeBtn .mIcon{font-size:44px}
+.modeBtn .mInfo{flex:1}
+.modeBtn .mTitle{font-size:20px;font-weight:bold;margin-bottom:4px}
+.modeBtn .mDesc{font-size:12px;opacity:.85;line-height:1.4}
+#modeAdv{background:linear-gradient(135deg,#e67520,#ff9e4a);border-color:#7a3a00}
+#modeBR{background:linear-gradient(135deg,#8a2848,#c85888);border-color:#5a1830}
+#modeEnd{background:linear-gradient(135deg,#3a5a88,#5a8ac8);border-color:#1a3a68}
+
+#start{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:14px}
+#start.off{display:none}
+#start .big{font-size:80px}
+#start h1{font-size:24px;color:#ffd700}
 #start p{font-size:13px;color:#ccc;line-height:1.7;max-width:340px}
 .startBtn{padding:14px 40px;font-size:18px;font-weight:bold;font-family:inherit;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:4px solid #7a5228;border-radius:18px;cursor:pointer;touch-action:manipulation;box-shadow:0 6px 20px rgba(255,180,0,.5)}
 .secBtn{padding:10px 24px;font-size:14px;font-weight:bold;font-family:inherit;color:#fff;background:linear-gradient(180deg,#7fd4f0,#3a8ac8);border:3px solid #1a4a88;border-radius:14px;cursor:pointer;touch-action:manipulation;margin:4px}
 
-#lvlEnd{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:16px}
+#lvlEnd{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:16px;overflow-y:auto}
 #lvlEnd.on{display:flex}
 #lvlEnd .big{font-size:80px}
 #lvlEnd h1{font-size:26px;color:#ffd700}
 #lvlEnd .st{font-size:16px;margin:3px}
 #lvlEnd button{padding:12px 26px;font-family:inherit;font-size:15px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:12px;cursor:pointer;margin:3px;touch-action:manipulation}
+
+/* Power selection */
+#powerSelect{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:210;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:14px;overflow-y:auto}
+#powerSelect.on{display:flex}
+#powerSelect h2{font-size:24px;color:#ffd700;margin-bottom:10px;text-shadow:0 0 20px rgba(255,215,0,.7)}
+.powerCards{display:flex;flex-direction:column;gap:12px;width:100%;max-width:360px}
+.powerCard{padding:16px;background:linear-gradient(135deg,#4a2a5a,#6a3a7a);border:3px solid #ffd700;border-radius:16px;cursor:pointer;touch-action:manipulation;text-align:right;display:flex;align-items:center;gap:12px;transition:transform .15s;box-shadow:0 4px 15px rgba(255,215,0,.3)}
+.powerCard:active{transform:scale(.97)}
+.powerCard .pIcon{font-size:44px}
+.powerCard .pInfo{flex:1}
+.powerCard .pName{font-size:17px;font-weight:bold;color:#ffd700;margin-bottom:4px}
+.powerCard .pDesc{font-size:12px;color:#ddd;line-height:1.4}
 
 @media (max-aspect-ratio:3/4){
   #atk{width:72px;height:72px;bottom:140px}
@@ -124,6 +153,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 <div id="autohunt">🔥 شکار خودکار فعال!</div>
 <div id="mini"><canvas id="miniC" width="200" height="160" style="width:100%;height:100%;display:block"></canvas></div>
 <div id="joy"><div id="knob"></div></div>
+<div id="pets"></div>
 
 <div class="btn" id="atk"></div>
 <div class="btn" id="voice"></div>
@@ -134,13 +164,53 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 
 <div id="menuPanel">
   <button id="mHelp">📖 راهنما</button>
+  <button id="mMainMenu">🏠 منوی اصلی</button>
   <button id="mReset">🔄 ریست</button>
 </div>
 
 <div id="dlg" data-sp="بی‌بی روغن"></div>
 
+<!-- Main Menu -->
+<div id="mainMenu">
+  <div class="logo">🛢️</div>
+  <h1>بی‌بی روغن</h1>
+  <button class="modeBtn" id="modeAdv">
+    <div class="mIcon">⚔️</div>
+    <div class="mInfo">
+      <div class="mTitle">حالت ماجراجویی</div>
+      <div class="mDesc">۶۰ مرحله - نقشه‌های مختلف - باس نهایی</div>
+    </div>
+  </button>
+  <button class="modeBtn" id="modeBR">
+    <div class="mIcon">👑</div>
+    <div class="mInfo">
+      <div class="mTitle">بتل رویال</div>
+      <div class="mDesc">۱۰ بازیکن - آخرین نفر برنده</div>
+    </div>
+  </button>
+  <button class="modeBtn" id="modeEnd">
+    <div class="mIcon">♾️</div>
+    <div class="mInfo">
+      <div class="mTitle">حالت بی‌نهایت</div>
+      <div class="mDesc">سختی نامحدود - قدرت‌های ویژه</div>
+    </div>
+  </button>
+</div>
+
+<div id="start" class="off">
+  <div class="big">🛢️</div>
+  <h1 id="startTitle">آماده‌ای؟</h1>
+  <p id="startDesc">
+    <b style="color:#ffd700">🕹️ نیمه چپ: حرکت</b><br>
+    <b style="color:#ff9e4a">🛢️: حمله</b><br>
+    <b style="color:#7ed6a0">🎤: دستور صوتی</b>
+  </p>
+  <button class="startBtn" id="startBtn">شروع 🚀</button>
+</div>
+
+<!-- Shop -->
 <div class="panel" id="shopPanel">
-  <h2>🏪 فروشگاه بی‌بی</h2>
+  <h2>🏪 فروشگاه</h2>
   <div class="panel-coins">🪙 <span id="shopCoins">0</span></div>
   <div class="tabs">
     <div class="tab on" data-t="weapons">🗡️ سلاح</div>
@@ -153,6 +223,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 </div>
 <button class="closeBtn" id="closeShop">بستن 🔙</button>
 
+<!-- Level End -->
 <div id="lvlEnd">
   <div class="big" id="endEmoji">🎉</div>
   <h1 id="endTitle">آفرین!</h1>
@@ -165,18 +236,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
   </div>
 </div>
 
-<div id="start">
-  <div class="big">🛢️</div>
-  <h1>بی‌بی روغن</h1>
-  <p>
-    سلام! من بی‌بی روغنم! 👵<br>
-    ۳۰ مرحله پیش رو داری تا همه روغن‌کاری کنی!<br><br>
-    <b style="color:#ffd700">🕹️ نیمه چپ صفحه رو لمس کن</b><br>
-    <b style="color:#ff9e4a">🛢️ دکمه نارنجی: حمله</b><br>
-    <b style="color:#7ed6a0">🎤 میکروفون: دستور صوتی</b><br>
-    <b style="color:#ff3030">🔥 بگو «همه دشمنان رو نابود کن»</b>
-  </p>
-  <button class="startBtn" id="startBtn">شروع 🚀</button>
+<!-- Power Selection -->
+<div id="powerSelect">
+  <div style="font-size:60px">⚡</div>
+  <h2>یک قدرت انتخاب کن!</h2>
+  <div class="powerCards" id="powerCards"></div>
 </div>
 
 <script>
@@ -189,15 +253,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 let W = window.innerWidth, H = window.innerHeight;
-
 function resize(){
-  W = window.innerWidth;
-  H = window.innerHeight;
+  W = window.innerWidth; H = window.innerHeight;
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width = W * DPR;
-  canvas.height = H * DPR;
-  canvas.style.width = W + "px";
-  canvas.style.height = H + "px";
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  canvas.style.width = W + "px"; canvas.style.height = H + "px";
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 resize();
@@ -205,9 +265,16 @@ window.addEventListener("resize", resize);
 window.addEventListener("orientationchange", () => setTimeout(resize, 300));
 
 /* ============================================================
+   ============ MODES ============
+   ============================================================ */
+const MODES = { ADVENTURE: "adv", BATTLE_ROYALE: "br", ENDLESS: "end" };
+let gameMode = MODES.ADVENTURE;
+
+/* ============================================================
    ============ DATA ============
    ============================================================ */
 const WORLD = { w: 2400, h: 1800 };
+const BIG_WORLD = { w: 3600, h: 2700 };
 
 const LAYOUTS = [
   [
@@ -249,31 +316,35 @@ const LAYOUTS = [
   ]
 ];
 
-// مبلمان - همه در اتاق‌های خاص قرار دارن
-const FURNITURE = [
-  // اتاق اصلی (اول) - مبل در گوشه
-  { x:120, y:120, w:200, h:60, color:"#8a4a2a", label:"مبل" },
-  { x:500, y:200, w:80, h:180, color:"#3a3a3a", label:"TV" },
-  // آشپزخانه
-  { x:920, y:100, w:400, h:70, color:"#8b5a2b", label:"کابینت" },
-  // دستشویی
-  { x:1700, y:120, w:100, h:100, color:"#d8e8e8", label:"توالت" },
-  // اتاق ۱
-  { x:120, y:750, w:250, h:130, color:"#ff9ac8", label:"تخت" },
-  // سالن
-  { x:800, y:700, w:200, h:100, color:"#3a5a78", label:"مشت" },
-  // اتاق ۲
-  { x:1500, y:750, w:200, h:150, color:"#8a6ac8", label:"قفسه" },
-  // اتاق ۳
-  { x:120, y:1350, w:200, h:150, color:"#ffcc66", label:"تخت" },
-  // انبار
-  { x:1000, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
-  { x:1150, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
-  { x:1300, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" }
+const BR_LAYOUT = [
+  { name:"منطقه شمالی", x:50, y:50, w:1100, h:800, floor:"#8a6a3a", deco:"yard" },
+  { name:"منطقه شرقی", x:1200, y:50, w:1100, h:800, floor:"#6a5a3a", deco:"storage" },
+  { name:"منطقه مرکزی", x:50, y:900, w:2250, h:500, floor:"#7a6a4a", deco:"yard" },
+  { name:"منطقه جنوبی", x:50, y:1450, w:1100, h:300, floor:"#5a4a3a", deco:"bed" },
+  { name:"منطقه غربی", x:1200, y:1450, w:1100, h:300, floor:"#6a5a3a", deco:"gym" }
 ];
 
-const ENEMY_NAMES = ["مریم","زهرا","اسماع","حنانه","بچه‌خور","مگس","دایی جواد","خاله سوسن","عمو رحیم","ننه صغری"];
-const ENEMY_COLORS = ["#ff8ac4","#3a8ac8","#68c890","#ffb700","#8a6ac8","#4a4a4a","#e74c3c","#9b59b6","#f39c12","#16a085"];
+const ENDLESS_LAYOUT = [
+  { name:"دشت بزرگ", x:100, y:100, w:3300, h:1100, floor:"#5a7a4a", deco:"yard" },
+  { name:"جنگل تاریک", x:100, y:1250, w:1600, h:1300, floor:"#2a4a2a", deco:"yard" },
+  { name:"غار اسرار", x:1750, y:1250, w:1650, h:1300, floor:"#3a2a1a", deco:"storage" }
+];
+
+const FURNITURE = [
+  { x:120, y:120, w:200, h:60, color:"#8a4a2a", label:"مبل" },
+  { x:500, y:200, w:80, h:180, color:"#3a3a3a", label:"TV" },
+  { x:920, y:100, w:400, h:70, color:"#8b5a2b", label:"کابینت" },
+  { x:1700, y:120, w:100, h:100, color:"#d8e8e8", label:"توالت" },
+  { x:120, y:750, w:250, h:130, color:"#ff9ac8", label:"تخت" },
+  { x:800, y:700, w:200, h:100, color:"#3a5a78", label:"مشت" },
+  { x:1500, y:750, w:200, h:150, color:"#8a6ac8", label:"قفسه" },
+  { x:120, y:1350, w:200, h:150, color:"#ffcc66", label:"تخت" },
+  { x:1000, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
+  { x:1150, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" }
+];
+
+const ENEMY_NAMES = ["مریم","زهرا","اسماع","حنانه","بچه‌خور","مگس","دایی جواد","خاله سوسن","عمو رحیم","ننه صغری","پسر عمو","دختر خاله"];
+const ENEMY_COLORS = ["#ff8ac4","#3a8ac8","#68c890","#ffb700","#8a6ac8","#4a4a4a","#e74c3c","#9b59b6","#f39c12","#16a085","#c0392b","#8e44ad"];
 const ENEMY_LINES = ["بیا بگیرم! 🏃","نمی‌تونی منو بزنی! 😎","روغن نده! 😱","کمک! 😂","آخه چرا من؟ 🥺","برو خونت! 😤","داره تعقیبم! 😭","اِ اِ 🥶","نکن! 🤢","خودت می‌سوزی! 🔥"];
 
 const SHOP_WEAPONS = [
@@ -314,49 +385,48 @@ const SHOP_CONSUMABLES = [
   { id:"bomb", icon:"💣", name:"بمب", price:150, desc:"انفجار" }
 ];
 
+// 🐉 PETS
+const PET_DATA = {
+  dragon:   { icon:"🐉", name:"اژدها",   color:"#8a0000", damage:18, rate:50,  range:250, desc:"آتش از دهن" },
+  naruto:   { icon:"🥷", name:"ناروتو",   color:"#ff8c00", damage:14, rate:40,  range:220, desc:"شوریکن" },
+  ben10:    { icon:"⌚", name:"بن تن",     color:"#4ade80", damage:22, rate:60,  range:200, desc:"تبدیل به هیولا" },
+  deadpool: { icon:"🗡️", name:"ددپول",   color:"#c0392b", damage:16, rate:45,  range:230, desc:"شمشیر دوقلو" },
+  mrbean:   { icon:"🎭", name:"مستر بین", color:"#3498db", damage:28, rate:80,  range:180, desc:"حرکات عجیب" }
+};
+
 /* ============================================================
    ============ SAVE ============
    ============================================================ */
 const S = {
   coins: 0, totalCoins: 0, currentLevel: 1, maxLevel: 1,
+  advLevel: 1, brWins: 0, endWave: 1,
   kills: 0, maxCombo: 0, bossDefeated: false,
   ownedWeapons: ["oil"], ownedArmors: ["none"], ownedSkins: ["bibi"], ownedPowerups: [],
   consumables: { potion_health: 0, potion_speed: 0, potion_shield: 0, bomb: 0 },
   equipWeapon: "oil", equipArmor: "none", equipSkin: "bibi"
 };
-
-function save(){ try { localStorage.setItem("bibi_v3", JSON.stringify(S)); } catch(e){} }
-function load(){ try { const d = localStorage.getItem("bibi_v3"); if (d) Object.assign(S, JSON.parse(d)); } catch(e){} }
+function save(){ try { localStorage.setItem("bibi_v4", JSON.stringify(S)); } catch(e){} }
+function load(){ try { const d = localStorage.getItem("bibi_v4"); if (d) Object.assign(S, JSON.parse(d)); } catch(e){} }
 load();
 
 function getWeapon(){ return SHOP_WEAPONS.find(w => w.id === S.equipWeapon) || SHOP_WEAPONS[0]; }
 function getArmor(){ return SHOP_ARMOR.find(a => a.id === S.equipArmor) || SHOP_ARMOR[0]; }
-function getSkin(){ return SHOP_SKINS.find(k => k.id === S.equipSkin) || SHOP_SKINS[0]; }
 
 /* ============================================================
    ============ STATE ============
    ============================================================ */
-let rooms = [];
-let obstacles = [];
-let enemies = [];
-let bullets = [];
-let particles = [];
-let prizeBoxes = [];
-let items = [];
+let rooms = [], obstacles = [], world = WORLD;
+let enemies = [], bullets = [], particles = [], prizeBoxes = [], items = [];
+let pets = [], autoOilTimer = 0;
 let boss = null;
-let level = 1;
-let levelConfig = null;
-let gameStarted = false;
-let levelComplete = false;
-let levelStartTime = 0;
-let combo = 0;
-let comboTimer = 0;
-let shakeAmount = 0;
-let autoHunt = false;
-let autoHuntTimer = 0;
-let autoHuntAtkTimer = 0;
-let autoMoveTarget = null;
-let autoMoveTimer = 0;
+let level = 1, levelConfig = null, waveEnemiesCount = 0;
+let gameStarted = false, levelComplete = false, levelStartTime = 0;
+let combo = 0, comboTimer = 0, shakeAmount = 0;
+let autoHunt = false, autoHuntTimer = 0, autoHuntAtkTimer = 0;
+let autoMoveTarget = null, autoMoveTimer = 0;
+let playerDamageMult = 1, playerSpeedMult = 1;
+let brPlayers = [];
+let endlessPowers = [];
 
 const player = {
   x: 400, y: 400, r: 22,
@@ -364,22 +434,31 @@ const player = {
   health: 100, maxHealth: 100,
   mana: 100, maxMana: 100,
   attackCooldown: 0, hitFlash: 0,
-  speedBoost: 0, shieldTimer: 0
+  speedBoost: 0, shieldTimer: 0,
+  isBR: false
 };
 
 const camera = { x: 0, y: 0, sx: 0, sy: 0 };
 
 /* ============================================================
-   ============ BUILD LEVEL ============
+   ============ BUILD LEVELS ============
    ============================================================ */
-function buildLevel(num){
-  const idx = num - 1;
-  rooms = LAYOUTS[idx % LAYOUTS.length];
+function buildLevel(num, isBR, isEndless){
+  if (isBR){
+    rooms = BR_LAYOUT;
+    world = WORLD;
+  } else if (isEndless){
+    rooms = ENDLESS_LAYOUT;
+    world = BIG_WORLD;
+  } else {
+    rooms = LAYOUTS[(num - 1) % LAYOUTS.length];
+    world = WORLD;
+  }
   const walls = [];
-  walls.push({ x:0, y:0, w:WORLD.w, h:30 });
-  walls.push({ x:0, y:WORLD.h-30, w:WORLD.w, h:30 });
-  walls.push({ x:0, y:0, w:30, h:WORLD.h });
-  walls.push({ x:WORLD.w-30, y:0, w:30, h:WORLD.h });
+  walls.push({ x:0, y:0, w:world.w, h:30 });
+  walls.push({ x:0, y:world.h-30, w:world.w, h:30 });
+  walls.push({ x:0, y:0, w:30, h:world.h });
+  walls.push({ x:world.w-30, y:0, w:30, h:world.h });
   for (let i = 0; i < rooms.length; i++){
     for (let j = i + 1; j < rooms.length; j++){
       const r1 = rooms[i], r2 = rooms[j];
@@ -418,45 +497,49 @@ function collides(x, y, r){
   }
   return false;
 }
-
-// 🔑 تابع جدید: پیدا کردن نقطه‌ی خالی در یه اتاق
 function findSafeSpot(room, radius){
-  // اول مرکز اتاق رو امتحان کن
-  const centerX = room.x + room.w / 2;
-  const centerY = room.y + room.h / 2;
-  if (!collides(centerX, centerY, radius)) return { x: centerX, y: centerY };
-
-  // جستجوی شبکه‌ای
-  for (let sy = room.y + 100; sy < room.y + room.h - 80; sy += 60){
-    for (let sx = room.x + 100; sx < room.x + room.w - 80; sx += 60){
+  const cx = room.x + room.w / 2, cy = room.y + room.h / 2;
+  if (!collides(cx, cy, radius)) return { x: cx, y: cy };
+  for (let sy = room.y + 80; sy < room.y + room.h - 60; sy += 60){
+    for (let sx = room.x + 80; sx < room.x + room.w - 60; sx += 60){
       if (!collides(sx, sy, radius)) return { x: sx, y: sy };
     }
   }
-  // اگه هیچی پیدا نشد، مرکز رو برگردون
-  return { x: centerX, y: centerY };
+  return { x: cx, y: cy };
 }
 
 /* ============================================================
-   ============ ENEMIES ============
+   ============ ENEMY SPAWNING ============
    ============================================================ */
-function getLevelConfig(num){
+function getLevelConfig(num, mode){
   const i = num - 1;
+  if (mode === "end"){
+    // حالت بی‌نهایت - سختی تصاعدی
+    return {
+      enemyCount: Math.min(4 + i, 20),
+      enemyHealth: Math.floor(50 * Math.pow(1.18, i)),
+      enemySpeed: 0.6 + i * 0.06,
+      enemyDamage: 2 + Math.floor(i / 2),
+      enemyHasWeapon: i >= 2,
+      hasBoss: (i + 1) % 5 === 0
+    };
+  }
   return {
     enemyCount: Math.min(3 + Math.floor(i * 0.5), 14),
     enemyHealth: 50 + i * 15,
     enemySpeed: 0.6 + i * 0.04,
     enemyDamage: 1 + Math.floor(i / 3),
     enemyHasWeapon: i >= 4,
-    hasBoss: num === 30
+    hasBoss: num % 10 === 0
   };
 }
 
 function spawnEnemies(){
   enemies = [];
   const cnt = levelConfig.enemyCount;
+  const minRoom = rooms.length > 1 ? 1 : 0;
   for (let i = 0; i < cnt; i++){
-    // اتاق‌ها رو بر اساس شماره دشمن تقسیم کن (نه اتاق اول که بی‌بی توشه)
-    const roomIdx = 1 + (i % (rooms.length - 1));
+    const roomIdx = minRoom + (i % (rooms.length - minRoom));
     const room = rooms[roomIdx];
     const spot = findSafeSpot(room, 25);
     const idx = i % ENEMY_NAMES.length;
@@ -472,12 +555,13 @@ function spawnEnemies(){
       defeatedTimer: 0, oilLevel: 0, hitFlash: 0,
       hasWeapon: levelConfig.enemyHasWeapon && Math.random() < 0.7,
       weaponCD: 0,
-      dlgTimer: 100 + Math.random() * 200,
-      dlgIdx: Math.floor(Math.random() * ENEMY_LINES.length)
+      dlgTimer: 80 + Math.random() * 200,
+      dlgIdx: Math.floor(Math.random() * ENEMY_LINES.length),
+      attackCD: 0
     });
   }
-  // آیتم مخفی در یه اتاق تصادفی (نه اتاق اول)
-  const itemRoom = rooms[1 + Math.floor(Math.random() * (rooms.length - 1))];
+  // آیتم مخفی
+  const itemRoom = rooms[minRoom + Math.floor(Math.random() * (rooms.length - minRoom))];
   const itemSpot = findSafeSpot(itemRoom, 15);
   items.push({ x: itemSpot.x, y: itemSpot.y, type: "hidden" });
   // باس
@@ -488,33 +572,271 @@ function spawnEnemies(){
 function spawnBoss(){
   boss = {
     id: "boss", name: "🐉 اژدهای روغن",
-    x: WORLD.w / 2, y: WORLD.h / 2,
+    x: world.w / 2, y: world.h / 2,
     r: 50, dir: 0, walkFrame: 0,
-    health: 2500, maxHealth: 2500,
+    health: 2500 + level * 100, maxHealth: 2500 + level * 100,
     hitFlash: 0, isBoss: true,
     bulletCD: 0, slamCD: 0,
     dlgTimer: 100, dlgIdx: 0
   };
   document.getElementById("bossBar").classList.add("on");
+  document.getElementById("bossTxt").textContent = boss.name;
   showDlg("🐉 من اژدهای روغنم! اومدی منو بزنی؟", 4000, 0.6, 0.8);
 }
 
 /* ============================================================
-   ============ START LEVEL ============
+   ============ BATTLE ROYALE ============
    ============================================================ */
-function startLevel(num){
-  level = num;
-  buildLevel(num);
-  levelConfig = getLevelConfig(num);
-  bullets = []; particles = []; prizeBoxes = []; items = []; combo = 0;
-  spawnEnemies();
+function spawnBRPlayers(){
+  brPlayers = [];
+  const names = ["باب اسفنجی","پاتریک","آقای خرچنگ","سندی","پلانکتون","لری","مرد ماهی","خانم پاف","نِد","اسکوئید"];
+  const colors = ["#ffd700","#ff8ac4","#e74c3c","#c8a870","#3a8ac8","#68c890","#9b59b6","#e67e22","#16a085","#34495e"];
+  for (let i = 0; i < 9; i++){
+    const room = rooms[i % rooms.length];
+    const spot = findSafeSpot(room, 25);
+    brPlayers.push({
+      id: "br" + i, name: names[i], color: colors[i],
+      x: spot.x, y: spot.y, r: 22,
+      dir: 0, walkFrame: 0,
+      health: 100, maxHealth: 100,
+      state: "wander", stateTimer: 60 + Math.random() * 100,
+      targetX: spot.x, targetY: spot.y,
+      alive: true, hitFlash: 0,
+      weaponCD: 0, dlgTimer: 100 + Math.random() * 200, dlgIdx: 0,
+      kills: 0
+    });
+  }
+}
 
-  // 🔑 استفاده از findSafeSpot برای تولید بی‌بی
+function updateBRPlayer(n){
+  if (!n.alive) return;
+  if (n.hitFlash > 0) n.hitFlash--;
+  const dx = player.x - n.x, dy = player.y - n.y;
+  const dist = Math.hypot(dx, dy);
+  // AI: اگه بازیکن نزدیکه، حمله کن
+  if (dist < 400){
+    n.state = "chase";
+  } else {
+    n.state = "wander";
+  }
+  if (n.state === "chase" && dist < 90){
+    if (n.weaponCD <= 0){
+      // ضربه
+      player.health -= 4;
+      player.hitFlash = 8;
+      playBeep("hurt");
+      n.weaponCD = 60;
+    }
+  } else if (n.state === "chase" && dist < 300){
+    if (n.weaponCD <= 0){
+      const a = Math.atan2(dy, dx);
+      bullets.push({ x: n.x, y: n.y, vx: Math.cos(a) * 5, vy: Math.sin(a) * 5, owner: "enemy", damage: 3, life: 120 });
+      n.weaponCD = 80;
+    }
+  }
+  if (n.weaponCD > 0) n.weaponCD--;
+
+  if (n.state === "chase"){
+    if (dist > 60){
+      const a = Math.atan2(dy, dx);
+      const sp = 1.5;
+      let nx = n.x + Math.cos(a) * sp, ny = n.y + Math.sin(a) * sp;
+      if (!collides(nx, n.y, n.r)) n.x = nx;
+      if (!collides(n.x, ny, n.r)) n.y = ny;
+      n.dir = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) > 0 ? 3 : 1) : (Math.sin(a) > 0 ? 0 : 2);
+      n.walkFrame += 0.4;
+    }
+    return;
+  }
+
+  // wander
+  n.stateTimer--;
+  if (n.stateTimer <= 0){
+    const room = rooms[Math.floor(Math.random() * rooms.length)];
+    const spot = findSafeSpot(room, n.r + 5);
+    n.targetX = spot.x; n.targetY = spot.y;
+    n.stateTimer = 120 + Math.random() * 120;
+  }
+  const tdx = n.targetX - n.x, tdy = n.targetY - n.y;
+  const td = Math.hypot(tdx, tdy);
+  if (td > 10){
+    const a = Math.atan2(tdy, tdx);
+    const sp = 0.8;
+    let nx = n.x + Math.cos(a) * sp, ny = n.y + Math.sin(a) * sp;
+    if (!collides(nx, n.y, n.r)) n.x = nx;
+    if (!collides(n.x, ny, n.r)) n.y = ny;
+    n.dir = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) > 0 ? 3 : 1) : (Math.sin(a) > 0 ? 0 : 2);
+    n.walkFrame += 0.25;
+  }
+}
+
+function checkBRWin(){
+  if (gameMode !== MODES.BATTLE_ROYALE) return;
+  const alive = brPlayers.filter(p => p.alive).length;
+  if (alive === 0 && !levelComplete){
+    levelComplete = true;
+    setTimeout(() => showLevelEnd(true), 1000);
+  }
+}
+
+/* ============================================================
+   ============ POWERS ============
+   ============================================================ */
+const POWER_OPTIONS = [
+  { id:"dmg", icon:"💥", name:"افزایش آسیب", desc:"+30% آسیب حمله", apply:() => { playerDamageMult *= 1.3; } },
+  { id:"hp", icon:"❤️", name:"افزایش جون", desc:"+50 جون حداکثر", apply:() => { player.maxHealth += 50; player.health += 50; } },
+  { id:"spd", icon:"⚡", name:"افزایش سرعت", desc:"+25% سرعت حرکت", apply:() => { playerSpeedMult *= 1.25; } },
+  { id:"autoOil", icon:"🛢️", name:"پرتاب خودکار روغن", desc:"هر ۵ ثانیه یه قوطی روغن پرت می‌کنه", apply:() => { autoOilTimer = 300; } },
+  { id:"pet_dragon", icon:"🐉", name:"حیوان: اژدها", desc:"اژدها به دشمنان حمله می‌کنه", apply:() => { addPet("dragon"); } },
+  { id:"pet_naruto", icon:"🥷", name:"حیوان: ناروتو", desc:"ناروتو شوریکن پرت می‌کنه", apply:() => { addPet("naruto"); } },
+  { id:"pet_ben10", icon:"⌚", name:"حیوان: بن تن", desc:"بن تن به هیولا تبدیل می‌شه", apply:() => { addPet("ben10"); } },
+  { id:"pet_deadpool", icon:"🗡️", name:"حیوان: ددپول", desc:"ددپول با شمشیر حمله می‌کنه", apply:() => { addPet("deadpool"); } },
+  { id:"pet_mrbean", icon:"🎭", name:"حیوان: مستر بین", desc:"مستر بین حرکات عجیب می‌کنه", apply:() => { addPet("mrbean"); } },
+  { id:"regen", icon:"💚", name:"درمان خودکار", desc:"جون به‌طور خودکار پر می‌شه", apply:() => { S.ownedPowerups.push("regen"); } }
+];
+
+function addPet(type){
+  if (pets.find(p => p.type === type)) return;
+  pets.push({
+    type,
+    icon: PET_DATA[type].icon,
+    x: player.x - 40, y: player.y + 40,
+    cd: 0,
+    targetX: player.x, targetY: player.y
+  });
+  updatePetsDisplay();
+}
+
+function updatePetsDisplay(){
+  const cont = document.getElementById("pets");
+  cont.innerHTML = "";
+  pets.forEach(p => {
+    const d = document.createElement("div");
+    d.className = "petIcon";
+    d.textContent = p.icon;
+    cont.appendChild(d);
+  });
+}
+
+function updatePets(){
+  pets.forEach(p => {
+    const data = PET_DATA[p.type];
+    // دنبال بازیکن
+    const dxP = player.x - p.x, dyP = player.y - p.y;
+    const distP = Math.hypot(dxP, dyP);
+    if (distP > 60){
+      const a = Math.atan2(dyP, dxP);
+      p.x += Math.cos(a) * 3;
+      p.y += Math.sin(a) * 3;
+    }
+    // پیدا کردن دشمن
+    if (p.cd > 0) { p.cd--; return; }
+    let target = null, bestD = Infinity;
+    const targets = enemies.concat(boss && boss.health > 0 ? [boss] : []);
+    targets.forEach(n => {
+      if (n.state === "defeated") return;
+      const d = Math.hypot(n.x - p.x, n.y - p.y);
+      if (d < data.range && d < bestD){ bestD = d; target = n; }
+    });
+    if (target){
+      p.cd = data.rate;
+      let dmg = data.damage;
+      target.health -= dmg;
+      target.hitFlash = 10;
+      spawnParticles(target.x, target.y, data.color, 8);
+      damagePopup(target.x, target.y - 20, dmg);
+      playBeep("hit");
+      if (target.health <= 0 && target.state !== "defeated"){
+        target.state = "defeated";
+        if (!target.isBoss) target.defeatedTimer = 90;
+        let pts = target.isBoss ? 500 : 12;
+        S.coins += pts; S.totalCoins += pts; S.kills++;
+        combo++; comboTimer = 90;
+        if (combo > S.maxCombo) S.maxCombo = combo;
+        spawnParticles(target.x, target.y, "#7ed6a0", 20);
+        if (!target.isBoss && Math.random() < 0.4) spawnPrize(target.x, target.y);
+        if (target.isBoss){
+          S.bossDefeated = true;
+          document.getElementById("bossBar").classList.remove("on");
+          playBeep("win");
+          showDlg("🎉 اژدها کشته شد! 🏆", 4000, 1.6, 1);
+        }
+        save(); updateHUD(); checkLevelDone();
+      }
+    }
+  });
+}
+
+function showPowerSelection(){
+  const cont = document.getElementById("powerCards");
+  cont.innerHTML = "";
+  // انتخاب ۳ قدرت تصادفی
+  const shuffled = [...POWER_OPTIONS].sort(() => Math.random() - 0.5);
+  const options = shuffled.slice(0, 3);
+  options.forEach(opt => {
+    const card = document.createElement("div");
+    card.className = "powerCard";
+    card.innerHTML = `
+      <div class="pIcon">${opt.icon}</div>
+      <div class="pInfo">
+        <div class="pName">${opt.name}</div>
+        <div class="pDesc">${opt.desc}</div>
+      </div>
+    `;
+    card.onclick = () => {
+      opt.apply();
+      endlessPowers.push(opt.id);
+      document.getElementById("powerSelect").classList.remove("on");
+      playBeep("coin");
+      showDlg("قدرت فعال شد: " + opt.name, 2000, 1.5, 1);
+      startNextWave();
+    };
+    cont.appendChild(card);
+  });
+  document.getElementById("powerSelect").classList.add("on");
+}
+
+/* ============================================================
+   ============ START GAME ============
+   ============================================================ */
+function updatePlayerStats(){
+  const a = getArmor();
+  player.maxHealth = (100 + a.health);
+  player.health = Math.min(player.health, player.maxHealth);
+}
+
+function startGame(){
+  if (gameMode === MODES.ADVENTURE){
+    level = S.advLevel || 1;
+    startLevel(level, false, false);
+  } else if (gameMode === MODES.BATTLE_ROYALE){
+    startLevel(1, true, false);
+  } else {
+    level = S.endWave || 1;
+    startEndlessLevel(level);
+  }
+}
+
+function startLevel(num, isBR, isEndless){
+  level = num;
+  buildLevel(num, isBR, isEndless);
+  levelConfig = getLevelConfig(num, isBR ? "br" : (isEndless ? "end" : "adv"));
+  bullets = []; particles = []; prizeBoxes = []; items = []; combo = 0;
+  pets = []; autoOilTimer = 0;
+  playerDamageMult = 1; playerSpeedMult = 1;
+  updatePetsDisplay();
+
+  if (isBR){
+    spawnBRPlayers();
+    enemies = [];
+  } else {
+    spawnEnemies();
+  }
+
   const startRoom = rooms[0];
   const spawn = findSafeSpot(startRoom, player.r + 5);
   player.x = spawn.x;
   player.y = spawn.y;
-
   updatePlayerStats();
   player.health = player.maxHealth;
   player.mana = player.maxMana;
@@ -532,16 +854,49 @@ function startLevel(num){
   camera.x = player.x - W/2;
   camera.y = player.y - H/2;
   updateHUD();
-  showDlg("مرحله " + num + " شروع شد! ⚔️", 2500, 1.5, 0.9);
+  const prefix = isBR ? "بتل رویال! " : (isEndless ? "موج " : "مرحله ");
+  showDlg(prefix + num + " شروع شد! ⚔️", 2500, 1.5, 0.9);
 }
 
-function updatePlayerStats(){
-  const a = getArmor();
-  player.maxHealth = 100 + a.health;
-  player.health = Math.min(player.health, player.maxHealth);
+function startEndlessLevel(num){
+  level = num;
+  buildLevel(1, false, true);
+  levelConfig = getLevelConfig(num, "end");
+  bullets = []; particles = []; prizeBoxes = []; items = []; combo = 0;
+  spawnEnemies();
+  const startRoom = rooms[0];
+  const spawn = findSafeSpot(startRoom, player.r + 5);
+  player.x = spawn.x;
+  player.y = spawn.y;
+  updatePlayerStats();
+  player.health = player.maxHealth;
+  player.mana = player.maxMana;
+  levelComplete = false;
+  autoMoveTarget = null; autoMoveTimer = 0;
+  stopAutoHunt();
+  document.getElementById("lvlN").textContent = num;
+  updateGoal();
+  document.getElementById("lvlInfo").classList.add("on");
+  levelStartTime = Date.now();
+  camera.x = player.x - W/2;
+  camera.y = player.y - H/2;
+  updateHUD();
+  showDlg("موج " + num + " شروع شد! 🌊", 2500, 1.5, 0.9);
+}
+
+function startNextWave(){
+  level++;
+  S.endWave = level;
+  save();
+  startEndlessLevel(level);
 }
 
 function updateGoal(){
+  if (gameMode === MODES.BATTLE_ROYALE){
+    const alive = brPlayers.filter(p => p.alive).length;
+    document.getElementById("lvlGoal").textContent = alive + " نفر زنده";
+    return;
+  }
   const alive = enemies.filter(e => e.state !== "defeated").length;
   document.getElementById("lvlGoal").textContent = (enemies.length - alive) + "/" + enemies.length;
 }
@@ -556,10 +911,8 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
 
-let joyOn = false;
-let joyId = null;
-let joyOX = 0, joyOY = 0;
-let joyX = 0, joyY = 0;
+let joyOn = false, joyId = null;
+let joyOX = 0, joyOY = 0, joyX = 0, joyY = 0;
 const JOY_R = 65;
 const joyEl = document.getElementById("joy");
 const knobEl = document.getElementById("knob");
@@ -568,16 +921,11 @@ canvas.addEventListener("pointerdown", e => {
   if (e.pointerType === "mouse" && e.button !== 0) return;
   if (joyId !== null) return;
   if (e.clientX >= W / 2) return;
-
   joyId = e.pointerId;
   joyOn = true;
-  joyOX = e.clientX;
-  joyOY = e.clientY;
-  joyX = e.clientX;
-  joyY = e.clientY;
-
+  joyOX = e.clientX; joyOY = e.clientY;
+  joyX = e.clientX; joyY = e.clientY;
   try { canvas.setPointerCapture(e.pointerId); } catch(err){}
-
   joyEl.style.left = (joyOX - 65) + "px";
   joyEl.style.top = (joyOY - 65) + "px";
   joyEl.classList.add("on");
@@ -587,20 +935,16 @@ canvas.addEventListener("pointerdown", e => {
 
 canvas.addEventListener("pointermove", e => {
   if (e.pointerId !== joyId) return;
-  joyX = e.clientX;
-  joyY = e.clientY;
-
+  joyX = e.clientX; joyY = e.clientY;
   const dx = joyX - joyOX, dy = joyY - joyOY;
   const dist = Math.hypot(dx, dy);
-
   let kx = dx, ky = dy;
   if (dist > JOY_R){
     joyOX = joyX - (dx / dist) * JOY_R;
     joyOY = joyY - (dy / dist) * JOY_R;
     joyEl.style.left = (joyOX - 65) + "px";
     joyEl.style.top = (joyOY - 65) + "px";
-    kx = (dx / dist) * JOY_R;
-    ky = (dy / dist) * JOY_R;
+    kx = (dx / dist) * JOY_R; ky = (dy / dist) * JOY_R;
   }
   knobEl.style.transform = `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
   e.preventDefault();
@@ -608,8 +952,7 @@ canvas.addEventListener("pointermove", e => {
 
 function endPointer(e){
   if (e.pointerId !== joyId) return;
-  joyId = null;
-  joyOn = false;
+  joyId = null; joyOn = false;
   knobEl.style.transform = "translate(-50%,-50%)";
   joyEl.classList.remove("on");
 }
@@ -639,16 +982,11 @@ function getInput(){
 /* ============================================================
    ============ AUDIO ============
    ============================================================ */
-let soundOn = true;
-let audioCtx = null;
-
+let soundOn = true, audioCtx = null;
 function initAudio(){
-  if (!audioCtx){
-    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
-  }
+  if (!audioCtx){ try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
-
 function playBeep(type){
   if (!soundOn || !audioCtx) return;
   const now = audioCtx.currentTime;
@@ -713,11 +1051,9 @@ function showDlg(text, dur, pitch, rate){
 }
 
 /* ============================================================
-   ============ SPEECH RECOGNITION ============
+   ============ VOICE RECOGNITION ============
    ============================================================ */
-let listening = false;
-let recog = null;
-
+let listening = false, recog = null;
 function initRecog(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return null;
@@ -733,15 +1069,8 @@ function initRecog(){
 }
 function startListening(){
   if (!recog) recog = initRecog();
-  if (!recog){
-    showDlg("مرورگر پشتیبانی نمی‌کنه! از Chrome استفاده کن!", 3500, 1.4, 0.95);
-    return;
-  }
-  try {
-    recog.start();
-    listening = true;
-    document.getElementById("voice").classList.add("listening");
-  } catch(e){}
+  if (!recog){ showDlg("مرورگر پشتیبانی نمی‌کنه!", 3500, 1.4, 0.95); return; }
+  try { recog.start(); listening = true; document.getElementById("voice").classList.add("listening"); } catch(e){}
 }
 function stopListening(){
   if (recog && listening){
@@ -763,6 +1092,9 @@ function parse(text){
   const vp = [
     { v:"attackAll", re:/همه.*(دشمن|اهالی).*(نابود|بکش|بزن)|همه رو نابود|همه دشمنان/ },
     { v:"usePotion", re:/معجون|شفا|بخور|سپر بگیر|سرعت بگیر/ },
+    { v:"sing", re:/آهنگ|بخون|آواز|بخوان|شعر/ },
+    { v:"curse", re:/نفرین|نفرین کن|لعن|لعن کن|دشنام/ },
+    { v:"powerUp", re:/قدرت ویژه|قدرت خودت|قدرتت|قدرت خاص|قدرت فعال|قدرتت رو فعال/ },
     { v:"attack", re:/حمله|بزن|شلیک|روغن بزن|بکش|نابود|له کن/ },
     { v:"seek", re:/بگرد|پیدا کن|دنبال|تعقیب|شکار|گرفتن/ },
     { v:"stop", re:/بایست|وایسا|توقف|بسه|صبر/ },
@@ -789,65 +1121,62 @@ function parse(text){
 }
 
 /* ============================================================
-   ============ HELPERS ============
+   ============ SONG & CURSE ============
    ============================================================ */
-function getAlive(){ return enemies.filter(e => e.state !== "defeated"); }
+const SONGS = [
+  "روغن روغن روغن، ای روغن طلایی، تو خونه ما پاشی، برای همه شفایی 🎵",
+  "بی بی روغن اومده، با قوطی جادویی، همه رو روغن کاری، تا استخونا قوی 🎶",
+  "ما بچه های روغنیم، قوی و سالمیم، هر کی نبینه ما رو، می گیم سلامیم 🎵"
+];
+const CURSES = [
+  "الهی دزد کارتم خشتکش دوتا بشه! 👖",
+  "الهی چاییت سرد باشه و قند نداشته باشه! ☕",
+  "الهی ماست بخوری و بفهمی ترشه! 🥛",
+  "الهی کولرت خراب بشه وسط مرداد! 🥵",
+  "الهی کفشت پاره بشه و پیاده بری خونه! 👟",
+  "الهی موبایلت شارژ نداشته باشه وسط تماس مهم! 📱",
+  "الهی نون توی تنورت بسوزه! 🔥",
+  "الهی توی حموم آب قطع بشه و کف بدنت بمونه! 🚿"
+];
+
+/* ============================================================
+   ============ VOICE COMMAND HANDLER ============
+   ============================================================ */
+function getAlive(){
+  if (gameMode === MODES.BATTLE_ROYALE) return brPlayers.filter(p => p.alive);
+  return enemies.filter(e => e.state !== "defeated");
+}
 function nearestNPC(){
   const a = getAlive();
   if (!a.length) return boss && boss.health > 0 ? boss : null;
   let best = a[0], bd = Infinity;
-  a.forEach(n => { const d = Math.hypot(n.x - player.x, n.y - player.y); if (d < bd) { bd = d; best = n; } });
+  a.forEach(n => { const d = Math.hypot(n.x - player.x, n.y - player.y); if (d < bd){ bd = d; best = n; } });
   return best;
 }
 
-function startAutoHunt(){
-  if (autoHunt) return;
-  const a = getAlive();
-  if (a.length === 0 && !boss){ showDlg("همه نابود شدن! 🎉", 2500, 1.55, 0.9); return; }
-  autoHunt = true; autoHuntTimer = 0; autoHuntAtkTimer = 0;
-  document.getElementById("autohunt").classList.add("on");
-  showDlg("باشه! همه‌شون رو نابود می‌کنم! 🔥", 2500, 1.6, 1);
-}
-function stopAutoHunt(){
-  autoHunt = false;
-  document.getElementById("autohunt").classList.remove("on");
-}
-function updateAutoHunt(){
-  if (!autoHunt) return;
-  autoHuntTimer++;
-  if (autoHuntTimer > 3600){ stopAutoHunt(); return; }
-  let t = nearestNPC();
-  if (!t){ stopAutoHunt(); return; }
-  const dx = t.x - player.x, dy = t.y - player.y;
-  const dist = Math.hypot(dx, dy);
-  if (dist > 55){
-    const speed = 5;
-    const stepX = (dx / dist) * speed;
-    const stepY = (dy / dist) * speed;
-    let nx = player.x + stepX, ny = player.y + stepY;
-    if (!collides(nx, player.y, player.r)) player.x = nx;
-    if (!collides(player.x, ny, player.r)) player.y = ny;
-    if (Math.abs(stepX) > Math.abs(stepY)) player.dir = stepX > 0 ? 3 : 1;
-    else player.dir = stepY > 0 ? 0 : 2;
-    player.walkFrame += 0.5;
-  } else {
-    const ang = Math.atan2(dy, dx);
-    if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
-    else player.dir = Math.sin(ang) > 0 ? 0 : 2;
-    if (autoHuntAtkTimer <= 0){ attack(); autoHuntAtkTimer = 8; }
-  }
-  if (autoHuntAtkTimer > 0) autoHuntAtkTimer--;
-}
-
-function moveTowards(nx, ny){ autoMoveTarget = { x:nx, y:ny }; autoMoveTimer = 300; }
-
-/* ============================================================
-   ============ VOICE COMMAND ============
-   ============================================================ */
 function handleVoice(text){
   const p = parse(text);
   if (p.verbs.includes("attackAll")){ startAutoHunt(); return; }
   if (p.verbs.includes("usePotion")){ usePotion(); return; }
+  if (p.verbs.includes("sing")){
+    const song = SONGS[Math.floor(Math.random() * SONGS.length)];
+    showDlg(song, 6000, 1.6, 0.8);
+    return;
+  }
+  if (p.verbs.includes("curse")){
+    const curse = CURSES[Math.floor(Math.random() * CURSES.length)];
+    showDlg(curse, 5000, 1.5, 0.9);
+    playBeep("boss");
+    return;
+  }
+  if (p.verbs.includes("powerUp")){
+    if (pets.length > 0){
+      showDlg("قدرتم فعاله! " + pets.map(x => x.icon).join(" "), 3000, 1.5, 1);
+    } else {
+      showDlg("هنوز قدرت خاصی ندارم! تو حالت بی‌نهایت انتخاب کن!", 3500, 1.4, 0.9);
+    }
+    return;
+  }
   if (p.isHi){ showDlg("سلام عزیزم! روغن می‌خوای؟ 🛢️", 2500, 1.55, 0.85); return; }
   if (p.isThx){ showDlg("خواهش می‌کنم! 🌹", 2200, 1.55, 0.9); return; }
   if (p.isQ && p.verbs.length === 0){
@@ -892,7 +1221,11 @@ function handleVoice(text){
   if (p.verbs.includes("move") && p.dirs.length > 0){
     const dirVecs = { up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0} };
     const d = dirVecs[p.dirs[0]];
-    if (d){ moveTowards(player.x + d.x * 300, player.y + d.y * 300); showDlg("دارم می‌رم!", 1500, 1.5, 0.9); }
+    if (d){
+      moveTowards(player.x + d.x * 400, player.y + d.y * 400);
+      const dirNames = { up:"بالا", down:"پایین", left:"چپ", right:"راست" };
+      showDlg("دارم می‌رم " + dirNames[p.dirs[0]] + "! 🚶", 1500, 1.5, 0.9);
+    }
     return;
   }
   if (p.verbs.includes("seek")){
@@ -919,6 +1252,47 @@ function handleVoice(text){
   showDlg("نفهمیدم! مثلاً: همه دشمنان رو نابود کن", 3000, 1.4, 0.9);
 }
 
+function moveTowards(nx, ny){ autoMoveTarget = { x:nx, y:ny }; autoMoveTimer = 300; }
+
+function startAutoHunt(){
+  if (autoHunt) return;
+  const a = getAlive();
+  if (a.length === 0 && !boss){ showDlg("همه نابود شدن! 🎉", 2500, 1.55, 0.9); return; }
+  autoHunt = true; autoHuntTimer = 0; autoHuntAtkTimer = 0;
+  document.getElementById("autohunt").classList.add("on");
+  showDlg("باشه! همه‌شون رو نابود می‌کنم! 🔥", 2500, 1.6, 1);
+}
+function stopAutoHunt(){
+  autoHunt = false;
+  document.getElementById("autohunt").classList.remove("on");
+}
+function updateAutoHunt(){
+  if (!autoHunt) return;
+  autoHuntTimer++;
+  if (autoHuntTimer > 3600){ stopAutoHunt(); return; }
+  let t = nearestNPC();
+  if (!t){ stopAutoHunt(); return; }
+  const dx = t.x - player.x, dy = t.y - player.y;
+  const dist = Math.hypot(dx, dy);
+  if (dist > 55){
+    const speed = 5;
+    const stepX = (dx / dist) * speed;
+    const stepY = (dy / dist) * speed;
+    let nx = player.x + stepX, ny = player.y + stepY;
+    if (!collides(nx, player.y, player.r)) player.x = nx;
+    if (!collides(player.x, ny, player.r)) player.y = ny;
+    if (Math.abs(stepX) > Math.abs(stepY)) player.dir = stepX > 0 ? 3 : 1;
+    else player.dir = stepY > 0 ? 0 : 2;
+    player.walkFrame += 0.5;
+  } else {
+    const ang = Math.atan2(dy, dx);
+    if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
+    else player.dir = Math.sin(ang) > 0 ? 0 : 2;
+    if (autoHuntAtkTimer <= 0){ attack(); autoHuntAtkTimer = 8; }
+  }
+  if (autoHuntAtkTimer > 0) autoHuntAtkTimer--;
+}
+
 /* ============================================================
    ============ COMBAT ============
    ============================================================ */
@@ -934,9 +1308,14 @@ function attack(){
   const range = weapon.range;
   const spread = Math.PI / 3;
 
+  // حمله به دشمن‌ها
   const targets = enemies.concat(boss && boss.health > 0 ? [boss] : []);
-  targets.forEach(n => {
-    if (n.state === "defeated") return;
+  // حمله به BR players
+  const brTargets = brPlayers.filter(p => p.alive);
+  const allTargets = targets.concat(brTargets);
+
+  allTargets.forEach(n => {
+    if (n.state === "defeated" || n.alive === false) return;
     const dx = n.x - player.x, dy = n.y - player.y;
     const dist = Math.hypot(dx, dy);
     if (dist > range) return;
@@ -944,36 +1323,43 @@ function attack(){
     let diff = Math.abs(ang - baseAng);
     if (diff > Math.PI) diff = Math.PI * 2 - diff;
     if (diff < spread / 2 || dist < 40){
-      let dmg = weapon.damage + Math.floor(Math.random() * 10);
+      let dmg = Math.floor((weapon.damage + Math.floor(Math.random() * 10)) * playerDamageMult);
       if (S.ownedPowerups.includes("crit") && Math.random() < 0.2) dmg *= 2;
       n.health -= dmg;
       n.hitFlash = 12;
-      if (!n.isBoss) n.oilLevel = Math.min(100, (1 - n.health / n.maxHealth) * 100);
+      if (!n.isBoss && !n.isBR) n.oilLevel = Math.min(100, (1 - n.health / n.maxHealth) * 100);
       spawnParticles(n.x, n.y, "#ffb700", 10);
       damagePopup(n.x, n.y - 20, dmg);
       playBeep("hit");
       shakeAmount = Math.max(shakeAmount, 5);
-      if (n.health <= 0 && n.state !== "defeated"){
-        n.state = "defeated";
-        if (!n.isBoss) n.defeatedTimer = 90;
-        let pts = n.isBoss ? 500 : 10;
-        if (S.ownedPowerups.includes("double")) pts *= 2;
-        S.coins += pts;
-        S.totalCoins += pts;
-        S.kills++;
-        combo++;
-        comboTimer = 90;
-        if (combo > S.maxCombo) S.maxCombo = combo;
-        spawnParticles(n.x, n.y, "#7ed6a0", 25);
-        if (!n.isBoss && Math.random() < 0.4) spawnPrize(n.x, n.y);
-        if (n.isBoss){
-          S.bossDefeated = true;
-          document.getElementById("bossBar").classList.remove("on");
-          playBeep("win");
-          shakeAmount = Math.max(shakeAmount, 40);
-          showDlg("🎉 اژدها شکست خورد! 🏆", 5000, 1.6, 1);
+      if (n.health <= 0 && n.state !== "defeated" && n.alive !== false){
+        if (n.isBR){
+          n.alive = false;
+          n.state = "defeated";
+          player.kills = (player.kills || 0) + 1;
+          S.coins += 100; S.totalCoins += 100;
+          spawnParticles(n.x, n.y, "#ffd700", 30);
+          checkBRWin();
+          updateGoal();
+        } else {
+          n.state = "defeated";
+          if (!n.isBoss) n.defeatedTimer = 90;
+          let pts = n.isBoss ? 500 : 10;
+          if (S.ownedPowerups.includes("double")) pts *= 2;
+          S.coins += pts; S.totalCoins += pts; S.kills++;
+          combo++; comboTimer = 90;
+          if (combo > S.maxCombo) S.maxCombo = combo;
+          spawnParticles(n.x, n.y, "#7ed6a0", 25);
+          if (!n.isBoss && Math.random() < 0.4) spawnPrize(n.x, n.y);
+          if (n.isBoss){
+            S.bossDefeated = true;
+            document.getElementById("bossBar").classList.remove("on");
+            playBeep("win");
+            shakeAmount = Math.max(shakeAmount, 40);
+            showDlg("🎉 اژدها کشته شد! 🏆", 5000, 1.6, 1);
+          }
+          save(); updateHUD(); checkLevelDone();
         }
-        save(); updateHUD(); checkLevelDone();
       }
     }
   });
@@ -1046,9 +1432,6 @@ function updateItem(){
   document.getElementById("item").classList.toggle("on", total > 0);
 }
 
-/* ============================================================
-   ============ PARTICLES ============
-   ============================================================ */
 function spawnParticles(x, y, color, count){
   for (let i = 0; i < count; i++){
     particles.push({ x, y, vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6-2, life: 1, color, size: 3 + Math.random() * 5 });
@@ -1071,9 +1454,8 @@ function update(){
     else { autoMoveTimer = 0; autoMoveTarget = null; }
   }
 
-  let speed = 4;
+  let speed = 4 * playerSpeedMult;
   if (S.ownedPowerups.includes("speed")) speed *= 1.3;
-  if (getSkin().id === "ninja") speed *= 1.2;
   if (player.speedBoost > 0){ speed *= 1.5; player.speedBoost--; }
 
   const vx = input.x * speed, vy = input.y * speed;
@@ -1086,10 +1468,8 @@ function update(){
   let nx = player.x + vx, ny = player.y + vy;
   if (!collides(nx, player.y, player.r)) player.x = nx;
   if (!collides(player.x, ny, player.r)) player.y = ny;
-  if (player.x < 40) player.x = 40;
-  if (player.x > WORLD.w - 40) player.x = WORLD.w - 40;
-  if (player.y < 40) player.y = 40;
-  if (player.y > WORLD.h - 40) player.y = WORLD.h - 40;
+  player.x = Math.max(40, Math.min(world.w - 40, player.x));
+  player.y = Math.max(40, Math.min(world.h - 40, player.y));
 
   if (player.attackCooldown > 0) player.attackCooldown--;
   if (player.hitFlash > 0) player.hitFlash--;
@@ -1098,8 +1478,24 @@ function update(){
   if (S.ownedPowerups.includes("regen") && player.health < player.maxHealth)
     player.health = Math.min(player.maxHealth, player.health + 0.03);
 
+  // Auto oil power
+  if (autoOilTimer > 0){
+    autoOilTimer--;
+    if (autoOilTimer <= 0){
+      autoOilTimer = 300;
+      const t = nearestNPC();
+      if (t){
+        const a = Math.atan2(t.y - player.y, t.x - player.x);
+        bullets.push({ x: player.x, y: player.y, vx: Math.cos(a) * 7, vy: Math.sin(a) * 7, owner: "player", damage: 30 * playerDamageMult, life: 150 });
+        playBeep("bullet");
+      }
+    }
+  }
+
   enemies.forEach(updateEnemy);
+  brPlayers.forEach(updateBRPlayer);
   if (boss && boss.health > 0) updateBoss();
+  updatePets();
   updateAutoHunt();
 
   if (comboTimer > 0){ comboTimer--; if (comboTimer <= 0) combo = 0; }
@@ -1108,21 +1504,43 @@ function update(){
     const b = bullets[i];
     b.x += b.vx; b.y += b.vy; b.life--;
     if (b.life <= 0){ bullets.splice(i, 1); continue; }
-    if (Math.hypot(b.x - player.x, b.y - player.y) < player.r + 6){
-      let dmg = b.damage;
-      if (S.ownedPowerups.includes("shield")) dmg *= 0.5;
-      if (player.shieldTimer > 0) dmg = 0;
-      if (dmg > 0){
-        player.health -= dmg;
-        player.hitFlash = 8;
-        playBeep("hurt");
-        spawnParticles(player.x, player.y, "#ff6b6b", 8);
-        shakeAmount = Math.max(shakeAmount, 15);
+    if (b.owner === "enemy"){
+      if (Math.hypot(b.x - player.x, b.y - player.y) < player.r + 6){
+        let dmg = b.damage;
+        if (S.ownedPowerups.includes("shield")) dmg *= 0.5;
+        if (player.shieldTimer > 0) dmg = 0;
+        if (dmg > 0){
+          player.health -= dmg;
+          player.hitFlash = 8;
+          playBeep("hurt");
+          spawnParticles(player.x, player.y, "#ff6b6b", 8);
+          shakeAmount = Math.max(shakeAmount, 15);
+        }
+        bullets.splice(i, 1);
+        updateHUD();
+        if (player.health <= 0){ gameStarted = false; showLevelEnd(false); return; }
+        continue;
       }
-      bullets.splice(i, 1);
-      updateHUD();
-      if (player.health <= 0){ gameStarted = false; showLevelEnd(false); return; }
-      continue;
+    } else if (b.owner === "player"){
+      // آسیب به دشمن‌ها
+      let hit = false;
+      enemies.forEach(n => {
+        if (n.state === "defeated" || hit) return;
+        if (Math.hypot(b.x - n.x, b.y - n.y) < n.r + 6){
+          n.health -= b.damage;
+          n.hitFlash = 10;
+          spawnParticles(n.x, n.y, "#ffb700", 6);
+          damagePopup(n.x, n.y - 20, Math.floor(b.damage));
+          hit = true;
+          if (n.health <= 0 && n.state !== "defeated"){
+            n.state = "defeated"; n.defeatedTimer = 90;
+            S.coins += 10; S.totalCoins += 10; S.kills++;
+            spawnParticles(n.x, n.y, "#7ed6a0", 20);
+            save(); updateHUD(); checkLevelDone();
+          }
+        }
+      });
+      if (hit){ bullets.splice(i, 1); continue; }
     }
     if (collides(b.x, b.y, 4)) bullets.splice(i, 1);
   }
@@ -1179,6 +1597,17 @@ function updateEnemy(n){
   const dist = Math.hypot(dx, dy);
 
   if (dist < 220 && n.state !== "chase"){ n.state = "flee"; n.stateTimer = 60; }
+  // گاهی حمله مستقیم
+  if (dist < 100 && n.attackCD <= 0){
+    n.attackCD = 60;
+    player.health -= levelConfig.enemyDamage;
+    player.hitFlash = 8;
+    playBeep("hurt");
+    spawnParticles(player.x, player.y, "#ff6b6b", 8);
+    updateHUD();
+    if (player.health <= 0){ gameStarted = false; showLevelEnd(false); return; }
+  }
+  if (n.attackCD > 0) n.attackCD--;
 
   if (n.hasWeapon && n.weaponCD <= 0 && dist < 350 && dist > 60){
     const a = Math.atan2(dy, dx);
@@ -1199,8 +1628,8 @@ function updateEnemy(n){
     if (!collides(n.x, ny, n.r)) n.y = ny;
     n.dir = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) > 0 ? 3 : 1) : (Math.sin(a) > 0 ? 0 : 2);
     n.walkFrame += 0.4;
-    n.x = Math.max(40, Math.min(WORLD.w - 40, n.x));
-    n.y = Math.max(40, Math.min(WORLD.h - 40, n.y));
+    n.x = Math.max(40, Math.min(world.w - 40, n.x));
+    n.y = Math.max(40, Math.min(world.h - 40, n.y));
     return;
   }
 
@@ -1208,8 +1637,7 @@ function updateEnemy(n){
   if (n.stateTimer <= 0){
     const room = rooms[Math.floor(Math.random() * rooms.length)];
     const spot = findSafeSpot(room, n.r + 5);
-    n.targetX = spot.x;
-    n.targetY = spot.y;
+    n.targetX = spot.x; n.targetY = spot.y;
     n.stateTimer = 120 + Math.random() * 120;
   }
   const tdx = n.targetX - n.x, tdy = n.targetY - n.y;
@@ -1269,17 +1697,14 @@ function updateBoss(){
   document.getElementById("bossFill").style.width = (boss.health / boss.maxHealth * 100) + "%";
 }
 
-/* ============================================================
-   ============ CAMERA ============
-   ============================================================ */
 function updateCamera(){
   const tx = player.x - W / 2, ty = player.y - H / 2;
   camera.x += (tx - camera.x) * 0.15;
   camera.y += (ty - camera.y) * 0.15;
   if (camera.x < 0) camera.x = 0;
   if (camera.y < 0) camera.y = 0;
-  if (camera.x > WORLD.w - W) camera.x = Math.max(0, WORLD.w - W);
-  if (camera.y > WORLD.h - H) camera.y = Math.max(0, WORLD.h - H);
+  if (camera.x > world.w - W) camera.x = Math.max(0, world.w - W);
+  if (camera.y > world.h - H) camera.y = Math.max(0, world.h - H);
   if (shakeAmount > 0){
     camera.sx = (Math.random() - 0.5) * shakeAmount;
     camera.sy = (Math.random() - 0.5) * shakeAmount;
@@ -1291,32 +1716,28 @@ function updateCamera(){
 /* ============================================================
    ============ RENDER ============
    ============================================================ */
-function drawChar(x, y, r, dir, wf, bodyCol, hairCol, skinCol, hitFlash, isPlayer){
+function drawChar(x, y, r, dir, wf, bodyCol, hairCol, skinCol, hitFlash, isPlayer, isBR, dead){
   const cx = x - camera.x + camera.sx;
   const cy = y - camera.y + camera.sy;
   if (cx < -100 || cx > W + 100 || cy < -100 || cy > H + 100) return;
+  if (dead) return;
   const bob = Math.sin(wf) * 3;
   const py = cy + bob;
-
   ctx.fillStyle = "rgba(0,0,0,.3)";
   ctx.beginPath();
   ctx.ellipse(cx, cy + r * 0.9, r * 0.9, r * 0.4, 0, 0, Math.PI * 2);
   ctx.fill();
-
   ctx.save();
   ctx.translate(cx, py);
   let bodyColor = bodyCol, hairColor = hairCol, skinColor = skinCol;
   if (hitFlash > 0){ bodyColor = "#fff"; hairColor = "#ff6666"; }
   const legOff = Math.sin(wf) * 5;
-
   ctx.fillStyle = "#5a3a1a";
   ctx.beginPath(); ctx.ellipse(-r*0.35, r*0.6 + legOff*0.2, r*0.2, r*0.35, 0, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(r*0.35, r*0.6 - legOff*0.2, r*0.2, r*0.35, 0, 0, Math.PI*2); ctx.fill();
-
   ctx.fillStyle = bodyColor;
   ctx.beginPath(); ctx.ellipse(0, r*0.15, r*0.65, r*0.75, 0, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 2; ctx.stroke();
-
   if (isPlayer && S.equipArmor !== "none"){
     ctx.strokeStyle = "#c0c0c0"; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.ellipse(0, r*0.15, r*0.72, r*0.82, 0, 0, Math.PI*2); ctx.stroke();
@@ -1327,21 +1748,12 @@ function drawChar(x, y, r, dir, wf, bodyCol, hairCol, skinCol, hitFlash, isPlaye
     ctx.beginPath(); ctx.arc(0, 0, r*1.4, 0, Math.PI*2); ctx.stroke();
     ctx.globalAlpha = 1;
   }
-  if (isPlayer && player.speedBoost > 0){
-    ctx.globalAlpha = 0.4;
-    ctx.strokeStyle = "#7fe3ff"; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(0, 0, r*1.6, 0, Math.PI*2); ctx.stroke();
-    ctx.globalAlpha = 1;
-  }
-
   ctx.fillStyle = skinColor;
   ctx.beginPath(); ctx.ellipse(-r*0.75, r*0.1 + legOff*0.3, r*0.18, r*0.35, 0, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(r*0.75, r*0.1 - legOff*0.3, r*0.18, r*0.35, 0, 0, Math.PI*2); ctx.fill();
-
   ctx.fillStyle = skinColor;
   ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.7, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.stroke();
-
   ctx.fillStyle = hairColor;
   if (isPlayer){
     ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.72, Math.PI, Math.PI*2); ctx.fill();
@@ -1354,22 +1766,18 @@ function drawChar(x, y, r, dir, wf, bodyCol, hairCol, skinCol, hitFlash, isPlaye
   } else {
     ctx.beginPath(); ctx.arc(0, -r*0.7, r*0.7, Math.PI, Math.PI*2); ctx.fill();
   }
-
   let ex1 = -r*0.22, ex2 = r*0.22, ey = -r*0.55;
   if (dir === 1){ ex1 = -r*0.35; ex2 = -r*0.05; }
   if (dir === 3){ ex1 = r*0.05; ex2 = r*0.35; }
   if (dir === 2){ ey = -r*0.65; }
-
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(ex1, ey, r*0.13, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.arc(ex2, ey, r*0.13, 0, Math.PI*2); ctx.fill();
   ctx.fillStyle = "#000";
   ctx.beginPath(); ctx.arc(ex1, ey, r*0.06, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.arc(ex2, ey, r*0.06, 0, Math.PI*2); ctx.fill();
-
   ctx.strokeStyle = "#7a1a10"; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.arc(0, -r*0.35, r*0.15, 0, Math.PI); ctx.stroke();
-
   if (isPlayer){
     const w = getWeapon();
     ctx.save();
@@ -1386,13 +1794,12 @@ function drawChar(x, y, r, dir, wf, bodyCol, hairCol, skinCol, hitFlash, isPlaye
     }
     ctx.restore();
   }
-
   ctx.restore();
 }
 
 function drawEnemy(n){
   if (n.state === "defeated" && n.defeatedTimer <= 0) return;
-  drawChar(n.x, n.y, n.r, n.dir, n.walkFrame, n.color, "#3a1a0a", "#ffd8b0", n.hitFlash, false);
+  drawChar(n.x, n.y, n.r, n.dir, n.walkFrame, n.color, "#3a1a0a", "#ffd8b0", n.hitFlash, false, false, false);
   if (n.hasWeapon && n.state !== "defeated"){
     const cx = n.x - camera.x + camera.sx;
     const cy = n.y - camera.y + camera.sy + Math.sin(n.walkFrame) * 3;
@@ -1417,13 +1824,39 @@ function drawEnemy(n){
   }
 }
 
+function drawBRPlayer(n){
+  if (!n.alive) return;
+  drawChar(n.x, n.y, n.r, n.dir, n.walkFrame, n.color, "#3a1a0a", "#ffd8b0", n.hitFlash, false, true, false);
+  const cx = n.x - camera.x + camera.sx;
+  const cy = n.y - camera.y + camera.sy - n.r * 1.9;
+  const bw = n.r * 2, bh = 5;
+  ctx.fillStyle = "rgba(0,0,0,.7)";
+  ctx.fillRect(cx - n.r, cy, bw, bh);
+  const hp = Math.max(0, n.health / n.maxHealth);
+  ctx.fillStyle = hp > 0.5 ? "#4ade80" : hp > 0.25 ? "#ffd700" : "#ff3030";
+  ctx.fillRect(cx - n.r, cy, bw * hp, bh);
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  ctx.font = "bold 10px Tahoma"; ctx.textAlign = "center";
+  ctx.fillText(n.name, cx, cy - 4);
+}
+
 function drawBoss(){
   if (!boss || boss.health <= 0) return;
   const cx = boss.x - camera.x + camera.sx;
   const cy = boss.y - camera.y + camera.sy;
-  drawChar(boss.x, boss.y, boss.r, boss.dir, boss.walkFrame, "#8a0000", "#4a0000", "#8a2020", boss.hitFlash, false);
+  drawChar(boss.x, boss.y, boss.r, boss.dir, boss.walkFrame, "#8a0000", "#4a0000", "#8a2020", boss.hitFlash, false, false, false);
   ctx.font = "40px serif"; ctx.textAlign = "center";
   ctx.fillText("🐉", cx, cy - boss.r * 1.5);
+}
+
+function drawPets(){
+  pets.forEach(p => {
+    const px = p.x - camera.x + camera.sx;
+    const py = p.y - camera.y + camera.sy;
+    ctx.font = "36px serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(p.icon, px, py);
+  });
 }
 
 function drawMap(){
@@ -1541,7 +1974,9 @@ function render(){
   drawMap();
   drawPrizesItems();
   enemies.forEach(drawEnemy);
+  brPlayers.forEach(drawBRPlayer);
   drawBoss();
+  drawPets();
 
   let bodyCol = "#8a4858";
   if (S.equipSkin === "ninja") bodyCol = "#1a1a2a";
@@ -1549,7 +1984,7 @@ function render(){
   else if (S.equipSkin === "pirate") bodyCol = "#2c3e50";
   else if (S.equipSkin === "doktor") bodyCol = "#ffffff";
 
-  drawChar(player.x, player.y, player.r, player.dir, player.walkFrame, bodyCol, "#5a3a5a", "#e8b088", player.hitFlash, true);
+  drawChar(player.x, player.y, player.r, player.dir, player.walkFrame, bodyCol, "#5a3a5a", "#e8b088", player.hitFlash, true, false, false);
   drawBullets();
   drawCrosshair();
   drawParticlesArr();
@@ -1581,7 +2016,7 @@ const MM_W = 200, MM_H = 160;
 function drawMini(){
   mctx.fillStyle = "rgba(0,0,0,.85)";
   mctx.fillRect(0, 0, MM_W, MM_H);
-  const sx = MM_W / WORLD.w, sy = MM_H / WORLD.h;
+  const sx = MM_W / world.w, sy = MM_H / world.h;
   rooms.forEach(r => {
     mctx.fillStyle = "rgba(120,80,40,.6)";
     mctx.fillRect(r.x * sx, r.y * sy, r.w * sx, r.h * sy);
@@ -1592,6 +2027,11 @@ function drawMini(){
   enemies.forEach(n => {
     if (n.state === "defeated") return;
     mctx.fillStyle = autoHunt ? "#ff6b00" : "#ff6b6b";
+    mctx.beginPath(); mctx.arc(n.x * sx, n.y * sy, 3, 0, Math.PI * 2); mctx.fill();
+  });
+  brPlayers.forEach(n => {
+    if (!n.alive) return;
+    mctx.fillStyle = "#ff8ac4";
     mctx.beginPath(); mctx.arc(n.x * sx, n.y * sy, 3, 0, Math.PI * 2); mctx.fill();
   });
   if (boss && boss.health > 0){
@@ -1621,7 +2061,8 @@ function updateHUD(){
    ============================================================ */
 function checkLevelDone(){
   updateGoal();
-  const alive = getAlive().length;
+  if (gameMode === MODES.BATTLE_ROYALE) return;
+  const alive = enemies.filter(e => e.state !== "defeated").length;
   if (alive === 0 && (!boss || boss.health <= 0) && !levelComplete){
     levelComplete = true;
     stopAutoHunt();
@@ -1633,25 +2074,42 @@ function showLevelEnd(victory){
   const e = document.getElementById("lvlEnd");
   const elapsed = Math.round((Date.now() - levelStartTime) / 1000);
   document.getElementById("endEmoji").textContent = victory ? "🎉" : "😵";
-  document.getElementById("endTitle").textContent = victory ? "مرحله " + level + " تموم شد!" : "بی‌بی خسته شد!";
+  let title = "مرحله " + level + " تموم شد!";
+  if (gameMode === MODES.BATTLE_ROYALE) title = victory ? "🏆 برنده شدی!" : "باختی!";
+  else if (gameMode === MODES.ENDLESS) title = victory ? "🌊 موج " + level + " تموم شد!" : "موج خیلی سخت بود!";
+  else title = victory ? "مرحله " + level + " تموم شد!" : "بی‌بی خسته شد!";
+  document.getElementById("endTitle").textContent = title;
   document.getElementById("endMsg").textContent = victory ? "همه روغن‌کاری شدن!" : "دوباره تلاش کن!";
   document.getElementById("endCoins").textContent = S.coins;
   document.getElementById("endTime").textContent = "⏱️ " + elapsed + " ثانیه";
   const nxt = document.getElementById("nextBtn");
-  if (level >= 30){ nxt.textContent = "🎊 تموم شد!"; nxt.disabled = true; }
-  else { nxt.textContent = "مرحله بعد ➡️"; nxt.disabled = false; }
+  if (gameMode === MODES.ADVENTURE && level >= 60){
+    nxt.textContent = "🎊 تموم شد!";
+    nxt.disabled = true;
+  } else {
+    nxt.textContent = "مرحله بعد ➡️";
+    nxt.disabled = false;
+  }
   e.classList.add("on");
   save();
 }
 
 function nextLevel(){
   document.getElementById("lvlEnd").classList.remove("on");
-  if (level >= 30) return;
-  level++;
-  S.currentLevel = level;
-  if (level > S.maxLevel) S.maxLevel = level;
-  save();
-  startLevel(level);
+  if (gameMode === MODES.ADVENTURE){
+    if (level >= 60) return;
+    level++;
+    S.advLevel = level;
+    if (level > S.maxLevel) S.maxLevel = level;
+    save();
+    startLevel(level, false, false);
+  } else if (gameMode === MODES.BATTLE_ROYALE){
+    level = 1;
+    startLevel(1, true, false);
+  } else {
+    // حالت بی‌نهایت - انتخاب قدرت
+    showPowerSelection();
+  }
 }
 
 /* ============================================================
@@ -1783,17 +2241,47 @@ menuBtn.addEventListener("click", e => {
   document.getElementById("menuPanel").classList.toggle("on");
 });
 document.getElementById("mHelp").addEventListener("click", () => {
-  showDlg("جوی‌استیک: نیمه چپ | 🛢️: حمله | 🎤: دستور صوتی", 5000, 1.4, 0.9);
+  showDlg("جوی‌استیک: نیمه چپ | 🛢️: حمله | 🎤: صوتی | 🏪: فروشگاه", 5000, 1.4, 0.9);
   document.getElementById("menuPanel").classList.remove("on");
+});
+document.getElementById("mMainMenu").addEventListener("click", () => {
+  document.getElementById("menuPanel").classList.remove("on");
+  gameStarted = false;
+  document.getElementById("mainMenu").classList.remove("off");
+  document.getElementById("lvlInfo").classList.remove("on");
+  document.getElementById("bossBar").classList.remove("on");
 });
 document.getElementById("mReset").addEventListener("click", () => {
   if (confirm("مطمئنی؟ همه پیشرفتت پاک می‌شه!")){
-    localStorage.removeItem("bibi_v3");
+    localStorage.removeItem("bibi_v4");
     location.reload();
   }
 });
 
 document.getElementById("nextBtn").addEventListener("click", nextLevel);
+
+/* Main Menu buttons */
+document.getElementById("modeAdv").addEventListener("click", () => {
+  gameMode = MODES.ADVENTURE;
+  document.getElementById("mainMenu").classList.add("off");
+  document.getElementById("startTitle").textContent = "حالت ماجراجویی";
+  document.getElementById("startDesc").innerHTML = "۶۰ مرحله پیش رو داری!<br><b style='color:#ffd700'>🕹️ نیمه چپ: حرکت</b><br><b style='color:#ff9e4a'>🛢️: حمله</b>";
+  document.getElementById("start").classList.remove("off");
+});
+document.getElementById("modeBR").addEventListener("click", () => {
+  gameMode = MODES.BATTLE_ROYALE;
+  document.getElementById("mainMenu").classList.add("off");
+  document.getElementById("startTitle").textContent = "بتل رویال";
+  document.getElementById("startDesc").innerHTML = "با ۹ رقیب بجنگ!<br>آخرین نفر برنده است!<br><b style='color:#ffd700'>🕹️ نیمه چپ: حرکت</b>";
+  document.getElementById("start").classList.remove("off");
+});
+document.getElementById("modeEnd").addEventListener("click", () => {
+  gameMode = MODES.ENDLESS;
+  document.getElementById("mainMenu").classList.add("off");
+  document.getElementById("startTitle").textContent = "حالت بی‌نهایت";
+  document.getElementById("startDesc").innerHTML = "موج‌های نامحدود!<br>بعد از هر موج قدرت انتخاب کن!<br><b style='color:#ffd700'>🕹️ نیمه چپ: حرکت</b>";
+  document.getElementById("start").classList.remove("off");
+});
 
 document.getElementById("startBtn").addEventListener("click", () => {
   initAudio();
@@ -1801,7 +2289,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
   gameStarted = true;
   updatePlayerStats();
   player.health = player.maxHealth;
-  startLevel(S.currentLevel || 1);
+  startGame();
 });
 
 /* ============================================================
@@ -1821,7 +2309,7 @@ if ("speechSynthesis" in window){
   speechSynthesis.onvoiceschanged = () => findFaVoice();
   findFaVoice();
 }
-buildLevel(1);
+buildLevel(1, false, false);
 updatePlayerStats();
 updateHUD();
 updateItem();
