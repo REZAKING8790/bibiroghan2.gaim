@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>🛢️ بی‌بی روغن - نسخه نهایی</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tahoma,sans-serif;overscroll-behavior:none}
-#gameCanvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+#gameCanvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none;z-index:1}
 #hud{position:fixed;top:0;left:0;right:0;padding:6px 8px;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;font-size:12px;color:#fff}
-.hud-box{background:rgba(0,0,0,.8);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 9px;backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.hud-box{background:rgba(0,0,0,.8);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 9px;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 #healthWrap{width:120px;height:14px;background:rgba(0,0,0,.6);border:2px solid #8a1a1a;border-radius:7px;overflow:hidden;position:relative}
 #healthFill{height:100%;background:linear-gradient(90deg,#ff3030,#ff6b6b);transition:width .2s;width:100%}
 #healthText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;text-shadow:0 1px 2px #000}
@@ -21,20 +21,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 #bossFill{height:100%;background:linear-gradient(90deg,#8a0000,#ff3030,#ff6b6b);transition:width .2s;width:100%}
 #bossText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:bold;text-shadow:0 2px 4px #000}
 .hud-num{color:#ffd700;font-weight:bold}
-#joystick{position:fixed;width:110px;height:110px;border-radius:50%;border:3px solid rgba(255,215,0,.6);background:rgba(0,0,0,.35);opacity:0;pointer-events:none;z-index:20;transition:opacity .15s;box-shadow:0 0 20px rgba(255,215,0,.4)}
+#joystick{position:fixed;width:120px;height:120px;border-radius:50%;border:3px solid rgba(255,215,0,.7);background:rgba(0,0,0,.4);opacity:0;pointer-events:none;z-index:25;transition:opacity .15s;box-shadow:0 0 25px rgba(255,215,0,.5)}
 #joystick.active{opacity:1}
-#joyKnob{position:absolute;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+#joyKnob{position:absolute;width:55px;height:55px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.6)}
 .btn{position:fixed;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.6);border:3px solid;transition:transform .1s;z-index:30;touch-action:none}
 .btn:active{transform:scale(.9)}
-#attackBtn{right:18px;bottom:150px;width:76px;height:76px;background:radial-gradient(circle at 30% 30%,#ff9e4a,#e67520);border-color:#7a3a00}
-#attackBtn::after{content:'🛢️';font-size:36px}
-#voiceBtn{right:18px;bottom:55px;width:66px;height:66px;background:radial-gradient(circle at 30% 30%,#7ed6a0,#3aa76d);border-color:#1a6a3a}
-#voiceBtn::after{content:'🎤';font-size:30px}
+#attackBtn{right:18px;bottom:150px;width:80px;height:80px;background:radial-gradient(circle at 30% 30%,#ff9e4a,#e67520);border-color:#7a3a00}
+#attackBtn::after{content:'🛢️';font-size:38px}
+#voiceBtn{right:18px;bottom:55px;width:70px;height:70px;background:radial-gradient(circle at 30% 30%,#7ed6a0,#3aa76d);border-color:#1a6a3a}
+#voiceBtn::after{content:'🎤';font-size:32px}
 #voiceBtn.listening{animation:pulseMic .8s infinite;background:radial-gradient(circle at 30% 30%,#ff3030,#a00000)}
 @keyframes pulseMic{0%,100%{transform:scale(1)}50%{transform:scale(1.15);box-shadow:0 0 30px rgba(255,0,0,.9)}}
-#shopBtn{right:110px;bottom:55px;width:60px;height:60px;background:radial-gradient(circle at 30% 30%,#c8a8f0,#8a6ac8);border-color:#3a1a5a;font-size:28px}
+#shopBtn{right:115px;bottom:55px;width:62px;height:62px;background:radial-gradient(circle at 30% 30%,#c8a8f0,#8a6ac8);border-color:#3a1a5a;font-size:30px}
 #shopBtn::after{content:'🏪'}
-#itemBtn{right:110px;bottom:130px;width:56px;height:56px;background:radial-gradient(circle at 30% 30%,#ffe066,#e6a800);border-color:#7a4a00;font-size:26px;display:none}
+#itemBtn{right:115px;bottom:130px;width:58px;height:58px;background:radial-gradient(circle at 30% 30%,#ffe066,#e6a800);border-color:#7a4a00;font-size:26px;display:none}
 #itemBtn.show{display:flex}
 #itemBtn::after{content:'💊'}
 #itemBtn .count{position:absolute;top:-6px;right:-6px;background:#ff3030;color:#fff;font-size:11px;font-weight:bold;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
@@ -88,14 +88,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 #levelEndScreen h1{font-size:24px;color:#ffd700}
 #levelEndScreen .stat{font-size:16px;margin:3px}
 #levelEndScreen button{padding:12px 26px;font-family:inherit;font-size:15px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:12px;cursor:pointer;margin:3px;touch-action:manipulation}
-#storyScreen{position:fixed;inset:0;background:linear-gradient(180deg,#0a0a1a,#1a1a3a);z-index:180;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;color:#fff;gap:20px}
-#storyScreen.show{display:flex}
-#storyScreen .story-emoji{font-size:80px;animation:bounce 2s infinite alternate}
-#storyScreen .story-text{font-size:16px;line-height:2;max-width:500px;color:#ddd}
-#storyScreen .story-title{font-size:22px;color:#ffd700;font-weight:bold}
 .char-select{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0}
 .char-card{padding:12px;background:rgba(255,255,255,.1);border:3px solid rgba(255,215,0,.4);border-radius:14px;cursor:pointer;min-width:100px;transition:.2s}
-.char-card:hover{background:rgba(255,255,255,.2)}
 .char-card.selected{border-color:#ffd700;background:rgba(255,215,0,.2);box-shadow:0 0 20px rgba(255,215,0,.6)}
 .char-card .emoji{font-size:40px}
 .char-card .name{font-size:13px;font-weight:bold;margin-top:4px}
@@ -114,10 +108,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 .score-item .info{flex:1;text-align:right}
 .score-item .val{font-size:16px;font-weight:bold;color:#ffe066}
 @media (max-aspect-ratio:3/4){
-  #attackBtn{width:70px;height:70px;bottom:140px}
-  #voiceBtn{width:60px;height:60px;bottom:50px}
-  #shopBtn{right:100px;bottom:50px;width:56px;height:56px}
-  #itemBtn{right:100px;bottom:120px;width:52px;height:52px}
+  #attackBtn{width:72px;height:72px;bottom:140px}
+  #voiceBtn{width:64px;height:64px;bottom:55px}
+  #shopBtn{right:105px;bottom:55px;width:58px;height:58px}
+  #itemBtn{right:105px;bottom:128px;width:54px;height:54px}
 }
 </style>
 </head>
@@ -161,7 +155,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 
 <div id="dialog" data-speaker="بی‌بی روغن"></div>
 
-<!-- Shop -->
 <div class="panel" id="shopScreen">
   <h2>🏪 فروشگاه بی‌بی روغن</h2>
   <div class="panel-coins">🪙 <span id="shopCoinsVal">0</span></div>
@@ -176,14 +169,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 </div>
 <button class="close-panel-btn" id="closeShop" style="display:none">بستن 🔙</button>
 
-<!-- Achievements -->
 <div class="panel" id="achScreen">
   <h2>🎖️ دستاوردها</h2>
   <div id="achList"></div>
 </div>
 <button class="close-panel-btn" id="closeAch" style="display:none">بستن 🔙</button>
 
-<!-- Scoreboard -->
 <div class="panel" id="scoreScreen">
   <h2>🏆 جدول امتیازات</h2>
   <div class="panel-coins">بهترین امتیاز شما</div>
@@ -194,15 +185,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
 </div>
 <button class="close-panel-btn" id="closeScore" style="display:none">بستن 🔙</button>
 
-<!-- Story -->
-<div id="storyScreen">
-  <div class="story-emoji" id="storyEmoji">📖</div>
-  <div class="story-title" id="storyTitle">داستان بی‌بی روغن</div>
-  <div class="story-text" id="storyText"></div>
-  <button class="start-btn" id="storyNextBtn">ادامه ➡️</button>
-</div>
-
-<!-- Level End -->
 <div class="fs-screen" id="levelEndScreen" style="display:none">
   <div class="big" id="levelEndEmoji">🎉</div>
   <h1 id="levelEndTitle">آفرین!</h1>
@@ -215,7 +197,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tah
   </div>
 </div>
 
-<!-- Start Screen -->
 <div class="fs-screen" id="startScreen">
   <div class="big" style="font-size:70px;animation:bounce 1.5s infinite alternate">🛢️</div>
   <h1>بی‌بی روغن - نسخه نهایی</h1>
@@ -357,57 +338,49 @@ const WORLD = { w: 2400, h: 1800 };
 let rooms = [], obstacles = [];
 
 const LAYOUTS = [
-  // خانه بی‌بی
   [
-    { name:"پذیرایی", x:50, y:50, w:750, h:550, floor:"#c9a06a", deco:"tv" },
+    { name:"اتاق اصلی", x:50, y:50, w:750, h:550, floor:"#c9a06a", deco:"tv" },
     { name:"آشپزخانه", x:850, y:50, w:750, h:550, floor:"#d8b880", deco:"kitchen" },
     { name:"دستشویی", x:1650, y:50, w:700, h:450, floor:"#a8d8d8", deco:"bath" },
-    { name:"اتاق مریم", x:50, y:650, w:650, h:550, floor:"#f0c8d8", deco:"bed" },
+    { name:"اتاق ۱", x:50, y:650, w:650, h:550, floor:"#f0c8d8", deco:"bed" },
     { name:"سالن", x:750, y:650, w:650, h:550, floor:"#7fc4d8", deco:"gym" },
-    { name:"اتاق اسماع", x:1450, y:650, w:900, h:550, floor:"#c8e0b8", deco:"oil" },
-    { name:"اتاق کوچیکا", x:50, y:1250, w:850, h:500, floor:"#ffe8c0", deco:"kids" },
+    { name:"اتاق ۲", x:1450, y:650, w:900, h:550, floor:"#c8e0b8", deco:"oil" },
+    { name:"اتاق ۳", x:50, y:1250, w:850, h:500, floor:"#ffe8c0", deco:"kids" },
     { name:"انبار", x:950, y:1250, w:750, h:500, floor:"#e0c090", deco:"storage" },
     { name:"حیاط", x:1750, y:1250, w:600, h:500, floor:"#5a8a3a", deco:"yard" }
   ],
-  // کوچه
   [
-    { name:"کوچه", x:50, y:50, w:1100, h:800, floor:"#a8c8d8", deco:"tv" },
+    { name:"خیابان", x:50, y:50, w:1100, h:800, floor:"#a8c8d8", deco:"tv" },
     { name:"مغازه", x:1200, y:50, w:1150, h:800, floor:"#d8b880", deco:"kitchen" },
     { name:"زیرزمین", x:50, y:900, w:750, h:850, floor:"#5a4a3a", deco:"storage" },
     { name:"پشت‌بام", x:850, y:900, w:750, h:850, floor:"#8a8a8a", deco:"yard" },
     { name:"باغ", x:1650, y:900, w:700, h:850, floor:"#5a8a3a", deco:"yard" }
   ],
-  // جنگل
   [
     { name:"جنگل", x:50, y:50, w:1100, h:800, floor:"#3a6a2a", deco:"yard" },
     { name:"غار", x:1200, y:50, w:1150, h:800, floor:"#4a3a2a", deco:"storage" },
     { name:"رودخانه", x:50, y:900, w:2300, h:400, floor:"#3a8ab8", deco:"yard" },
     { name:"کمپ", x:50, y:1350, w:1100, h:400, floor:"#6a5a3a", deco:"kids" },
-    { name:"قبرستان", x:1200, y:1350, w:1150, h:400, floor:"#3a2a3a", deco:"bed" }
+    { name:"تپه", x:1200, y:1350, w:1150, h:400, floor:"#3a5a3a", deco:"bed" }
   ],
-  // قلعه آتش
   [
     { name:"تالار", x:50, y:50, w:1900, h:600, floor:"#8a3a1a", deco:"tv" },
-    { name:"سیاه‌چال", x:50, y:700, w:900, h:1050, floor:"#3a1a0a", deco:"storage" },
-    { name:"اتاق پادشاه", x:1000, y:700, w:900, h:500, floor:"#6a2a1a", deco:"bed" },
+    { name:"زیرزمین", x:50, y:700, w:900, h:1050, floor:"#3a1a0a", deco:"storage" },
+    { name:"اتاق بزرگ", x:1000, y:700, w:900, h:500, floor:"#6a2a1a", deco:"bed" },
     { name:"برج", x:1000, y:1250, w:900, h:500, floor:"#5a2a1a", deco:"gym" }
   ],
-  // جزیره اژدها
   [
     { name:"ساحل", x:50, y:50, w:1900, h:400, floor:"#c8a878", deco:"yard" },
     { name:"جنگل جادویی", x:50, y:500, w:1100, h:650, floor:"#3a5a3a", deco:"yard" },
-    { name:"معبد اژدها", x:1200, y:500, w:1150, h:650, floor:"#5a2a2a", deco:"bed" },
-    { name:"لانه اژدها", x:50, y:1200, w:2300, h:550, floor:"#3a1a1a", deco:"storage" }
+    { name:"معبد", x:1200, y:500, w:1150, h:650, floor:"#5a2a2a", deco:"bed" },
+    { name:"میدان", x:50, y:1200, w:2300, h:550, floor:"#3a1a1a", deco:"storage" }
   ],
-  // شهر شلوغ
   [
-    { name:"خیابان اصلی", x:50, y:50, w:2300, h:400, floor:"#6a6a6a", deco:"yard" },
-    { name:"میدان", x:50, y:500, w:1100, h:650, floor:"#8a8a8a", deco:"tv" },
-    { name:"بازار", x:1200, y:500, w:1150, h:650, floor:"#a87048", deco:"kitchen" },
-    { name:"پارک", x:50, y:1200, w:1100, h:550, floor:"#5a8a3a", deco:"yard" },
-    { name:"ایستگاه", x:1200, y:1200, w:1150, h:550, floor:"#4a4a4a", deco:"gym" }
+    { name:"میدان شهر", x:50, y:50, w:2300, h:400, floor:"#6a6a6a", deco:"yard" },
+    { name:"بازار", x:50, y:500, w:1100, h:650, floor:"#8a8a8a", deco:"tv" },
+    { name:"پارک", x:1200, y:500, w:1150, h:650, floor:"#a87048", deco:"kitchen" },
+    { name:"ایستگاه", x:50, y:1200, w:2300, h:550, floor:"#4a4a4a", deco:"gym" }
   ],
-  // فضا
   [
     { name:"سفینه", x:50, y:50, w:1100, h:800, floor:"#2a2a4a", deco:"tv" },
     { name:"ایستگاه فضایی", x:1200, y:50, w:1150, h:800, floor:"#3a3a5a", deco:"storage" },
@@ -484,7 +457,7 @@ const player = {
   health: 100, maxHealth: 100,
   mana: 100, maxMana: 100,
   attackCooldown: 0, hitFlash: 0, hideTimer: 0,
-  speedBoostTimer: 0, shieldTimer: 0, invulnerable: false
+  speedBoostTimer: 0, shieldTimer: 0
 };
 
 function updatePlayerStats(){
@@ -531,7 +504,7 @@ function updateCamera(){
   } else { camera.shakeX = 0; camera.shakeY = 0; }
 }
 
-// ============ INPUT ============
+// ============ INPUT (Pointer Events روی document) ============
 const keys = {};
 document.addEventListener("keydown", e => {
   keys[e.key.toLowerCase()] = true;
@@ -542,49 +515,71 @@ document.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
 
 let joyActive = false, joyPointerId = null;
 let joyOriginX = 0, joyOriginY = 0, joyX = 0, joyY = 0;
-const joyRadius = 55;
+const joyRadius = 60;
 const joystickEl = document.getElementById("joystick");
 const joyKnob = document.getElementById("joyKnob");
 
-canvas.addEventListener("pointerdown", e => {
-  if (e.pointerType === "mouse" && e.button !== 0) return;
+// چک کن آیا نقطه روی یه UI element هست
+function isOnUI(x, y){
+  const elements = document.querySelectorAll(".btn, #menuPanel button, .close-panel-btn, .start-btn, .sec-btn, .fs-screen, .panel");
+  for (const el of elements){
+    const r = el.getBoundingClientRect();
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+  }
+  return false;
+}
+
+// رویدادهای جوی‌استیک روی document
+document.addEventListener("pointerdown", e => {
   if (joyPointerId !== null) return;
+  // اگه روی UI بود، جوی‌استیک فعال نشه
+  if (isOnUI(e.clientX, e.clientY)) return;
+  // فقط نیمه چپ صفحه
   if (e.clientX >= W / 2) return;
+  
   joyPointerId = e.pointerId;
   joyActive = true;
-  joyOriginX = e.clientX; joyOriginY = e.clientY;
-  joyX = e.clientX; joyY = e.clientY;
-  joystickEl.style.left = (joyOriginX - 55) + "px";
-  joystickEl.style.top = (joyOriginY - 55) + "px";
+  joyOriginX = e.clientX;
+  joyOriginY = e.clientY;
+  joyX = e.clientX;
+  joyY = e.clientY;
+  
+  joystickEl.style.left = (joyOriginX - 60) + "px";
+  joystickEl.style.top = (joyOriginY - 60) + "px";
   joystickEl.classList.add("active");
   joyKnob.style.transform = "translate(-50%,-50%)";
-});
+  e.preventDefault();
+}, { passive: false });
 
-canvas.addEventListener("pointermove", e => {
+document.addEventListener("pointermove", e => {
   if (e.pointerId !== joyPointerId) return;
-  joyX = e.clientX; joyY = e.clientY;
+  joyX = e.clientX;
+  joyY = e.clientY;
+  
   const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
   const dist = Math.hypot(dx, dy);
+  
   if (dist > joyRadius){
     joyOriginX = joyX - (dx / dist) * joyRadius;
     joyOriginY = joyY - (dy / dist) * joyRadius;
-    joystickEl.style.left = (joyOriginX - 55) + "px";
-    joystickEl.style.top = (joyOriginY - 55) + "px";
+    joystickEl.style.left = (joyOriginX - 60) + "px";
+    joystickEl.style.top = (joyOriginY - 60) + "px";
   }
+  
   const ndx = joyX - joyOriginX, ndy = joyY - joyOriginY;
   joyKnob.style.transform = `translate(calc(-50% + ${ndx}px), calc(-50% + ${ndy}px))`;
 }, { passive: true });
 
 function endPointer(e){
   if (e.pointerId !== joyPointerId) return;
-  joyPointerId = null; joyActive = false;
+  joyPointerId = null;
+  joyActive = false;
   joyKnob.style.transform = "translate(-50%,-50%)";
   joystickEl.classList.remove("active");
 }
-canvas.addEventListener("pointerup", endPointer);
-canvas.addEventListener("pointercancel", endPointer);
-canvas.addEventListener("pointerleave", endPointer);
-canvas.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("pointerup", endPointer);
+document.addEventListener("pointercancel", endPointer);
+document.addEventListener("contextmenu", e => e.preventDefault());
 
 function getInputVec(){
   if (joyActive && joyPointerId !== null){
@@ -621,14 +616,12 @@ function startMusic(){
   if (!audioCtx || musicOsc) return;
   try {
     musicGain = audioCtx.createGain();
-    musicGain.gain.value = 0.04;
+    musicGain.gain.value = 0.03;
     musicGain.connect(audioCtx.destination);
     const osc1 = audioCtx.createOscillator();
-    osc1.type = "sine";
-    osc1.frequency.value = 110;
+    osc1.type = "sine"; osc1.frequency.value = 110;
     const osc2 = audioCtx.createOscillator();
-    osc2.type = "sine";
-    osc2.frequency.value = 165;
+    osc2.type = "sine"; osc2.frequency.value = 165;
     const lfo = audioCtx.createOscillator();
     lfo.frequency.value = 0.3;
     const lfoGain = audioCtx.createGain();
@@ -714,7 +707,7 @@ function playBeep(type){
   }
 }
 
-// ============ SPEECH ============
+// ============ SPEECH RECOGNITION ============
 let isListening = false, recognition = null;
 
 function initRecognition(){
@@ -1023,9 +1016,7 @@ function attack(){
   const baseAngle = dirAngles[player.dir];
   const range = weapon.range;
   const angleSpread = Math.PI / 3;
-  
   const targets = npcs.concat(boss && boss.state !== "defeated" ? [boss] : []);
-  
   targets.forEach(n => {
     if (n.state === "defeated") return;
     const dx = n.x - player.x, dy = n.y - player.y;
@@ -1056,14 +1047,11 @@ function attack(){
         comboTimer = 90;
         if (combo > gameState.maxCombo) gameState.maxCombo = combo;
         spawnParticles(n.x, n.y, "#7ed6a0", 25);
-        
-        // جعبه جایزه
         if (!n.isBoss && Math.random() < 0.4) spawnPrizeBox(n.x, n.y);
         if (n.isBoss){
           gameState.bossDefeated = true;
           showBossDefeated();
         }
-        
         updateHUD(); checkLevelComplete();
       }
     }
@@ -1093,8 +1081,7 @@ function collectPrizeBox(box){
   playBeep("coin");
   spawnParticles(box.x, box.y, "#ffd700", 20);
   if (box.type === "coin"){
-    gameState.coins += 25;
-    gameState.totalCoins += 25;
+    gameState.coins += 25; gameState.totalCoins += 25;
     showDialog("💰 +25 سکه!", 1500, 1.5, 1);
   } else if (box.type === "health"){
     player.health = Math.min(player.maxHealth, player.health + 30);
@@ -1122,8 +1109,7 @@ function spawnBoss(){
     state: "chase",
     hitFlash: 0, isBoss: true,
     bulletCooldown: 0, slamCooldown: 0,
-    dialogueTimer: 100,
-    dialogueIndex: 0
+    dialogueTimer: 100, dialogueIndex: 0
   };
   document.getElementById("bossBar").classList.add("show");
   showDialog("🐉 من اژدهای روغنم! اومدی منو بزنی؟", 4000, 0.6, 0.8);
@@ -1139,11 +1125,8 @@ function showBossDefeated(){
 function updateBoss(){
   if (!boss || boss.state === "defeated") return;
   if (boss.hitFlash > 0) boss.hitFlash--;
-  
   const dx = player.x - boss.x, dy = player.y - boss.y;
   const dist = Math.hypot(dx, dy);
-  
-  // حرکت به سمت بازیکن
   if (dist > 100){
     const ang = Math.atan2(dy, dx);
     const speed = 1.2;
@@ -1155,8 +1138,6 @@ function updateBoss(){
       ? (Math.cos(ang) > 0 ? 3 : 1) : (Math.sin(ang) > 0 ? 0 : 2);
     boss.walkFrame += 0.4;
   }
-  
-  // شلیک
   if (boss.bulletCooldown <= 0 && dist < 500){
     const baseAng = Math.atan2(dy, dx);
     for (let i = -1; i <= 1; i++){
@@ -1167,8 +1148,6 @@ function updateBoss(){
     playBeep("boss");
   }
   if (boss.bulletCooldown > 0) boss.bulletCooldown--;
-  
-  // اسلم
   if (boss.slamCooldown <= 0 && dist < 100){
     shakeScreen(30);
     player.health -= 15;
@@ -1179,8 +1158,6 @@ function updateBoss(){
     if (player.health <= 0){ gameStarted = false; showLevelEnd(false); return; }
   }
   if (boss.slamCooldown > 0) boss.slamCooldown--;
-  
-  // دیالوگ
   boss.dialogueTimer--;
   if (boss.dialogueTimer <= 0){
     const dialogues = ["منو نمی‌تونی بزنی! 🐉", "غررر! 🔥", "مرگ توئه! 💀", "من ابدی‌ام! 👑"];
@@ -1188,8 +1165,6 @@ function updateBoss(){
     boss.dialogueIndex = (boss.dialogueIndex + 1) % dialogues.length;
     boss.dialogueTimer = 300;
   }
-  
-  // نوار سلامت
   document.getElementById("bossFill").style.width = (boss.health / boss.maxHealth * 100) + "%";
 }
 
@@ -1197,7 +1172,7 @@ function updateBoss(){
 let gameStarted = false, levelComplete = false, levelStartTime = 0, levelTookDamage = false;
 const ENEMY_NAMES = ["مریم گلی","زهرا کماندو","اسماع روغن‌خور","حنانه بدترکیب","بچه‌خور","مگس","دایی جواد","خاله سوسن","عمو رحیم","ننه صغری","پسر عمو","دختر خاله"];
 const ENEMY_COLORS = ["#ff8ac4","#3a8ac8","#68c890","#ffb700","#8a6ac8","#4a4a4a","#e74c3c","#9b59b6","#f39c12","#16a085","#c0392b","#8e44ad"];
-const ENEMY_DIALOGUES = ["بیا بگیرم! 🏃","تو نمی‌تونی منو بزنی! 😎","روغن نده به من! 😱","کمک! بی‌بی دیوونه شده! 😂","آخه چرا من؟ 🥺","برو خونت رو بچسب! 😤","مامان! داره تعقیبم می‌کنه! 😭","اِ اِ اِ... 🥶","نکن! من خوشم نمیاد! 🤢","بگیر منو خودت می‌سوزی! 🔥"];
+const ENEMY_DIALOGUES = ["بیا بگیرم! 🏃","تو نمی‌تونی منو بزنی! 😎","روغن نده به من! 😱","کمک! بی‌بی دیوونه شده! 😂","آخه چرا من؟ 🥺","برو خونت رو بچسب! 😤","داره تعقیبم می‌کنه! 😭","اِ اِ اِ... 🥶","نکن! من خوشم نمیاد! 🤢","بگیر منو خودت می‌سوزی! 🔥"];
 
 let npcs = [];
 let currentLevel = 1;
@@ -1246,14 +1221,12 @@ function spawnNPCsForLevel(){
       dialogueIndex: Math.floor(Math.random() * ENEMY_DIALOGUES.length)
     });
   }
-  // آیتم مخفی
   const room = rooms[Math.floor(Math.random() * rooms.length)];
   items.push({
     x: room.x + 100 + Math.random() * (room.w - 200),
     y: room.y + 100 + Math.random() * (room.h - 200),
     type: "hidden", life: 99999
   });
-  // باس
   if (levelConfig.hasBoss) spawnBoss();
   else { boss = null; document.getElementById("bossBar").classList.remove("show"); }
 }
@@ -1273,15 +1246,13 @@ function showLevelEnd(victory){
   const elapsed = Math.round((Date.now() - levelStartTime) / 1000);
   document.getElementById("levelEndEmoji").textContent = victory ? "🎉" : "😵";
   document.getElementById("levelEndTitle").textContent = victory ? "مرحله " + currentLevel + " تموم شد!" : "بی‌بی خسته شد!";
-  document.getElementById("levelEndMsg").textContent = victory ? "همه اهالی روغن‌کاری شدن!" : "دوباره امتحان کن!";
+  document.getElementById("levelEndMsg").textContent = victory ? "همه روغن‌کاری شدن!" : "دوباره امتحان کن!";
   document.getElementById("levelEndCoins").textContent = gameState.coins;
   document.getElementById("levelEndTime").textContent = "⏱️ زمان: " + elapsed + " ثانیه";
-  
   if (victory && !levelTookDamage){
     gameState.perfectLevel = true;
     checkAchievements();
   }
-  
   const nextBtn = document.getElementById("nextLevelBtn");
   if (currentLevel >= 30){ nextBtn.textContent = "🎊 بازیت تموم شد!"; nextBtn.disabled = true; }
   else { nextBtn.textContent = "مرحله بعد ➡️"; nextBtn.disabled = false; }
@@ -1324,8 +1295,7 @@ function startLevel(num){
   updateHUD();
   updateCamera();
   camera.x = player.x - W/2; camera.y = player.y - H/2;
-  const intro = [`مرحله ${num}! آماده‌ای؟ 🛢️`, `بزن بریم مرحله ${num}! 💪`, `مرحله ${num} شروع شد! ⚔️`];
-  showDialog(intro[Math.floor(Math.random()*intro.length)], 2500, 1.5, 0.9);
+  showDialog("مرحله " + num + " شروع شد! ⚔️", 2500, 1.5, 0.9);
 }
 
 // ============ NPC ============
@@ -1404,7 +1374,6 @@ function update(){
   if (gameState.ownedPowerups.includes("speed")) speed *= 1.3;
   if (getSkin().id === "ninja") speed *= 1.2;
   if (player.speedBoostTimer > 0){ speed *= 1.5; player.speedBoostTimer--; }
-  
   let vx = input.x * speed, vy = input.y * speed;
   if (Math.abs(input.x) > 0.1 || Math.abs(input.y) > 0.1){
     if (Math.abs(input.x) > Math.abs(input.y)) player.dir = input.x > 0 ? 3 : 1;
@@ -1423,15 +1392,10 @@ function update(){
   if (player.mana < player.maxMana) player.mana = Math.min(player.maxMana, player.mana + 0.2);
   if (gameState.ownedPowerups.includes("regen") && player.health < player.maxHealth)
     player.health = Math.min(player.maxHealth, player.health + 0.03);
-  
   npcs.forEach(updateNPC);
   updateBoss();
   updateAutoHunt();
-  
-  // کمبو
   if (comboTimer > 0){ comboTimer--; if (comboTimer <= 0) combo = 0; }
-  
-  // گلوله‌ها
   for (let i = bullets.length - 1; i >= 0; i--){
     const b = bullets[i];
     b.x += b.vx; b.y += b.vy; b.life--;
@@ -1456,8 +1420,6 @@ function update(){
     }
     if (collides(b.x, b.y, 4)) bullets.splice(i, 1);
   }
-  
-  // جعبه‌های جایزه
   for (let i = prizeBoxes.length - 1; i >= 0; i--){
     const b = prizeBoxes[i];
     b.life--; b.anim += 0.1;
@@ -1467,8 +1429,6 @@ function update(){
       prizeBoxes.splice(i, 1);
     }
   }
-  
-  // آیتم‌های مخفی
   for (let i = items.length - 1; i >= 0; i--){
     const it = items[i];
     if (Math.hypot(it.x - player.x, it.y - player.y) < player.r + 20){
@@ -1482,7 +1442,6 @@ function update(){
       break;
     }
   }
-  
   for (let i = particles.length - 1; i >= 0; i--){
     const p = particles[i];
     p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.025;
@@ -1757,10 +1716,8 @@ function render(){
     ctx.strokeRect(3, 3, W-6, H-6);
   }
   if (combo > 1){
-    ctx.font = "bold 32px Tahoma";
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ffd700";
-    ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 4;
+    ctx.font = "bold 32px Tahoma"; ctx.textAlign = "center";
+    ctx.fillStyle = "#ffd700"; ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 4;
     ctx.strokeText("کمبو x" + combo, W/2, 140);
     ctx.fillText("کمبو x" + combo, W/2, 140);
   }
@@ -1822,7 +1779,6 @@ function renderShop(){
   else if (currentShopTab === "skins"){ items = SHOP_SKINS; owned = gameState.ownedSkins; equipped = gameState.equippedSkin; }
   else if (currentShopTab === "powerups"){ items = SHOP_POWERUPS; owned = gameState.ownedPowerups; equipped = ""; }
   else { items = SHOP_CONSUMABLES; owned = []; equipped = ""; }
-  
   items.forEach(item => {
     const isConsumable = currentShopTab === "consumables";
     const isOwned = isConsumable ? (gameState.consumables[item.id] || 0) > 0 : owned.includes(item.id);
@@ -1923,44 +1879,6 @@ function renderScoreboard(){
   });
 }
 
-function addScoreEntry(score, level){
-  gameState.highScores.push({ score, level, date: new Date().toLocaleDateString('fa-IR') });
-  if (gameState.highScores.length > 50) gameState.highScores.shift();
-  saveGame();
-}
-
-// ============ STORY ============
-const STORY_LINES = [
-  { emoji:"📖", title:"داستان بی‌بی روغن", text:"روزی روزگاری در شهر بیکینی باتم، بی‌بی روغنی زندگی می‌کرد که عاشق روغن بود... 🛢️" },
-  { emoji:"👵", title:"ماموریت بی‌بی", text:"بی‌بی می‌خواست به همه اهالی خونه روغن بده تا استخوناشون قوی بشه! 💪" },
-  { emoji:"🏃", title:"فرار اهالی", text:"ولی اهالی از ترس فرار می‌کردن! حالا بی‌بی باید خودش دنبالشون بره! 🏃💨" },
-  { emoji:"⚔️", title:"سلاح بی‌بی", text:"بی‌بی با قوطی روغن جادوییش می‌تونه همه رو روغن‌کاری کنه! 🛢️✨" },
-  { emoji:"🐉", title:"تهدید بزرگ", text:"اما در مرحله ۳۰، اژدهای روغن انتظارش رو می‌کشه! 🐉 باید اون رو هم شکست بده!" }
-];
-
-let storyIndex = 0;
-function showStory(){
-  storyIndex = 0;
-  document.getElementById("storyScreen").classList.add("show");
-  updateStoryView();
-}
-function updateStoryView(){
-  const line = STORY_LINES[storyIndex];
-  document.getElementById("storyEmoji").textContent = line.emoji;
-  document.getElementById("storyTitle").textContent = line.title;
-  document.getElementById("storyText").textContent = line.text;
-  speak(line.text, 1.4, 0.9);
-}
-document.getElementById("storyNextBtn").onclick = () => {
-  storyIndex++;
-  if (storyIndex >= STORY_LINES.length){
-    document.getElementById("storyScreen").classList.remove("show");
-    startGameActual();
-  } else {
-    updateStoryView();
-  }
-};
-
 // ============ CHARACTER SELECTION ============
 function renderCharSelect(){
   const container = document.getElementById("charSelect");
@@ -1992,43 +1910,67 @@ document.querySelectorAll(".tab").forEach(tab => {
   });
 });
 
+// دکمه‌ها - با pointerdown که با document یکی نشه
 document.getElementById("attackBtn").addEventListener("pointerdown", e => {
-  e.preventDefault(); e.stopPropagation(); attack();
-});
-document.getElementById("voiceBtn").addEventListener("pointerdown", e => {
-  e.preventDefault(); e.stopPropagation();
-  if (isListening) stopListening(); else startListening();
-});
-document.getElementById("itemBtn").addEventListener("pointerdown", e => {
-  e.preventDefault(); e.stopPropagation(); usePotion();
-});
-document.getElementById("soundBtn").addEventListener("click", e => {
   e.stopPropagation();
+  e.preventDefault();
+  attack();
+}, { passive: false });
+
+document.getElementById("voiceBtn").addEventListener("pointerdown", e => {
+  e.stopPropagation();
+  e.preventDefault();
+  if (isListening) stopListening(); else startListening();
+}, { passive: false });
+
+document.getElementById("itemBtn").addEventListener("pointerdown", e => {
+  e.stopPropagation();
+  e.preventDefault();
+  usePotion();
+}, { passive: false });
+
+document.getElementById("soundBtn").addEventListener("pointerdown", e => {
+  e.stopPropagation();
+  e.preventDefault();
   soundOn = !soundOn;
   document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
   document.getElementById("soundBtn").classList.toggle("off", !soundOn);
   if (!soundOn) stopMusic(); else startMusic();
   initAudio();
-});
-document.getElementById("menuBtn").addEventListener("click", e => {
+}, { passive: false });
+
+document.getElementById("menuBtn").addEventListener("pointerdown", e => {
   e.stopPropagation();
+  e.preventDefault();
   document.getElementById("menuPanel").classList.toggle("show");
-});
-document.getElementById("achBtn").addEventListener("click", e => {
+}, { passive: false });
+
+document.getElementById("achBtn").addEventListener("pointerdown", e => {
   e.stopPropagation();
+  e.preventDefault();
   renderAchievements();
   document.getElementById("achScreen").classList.add("show");
   document.getElementById("closeAch").style.display = "block";
-});
-document.getElementById("scoreBtn").addEventListener("click", e => {
+}, { passive: false });
+
+document.getElementById("scoreBtn").addEventListener("pointerdown", e => {
   e.stopPropagation();
+  e.preventDefault();
   renderScoreboard();
   document.getElementById("scoreScreen").classList.add("show");
   document.getElementById("closeScore").style.display = "block";
-});
+}, { passive: false });
+
+document.getElementById("shopBtn").addEventListener("pointerdown", e => {
+  e.stopPropagation();
+  e.preventDefault();
+  document.getElementById("shopScreen").classList.add("show");
+  document.getElementById("closeShop").style.display = "block";
+  renderShop();
+}, { passive: false });
 
 document.getElementById("btnHelp").addEventListener("click", () => {
-  showDialog("جوی‌استیک: نیمه چپ | 🛢️: حمله | 🎤: دستور | 💊: آیتم | بگو: همه دشمنان رو نابود کن", 6000, 1.4, 0.9);
+  showDialog("جوی‌استیک: نیمه چپ | 🛢️: حمله | 🎤: دستور | 💊: آیتم", 6000, 1.4, 0.9);
   document.getElementById("menuPanel").classList.remove("show");
 });
 document.getElementById("btnVoiceCmd").addEventListener("click", () => {
@@ -2054,12 +1996,6 @@ document.getElementById("btnReset").addEventListener("click", () => {
   }
 });
 
-document.getElementById("shopBtn").addEventListener("pointerdown", e => {
-  e.preventDefault(); e.stopPropagation();
-  document.getElementById("shopScreen").classList.add("show");
-  document.getElementById("closeShop").style.display = "block";
-  renderShop();
-});
 document.getElementById("closeShop").addEventListener("click", () => {
   document.getElementById("shopScreen").classList.remove("show");
   document.getElementById("closeShop").style.display = "none";
@@ -2086,21 +2022,19 @@ document.getElementById("shopFromEndBtn").addEventListener("click", () => {
   document.getElementById("closeShop").style.display = "block";
   renderShop();
 });
+
 document.getElementById("startBtn").addEventListener("click", () => {
   initAudio();
   startMusic();
   document.getElementById("startScreen").classList.add("hide");
-  showStory();
-});
-document.getElementById("nextLevelBtn").addEventListener("click", nextLevel);
-
-function startGameActual(){
   gameStarted = true;
   updatePlayerStats();
   player.health = player.maxHealth;
   checkAchievements();
   startLevel(gameState.currentLevel || 1);
-}
+});
+
+document.getElementById("nextLevelBtn").addEventListener("click", nextLevel);
 
 // ============ GAME LOOP ============
 let lastTime = performance.now();
