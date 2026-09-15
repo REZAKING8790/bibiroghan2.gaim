@@ -3,85 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>🛢️ بی‌بی روغن - ۳۰ مرحله</title>
+<title>🛢️ بی‌بی روغن - نسخه نهایی</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Tahoma,sans-serif;overscroll-behavior:none}
-canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
-#hud{position:absolute;top:0;left:0;right:0;padding:8px 10px;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;font-size:13px;color:#fff}
-.hud-box{background:rgba(0,0,0,.75);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:6px 10px;backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,.5)}
-#healthWrap{width:130px;height:16px;background:rgba(0,0,0,.6);border:2px solid #8a1a1a;border-radius:8px;overflow:hidden;position:relative}
+#gameCanvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+#hud{position:fixed;top:0;left:0;right:0;padding:6px 8px;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;font-size:12px;color:#fff}
+.hud-box{background:rgba(0,0,0,.8);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 9px;backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+#healthWrap{width:120px;height:14px;background:rgba(0,0,0,.6);border:2px solid #8a1a1a;border-radius:7px;overflow:hidden;position:relative}
 #healthFill{height:100%;background:linear-gradient(90deg,#ff3030,#ff6b6b);transition:width .2s;width:100%}
-#healthText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;text-shadow:0 1px 2px #000}
-#manaWrap{width:130px;height:10px;background:rgba(0,0,0,.6);border:2px solid #1a5a8a;border-radius:6px;overflow:hidden;margin-top:4px}
+#healthText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;text-shadow:0 1px 2px #000}
+#manaWrap{width:120px;height:8px;background:rgba(0,0,0,.6);border:2px solid #1a5a8a;border-radius:4px;overflow:hidden;margin-top:3px}
 #manaFill{height:100%;background:linear-gradient(90deg,#4aa8d0,#7fe3ff);width:100%;transition:width .2s}
+#bossBar{position:fixed;top:52px;left:50%;transform:translateX(-50%);width:min(80vw,500px);height:22px;background:rgba(0,0,0,.85);border:3px solid #ff3030;border-radius:12px;overflow:hidden;z-index:12;display:none;box-shadow:0 0 30px rgba(255,0,0,.6)}
+#bossBar.show{display:block;animation:pulseBoss 1s ease-in-out infinite}
+@keyframes pulseBoss{0%,100%{box-shadow:0 0 30px rgba(255,0,0,.6)}50%{box-shadow:0 0 50px rgba(255,0,0,1)}}
+#bossFill{height:100%;background:linear-gradient(90deg,#8a0000,#ff3030,#ff6b6b);transition:width .2s;width:100%}
+#bossText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:bold;text-shadow:0 2px 4px #000}
 .hud-num{color:#ffd700;font-weight:bold}
-#joystick{position:absolute;width:120px;height:120px;border-radius:50%;border:3px solid rgba(255,215,0,.5);background:rgba(0,0,0,.35);backdrop-filter:blur(4px);opacity:0;pointer-events:none;z-index:20;transition:opacity .15s}
+#joystick{position:fixed;width:110px;height:110px;border-radius:50%;border:3px solid rgba(255,215,0,.6);background:rgba(0,0,0,.35);opacity:0;pointer-events:none;z-index:20;transition:opacity .15s;box-shadow:0 0 20px rgba(255,215,0,.4)}
 #joystick.active{opacity:1}
-#joyKnob{position:absolute;width:55px;height:55px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%)}
-.btn{position:absolute;z-index:30;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:bold;color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.5);border:3px solid;transition:transform .1s}
+#joyKnob{position:absolute;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.btn{position:fixed;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.6);border:3px solid;transition:transform .1s;z-index:30;touch-action:none}
 .btn:active{transform:scale(.9)}
-#attackBtn{right:20px;bottom:130px;width:80px;height:80px;background:radial-gradient(circle at 30% 30%,#ff9e4a,#e67520);border-color:#7a3a00}
-#attackBtn::after{content:'🛢️';font-size:38px}
-#voiceBtn{right:20px;bottom:35px;width:70px;height:70px;background:radial-gradient(circle at 30% 30%,#7ed6a0,#3aa76d);border-color:#1a6a3a}
-#voiceBtn::after{content:'🎤';font-size:32px}
+#attackBtn{right:18px;bottom:150px;width:76px;height:76px;background:radial-gradient(circle at 30% 30%,#ff9e4a,#e67520);border-color:#7a3a00}
+#attackBtn::after{content:'🛢️';font-size:36px}
+#voiceBtn{right:18px;bottom:55px;width:66px;height:66px;background:radial-gradient(circle at 30% 30%,#7ed6a0,#3aa76d);border-color:#1a6a3a}
+#voiceBtn::after{content:'🎤';font-size:30px}
 #voiceBtn.listening{animation:pulseMic .8s infinite;background:radial-gradient(circle at 30% 30%,#ff3030,#a00000)}
 @keyframes pulseMic{0%,100%{transform:scale(1)}50%{transform:scale(1.15);box-shadow:0 0 30px rgba(255,0,0,.9)}}
-#shopBtn{right:20px;bottom:210px;width:60px;height:60px;font-size:26px;background:radial-gradient(circle at 30% 30%,#c8a8f0,#8a6ac8);border-color:#3a1a5a}
+#shopBtn{right:110px;bottom:55px;width:60px;height:60px;background:radial-gradient(circle at 30% 30%,#c8a8f0,#8a6ac8);border-color:#3a1a5a;font-size:28px}
 #shopBtn::after{content:'🏪'}
-#soundBtn{top:12px;right:12px;width:44px;height:44px;font-size:20px;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border-color:#7a5228;z-index:40}
-#soundBtn.off{background:radial-gradient(circle at 30% 30%,#888,#555)}
-#menuBtn{top:12px;left:12px;width:44px;height:44px;font-size:20px;background:radial-gradient(circle at 30% 30%,#7fd4f0,#3a8ac8);border-color:#1a4a88;z-index:40}
-#menuPanel{position:absolute;top:64px;left:12px;z-index:50;display:flex;flex-direction:column;gap:8px;opacity:0;transform:translateY(-10px);pointer-events:none;transition:all .3s}
+#itemBtn{right:110px;bottom:130px;width:56px;height:56px;background:radial-gradient(circle at 30% 30%,#ffe066,#e6a800);border-color:#7a4a00;font-size:26px;display:none}
+#itemBtn.show{display:flex}
+#itemBtn::after{content:'💊'}
+#itemBtn .count{position:absolute;top:-6px;right:-6px;background:#ff3030;color:#fff;font-size:11px;font-weight:bold;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+#soundBtn{top:10px;right:10px;width:40px;height:40px;font-size:18px;background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);border-color:#7a5228;z-index:40}
+#soundBtn.off{background:radial-gradient(circle at 30% 30%,#888,#555);border-color:#333}
+#menuBtn{top:10px;left:10px;width:40px;height:40px;font-size:18px;background:radial-gradient(circle at 30% 30%,#7fd4f0,#3a8ac8);border-color:#1a4a88;z-index:40}
+#achBtn{top:10px;left:60px;width:40px;height:40px;font-size:18px;background:radial-gradient(circle at 30% 30%,#ffd700,#e6a800);border-color:#7a4a00;z-index:40}
+#achBtn::after{content:'🎖️'}
+#scoreBtn{top:10px;left:110px;width:40px;height:40px;font-size:18px;background:radial-gradient(circle at 30% 30%,#ff8ac4,#c85888);border-color:#8a2848;z-index:40}
+#scoreBtn::after{content:'🏆'}
+#menuPanel{position:fixed;top:56px;left:10px;z-index:50;display:flex;flex-direction:column;gap:6px;opacity:0;transform:translateY(-10px);pointer-events:none;transition:all .3s}
 #menuPanel.show{opacity:1;transform:translateY(0);pointer-events:auto}
-#menuPanel button{padding:10px 16px;font-family:inherit;font-size:14px;font-weight:bold;color:#fff;background:rgba(40,20,10,.95);border:2px solid rgba(255,200,100,.6);border-radius:10px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.5);white-space:nowrap}
-#dialog{position:absolute;left:50%;bottom:22%;transform:translateX(-50%);background:rgba(2,10,22,.95);border:3px solid #ffd700;border-radius:16px;padding:12px 20px;color:#fff;font-size:15px;font-weight:bold;text-align:center;max-width:90vw;min-width:200px;z-index:60;opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 0 30px rgba(255,215,0,.5)}
+#menuPanel button{padding:9px 14px;font-family:inherit;font-size:13px;font-weight:bold;color:#fff;background:rgba(40,20,10,.95);border:2px solid rgba(255,200,100,.6);border-radius:10px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.5);white-space:nowrap}
+#dialog{position:fixed;left:50%;bottom:24%;transform:translateX(-50%);background:rgba(2,10,22,.95);border:3px solid #ffd700;border-radius:14px;padding:10px 18px;color:#fff;font-size:14px;font-weight:bold;text-align:center;max-width:88vw;min-width:180px;z-index:60;opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 0 30px rgba(255,215,0,.5)}
 #dialog.show{opacity:1}
-#dialog::before{content:attr(data-speaker);position:absolute;top:-14px;right:20px;background:#ffd700;color:#3a1a00;padding:3px 12px;border-radius:10px;font-size:12px}
-#minimap{position:absolute;top:80px;right:12px;width:110px;height:90px;background:rgba(0,0,0,.6);border:2px solid rgba(255,215,0,.5);border-radius:8px;z-index:15;overflow:hidden}
+#dialog::before{content:attr(data-speaker);position:absolute;top:-12px;right:14px;background:#ffd700;color:#3a1a00;padding:2px 10px;border-radius:8px;font-size:11px}
+#minimap{position:fixed;top:56px;right:10px;width:100px;height:80px;background:rgba(0,0,0,.6);border:2px solid rgba(255,215,0,.5);border-radius:8px;z-index:15;overflow:hidden;pointer-events:none}
 #minimapCanvas{width:100%;height:100%;display:block}
-#levelInfo{position:absolute;top:64px;left:12px;z-index:11;background:rgba(0,0,0,.7);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:6px 12px;color:#fff;font-size:13px;font-weight:bold;display:none}
+#levelInfo{position:fixed;top:56px;left:10px;z-index:11;background:rgba(0,0,0,.75);border:2px solid rgba(255,215,0,.5);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;font-weight:bold;display:none;pointer-events:none}
 #levelInfo.show{display:block}
-#autoHuntIndicator{position:absolute;top:100px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,60,0,.9);border:3px solid #ffd700;border-radius:14px;padding:8px 20px;color:#fff;font-size:14px;font-weight:bold;display:none;animation:pulseHunt 1s ease-in-out infinite;box-shadow:0 0 30px rgba(255,100,0,.8)}
+#autoHuntIndicator{position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,60,0,.9);border:3px solid #ffd700;border-radius:12px;padding:6px 16px;color:#fff;font-size:13px;font-weight:bold;display:none;animation:pulseHunt 1s ease-in-out infinite;pointer-events:none}
 #autoHuntIndicator.show{display:block}
 @keyframes pulseHunt{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
-#shopScreen{position:absolute;inset:0;background:rgba(0,0,0,.95);z-index:150;display:none;flex-direction:column;padding:16px;color:#fff;overflow-y:auto}
-#shopScreen.show{display:flex}
-#shopScreen h2{font-size:22px;text-align:center;color:#ffd700;margin-bottom:10px;text-shadow:0 0 20px rgba(255,215,0,.7)}
-#shopCoins{text-align:center;font-size:18px;color:#ffe066;margin-bottom:12px;font-weight:bold}
-.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;justify-content:center}
-.tab{padding:8px 14px;background:rgba(60,40,20,.8);border:2px solid rgba(255,200,100,.4);border-radius:8px;cursor:pointer;font-size:13px;font-weight:bold}
+.panel{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:150;display:none;flex-direction:column;color:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:12px 12px 90px}
+.panel.show{display:flex}
+.panel h2{font-size:20px;text-align:center;color:#ffd700;margin-bottom:8px;text-shadow:0 0 20px rgba(255,215,0,.7);position:sticky;top:0;background:rgba(0,0,0,.96);padding:8px 0;z-index:2}
+.panel-coins{text-align:center;font-size:16px;color:#ffe066;margin-bottom:10px;font-weight:bold}
+.tabs{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;justify-content:center;position:sticky;top:44px;background:rgba(0,0,0,.96);padding:6px 0;z-index:2}
+.tab{padding:7px 12px;background:rgba(60,40,20,.8);border:2px solid rgba(255,200,100,.4);border-radius:8px;cursor:pointer;font-size:12px;font-weight:bold;touch-action:manipulation;color:#fff}
 .tab.active{background:linear-gradient(180deg,#ffe066,#ffb700);color:#3a1a00}
-#shopItems{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding-bottom:80px}
-.shop-item{background:rgba(40,20,60,.85);border:2px solid rgba(255,200,100,.4);border-radius:12px;padding:10px;text-align:center;position:relative}
+#shopItems{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.shop-item{background:rgba(40,20,60,.85);border:2px solid rgba(255,200,100,.4);border-radius:12px;padding:8px;text-align:center}
 .shop-item.owned{border-color:#4ade80}
 .shop-item.equipped{border-color:#ffd700;box-shadow:0 0 20px rgba(255,215,0,.6)}
-.shop-item .icon{font-size:36px;margin-bottom:4px}
-.shop-item .name{font-size:13px;font-weight:bold;margin-bottom:4px}
-.shop-item .desc{font-size:10px;color:#bbb;margin-bottom:6px;line-height:1.4}
-.shop-item .price{font-size:12px;color:#ffe066;font-weight:bold;margin-bottom:6px}
-.shop-item button{width:100%;padding:6px;font-family:inherit;font-size:12px;font-weight:bold;color:#fff;background:rgba(120,60,200,.9);border:2px solid rgba(255,255,255,.3);border-radius:8px;cursor:pointer}
+.shop-item .icon{font-size:32px;margin-bottom:2px}
+.shop-item .name{font-size:12px;font-weight:bold;margin-bottom:3px}
+.shop-item .desc{font-size:9px;color:#bbb;margin-bottom:5px;line-height:1.3}
+.shop-item .price{font-size:11px;color:#ffe066;font-weight:bold;margin-bottom:5px}
+.shop-item button{width:100%;padding:6px;font-family:inherit;font-size:11px;font-weight:bold;color:#fff;background:rgba(120,60,200,.9);border:2px solid rgba(255,255,255,.3);border-radius:7px;cursor:pointer;touch-action:manipulation}
 .shop-item button:disabled{background:rgba(60,60,60,.9);cursor:not-allowed}
-#closeShop{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);padding:12px 40px;font-family:inherit;font-size:16px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:14px;cursor:pointer;box-shadow:0 6px 20px rgba(255,180,0,.5);z-index:151}
-#startScreen{position:absolute;inset:0;background:rgba(0,0,0,.95);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:14px;transition:opacity .5s}
-#startScreen.hide{opacity:0;pointer-events:none}
-#startScreen .big{font-size:80px;animation:bounce 1.5s infinite alternate}
+.close-panel-btn{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);padding:12px 40px;font-family:inherit;font-size:15px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:14px;cursor:pointer;box-shadow:0 6px 20px rgba(255,180,0,.5);z-index:151;touch-action:manipulation}
+.fs-screen{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:12px;transition:opacity .5s;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fs-screen.hide{opacity:0;pointer-events:none}
+#startScreen .big{font-size:70px;animation:bounce 1.5s infinite alternate}
 @keyframes bounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-15px) rotate(5deg)}}
-#startScreen h1{font-size:24px;background:linear-gradient(45deg,#ffd700,#ff9e4a,#ff6b9d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#startScreen h1{font-size:22px;background:linear-gradient(45deg,#ffd700,#ff9e4a,#ff6b9d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 #startScreen p{font-size:13px;color:#ccc;line-height:1.7;max-width:340px}
-#startBtn{padding:14px 45px;font-size:20px;font-weight:bold;font-family:inherit;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:4px solid #7a5228;border-radius:20px;cursor:pointer}
-#levelEndScreen{position:absolute;inset:0;background:rgba(0,0,0,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff;gap:16px}
-#levelEndScreen.show{display:flex}
-#levelEndScreen .big{font-size:80px}
-#levelEndScreen h1{font-size:26px;color:#ffd700}
-#levelEndScreen .stat{font-size:18px;margin:4px}
-#levelEndScreen button{padding:14px 30px;font-family:inherit;font-size:16px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:14px;cursor:pointer;margin:4px}
-@media (max-aspect-ratio:3/4){#attackBtn{width:90px;height:90px;bottom:140px}#voiceBtn{width:75px;height:75px}#shopBtn{bottom:220px}}
+.start-btn{padding:14px 40px;font-size:18px;font-weight:bold;font-family:inherit;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:4px solid #7a5228;border-radius:18px;cursor:pointer;touch-action:manipulation;box-shadow:0 6px 20px rgba(255,180,0,.5)}
+.sec-btn{padding:10px 24px;font-size:14px;font-weight:bold;font-family:inherit;color:#fff;background:linear-gradient(180deg,#7fd4f0,#3a8ac8);border:3px solid #1a4a88;border-radius:14px;cursor:pointer;touch-action:manipulation;margin:4px}
+#levelEndScreen .big{font-size:70px}
+#levelEndScreen h1{font-size:24px;color:#ffd700}
+#levelEndScreen .stat{font-size:16px;margin:3px}
+#levelEndScreen button{padding:12px 26px;font-family:inherit;font-size:15px;font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);border:3px solid #7a5228;border-radius:12px;cursor:pointer;margin:3px;touch-action:manipulation}
+#storyScreen{position:fixed;inset:0;background:linear-gradient(180deg,#0a0a1a,#1a1a3a);z-index:180;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;color:#fff;gap:20px}
+#storyScreen.show{display:flex}
+#storyScreen .story-emoji{font-size:80px;animation:bounce 2s infinite alternate}
+#storyScreen .story-text{font-size:16px;line-height:2;max-width:500px;color:#ddd}
+#storyScreen .story-title{font-size:22px;color:#ffd700;font-weight:bold}
+.char-select{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.char-card{padding:12px;background:rgba(255,255,255,.1);border:3px solid rgba(255,215,0,.4);border-radius:14px;cursor:pointer;min-width:100px;transition:.2s}
+.char-card:hover{background:rgba(255,255,255,.2)}
+.char-card.selected{border-color:#ffd700;background:rgba(255,215,0,.2);box-shadow:0 0 20px rgba(255,215,0,.6)}
+.char-card .emoji{font-size:40px}
+.char-card .name{font-size:13px;font-weight:bold;margin-top:4px}
+.char-card .desc{font-size:10px;color:#bbb;margin-top:2px}
+.achievement-item{background:rgba(255,255,255,.08);border:2px solid rgba(255,215,0,.4);border-radius:12px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.achievement-item.unlocked{border-color:#4ade80;background:rgba(74,222,128,.15)}
+.achievement-item .ach-icon{font-size:32px}
+.achievement-item .ach-info{flex:1;text-align:right}
+.achievement-item .ach-name{font-size:14px;font-weight:bold;margin-bottom:3px}
+.achievement-item .ach-desc{font-size:11px;color:#bbb}
+.achievement-item .ach-status{font-size:12px;color:#4ade80;font-weight:bold}
+.achievement-item.locked .ach-name{color:#888}
+.achievement-item.locked .ach-status{color:#888}
+.score-item{background:rgba(255,255,255,.08);border:2px solid rgba(255,215,0,.4);border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:14px}
+.score-item .rank{font-size:20px;font-weight:bold;color:#ffd700;width:40px}
+.score-item .info{flex:1;text-align:right}
+.score-item .val{font-size:16px;font-weight:bold;color:#ffe066}
+@media (max-aspect-ratio:3/4){
+  #attackBtn{width:70px;height:70px;bottom:140px}
+  #voiceBtn{width:60px;height:60px;bottom:50px}
+  #shopBtn{right:100px;bottom:50px;width:56px;height:56px}
+  #itemBtn{right:100px;bottom:120px;width:52px;height:52px}
+}
 </style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
+<canvas id="gameCanvas"></canvas>
 
 <div id="hud">
   <div>
@@ -93,203 +135,141 @@ canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
   <div class="hud-box">🪙 <span class="hud-num" id="coinsVal">0</span></div>
 </div>
 
+<div id="bossBar"><div id="bossFill"></div><div id="bossText">👹 اژدهای روغن</div></div>
+
 <div id="levelInfo">مرحله <span id="levelNum">1</span> - <span id="levelGoal">0/6</span></div>
 <div id="autoHuntIndicator">🔥 حالت شکار خودکار فعال!</div>
-<div id="minimap"><canvas id="minimapCanvas" width="220" height="180"></canvas></div>
+<div id="minimap"><canvas id="minimapCanvas" width="200" height="160"></canvas></div>
 <div id="joystick"><div id="joyKnob"></div></div>
 
 <div class="btn" id="attackBtn"></div>
 <div class="btn" id="voiceBtn"></div>
 <div class="btn" id="shopBtn"></div>
+<div class="btn" id="itemBtn"><span class="count" id="itemCount">0</span></div>
 <div class="btn" id="soundBtn">🔊</div>
 <div class="btn" id="menuBtn">☰</div>
+<div class="btn" id="achBtn"></div>
+<div class="btn" id="scoreBtn"></div>
 
 <div id="menuPanel">
   <button id="btnHelp">📖 راهنما</button>
-  <button id="btnVoice">🎤 دستورات</button>
+  <button id="btnVoiceCmd">🎤 دستورات</button>
+  <button id="btnAch">🎖️ دستاوردها</button>
+  <button id="btnScore">🏆 امتیازات</button>
   <button id="btnReset">🔄 ریست</button>
 </div>
 
 <div id="dialog" data-speaker="بی‌بی روغن"></div>
 
-<div id="shopScreen">
+<!-- Shop -->
+<div class="panel" id="shopScreen">
   <h2>🏪 فروشگاه بی‌بی روغن</h2>
-  <div id="shopCoins">🪙 <span id="shopCoinsVal">0</span></div>
+  <div class="panel-coins">🪙 <span id="shopCoinsVal">0</span></div>
   <div class="tabs">
     <div class="tab active" data-tab="weapons">🗡️ سلاح</div>
     <div class="tab" data-tab="armor">🛡️ زره</div>
     <div class="tab" data-tab="skins">👗 اسکین</div>
     <div class="tab" data-tab="powerups">⭐ قدرت</div>
+    <div class="tab" data-tab="consumables">💊 مصرفی</div>
   </div>
   <div id="shopItems"></div>
-  <button id="closeShop">بستن فروشگاه</button>
+</div>
+<button class="close-panel-btn" id="closeShop" style="display:none">بستن 🔙</button>
+
+<!-- Achievements -->
+<div class="panel" id="achScreen">
+  <h2>🎖️ دستاوردها</h2>
+  <div id="achList"></div>
+</div>
+<button class="close-panel-btn" id="closeAch" style="display:none">بستن 🔙</button>
+
+<!-- Scoreboard -->
+<div class="panel" id="scoreScreen">
+  <h2>🏆 جدول امتیازات</h2>
+  <div class="panel-coins">بهترین امتیاز شما</div>
+  <div id="scoreList"></div>
+  <div style="text-align:center;margin-top:20px">
+    <button class="sec-btn" id="clearScores">🗑️ پاک کردن همه</button>
+  </div>
+</div>
+<button class="close-panel-btn" id="closeScore" style="display:none">بستن 🔙</button>
+
+<!-- Story -->
+<div id="storyScreen">
+  <div class="story-emoji" id="storyEmoji">📖</div>
+  <div class="story-title" id="storyTitle">داستان بی‌بی روغن</div>
+  <div class="story-text" id="storyText"></div>
+  <button class="start-btn" id="storyNextBtn">ادامه ➡️</button>
 </div>
 
-<div id="levelEndScreen">
+<!-- Level End -->
+<div class="fs-screen" id="levelEndScreen" style="display:none">
   <div class="big" id="levelEndEmoji">🎉</div>
   <h1 id="levelEndTitle">آفرین!</h1>
   <div class="stat" id="levelEndMsg"></div>
   <div class="stat">🪙 سکه: <span id="levelEndCoins">0</span></div>
-  <div>
+  <div class="stat" id="levelEndTime"></div>
+  <div style="margin-top:10px">
     <button id="nextLevelBtn">مرحله بعد ➡️</button>
-    <button id="shopFromEndBtn">🏪 فروشگاه</button>
+    <button class="sec-btn" id="shopFromEndBtn">🏪 فروشگاه</button>
   </div>
 </div>
 
-<div id="startScreen">
-  <div class="big">🛢️</div>
-  <h1>بی‌بی روغن - ۳۰ مرحله</h1>
-  <p>
-    سلام! من بی‌بی روغنم! 👵<br>
-    ۳۰ مرحله پیش رو داری تا همه اهالی رو روغن‌کاری کنی!<br><br>
-    <b style="color:#ffd700;">🕹️ جوی‌استیک: حرکت</b><br>
-    <b style="color:#ff9e4a;">🛢️ دکمه روغن: حمله</b><br>
-    <b style="color:#7ed6a0;">🎤 میکروفون: دستور صوتی</b><br>
-    <b style="color:#ff3030;">🔥 بگو «همه دشمنان رو نابود کن»</b><br>
-    <b style="color:#c8a8f0;">🏪 فروشگاه: خرید سلاح و زره</b>
-  </p>
-  <button id="startBtn">شروع ماجراجویی 🚀</button>
+<!-- Start Screen -->
+<div class="fs-screen" id="startScreen">
+  <div class="big" style="font-size:70px;animation:bounce 1.5s infinite alternate">🛢️</div>
+  <h1>بی‌بی روغن - نسخه نهایی</h1>
+  <p style="color:#ffd700;font-weight:bold">شخصیت خودت رو انتخاب کن:</p>
+  <div class="char-select" id="charSelect"></div>
+  <button class="start-btn" id="startBtn">شروع ماجراجویی 🚀</button>
 </div>
 
 <script>
 (function(){
 "use strict";
 
-// ============ CANVAS SETUP ============
-const canvas = document.getElementById("c");
+// ============ CANVAS ============
+const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d", { alpha: false });
 let W = 0, H = 0, DPR = 1;
-
 function resize(){
   DPR = Math.min(window.devicePixelRatio || 1, 2);
-  W = window.innerWidth;
-  H = window.innerHeight;
-  canvas.width = W * DPR;
-  canvas.height = H * DPR;
-  canvas.style.width = W + "px";
-  canvas.style.height = H + "px";
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  canvas.style.width = W + "px"; canvas.style.height = H + "px";
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 window.addEventListener("resize", resize);
+window.addEventListener("orientationchange", () => setTimeout(resize, 200));
 resize();
 
-// ============ WORLD ============
-const WORLD = { w: 2400, h: 1800 };
-let rooms = [];
-let obstacles = [];
-
-const LAYOUTS = [
-  [
-    { name:"پذیرایی", x:50, y:50, w:750, h:550, floor:"#c9a06a", deco:"tv" },
-    { name:"آشپزخانه", x:850, y:50, w:750, h:550, floor:"#d8b880", deco:"kitchen" },
-    { name:"دستشویی", x:1650, y:50, w:700, h:450, floor:"#a8d8d8", deco:"bath" },
-    { name:"اتاق مریم", x:50, y:650, w:650, h:550, floor:"#f0c8d8", deco:"bed" },
-    { name:"سالن کاراته", x:750, y:650, w:650, h:550, floor:"#7fc4d8", deco:"gym" },
-    { name:"اتاق اسماع", x:1450, y:650, w:900, h:550, floor:"#c8e0b8", deco:"oil" },
-    { name:"اتاق کوچیکا", x:50, y:1250, w:850, h:500, floor:"#ffe8c0", deco:"kids" },
-    { name:"انبار روغن", x:950, y:1250, w:750, h:500, floor:"#e0c090", deco:"storage" },
-    { name:"حیاط", x:1750, y:1250, w:600, h:500, floor:"#5a8a3a", deco:"yard" }
-  ],
-  [
-    { name:"اتاق بزرگ", x:50, y:50, w:1100, h:800, floor:"#c9a06a", deco:"tv" },
-    { name:"آشپزخانه", x:1200, y:50, w:1150, h:800, floor:"#d8b880", deco:"kitchen" },
-    { name:"اتاق بچه‌ها", x:50, y:900, w:750, h:850, floor:"#ffe8c0", deco:"kids" },
-    { name:"انبار", x:850, y:900, w:750, h:850, floor:"#e0c090", deco:"storage" },
-    { name:"حیاط", x:1650, y:900, w:700, h:850, floor:"#5a8a3a", deco:"yard" }
-  ],
-  [
-    { name:"اتاق ۱", x:50, y:50, w:500, h:400, floor:"#c9a06a", deco:"tv" },
-    { name:"اتاق ۲", x:600, y:50, w:500, h:400, floor:"#d8b880", deco:"kitchen" },
-    { name:"اتاق ۳", x:1150, y:50, w:500, h:400, floor:"#a8d8d8", deco:"bath" },
-    { name:"اتاق ۴", x:1700, y:50, w:650, h:400, floor:"#f0c8d8", deco:"bed" },
-    { name:"سالن", x:50, y:500, w:800, h:600, floor:"#7fc4d8", deco:"gym" },
-    { name:"اتاق ۵", x:900, y:500, w:700, h:600, floor:"#c8e0b8", deco:"oil" },
-    { name:"اتاق ۶", x:1650, y:500, w:700, h:600, floor:"#ffe8c0", deco:"kids" },
-    { name:"انبار", x:50, y:1150, w:900, h:600, floor:"#e0c090", deco:"storage" },
-    { name:"حیاط", x:1000, y:1150, w:600, h:600, floor:"#5a8a3a", deco:"yard" },
-    { name:"باغ", x:1650, y:1150, w:700, h:600, floor:"#6a9a4a", deco:"yard" }
-  ]
+// ============ CHARACTERS ============
+const CHARACTERS = [
+  { id:"bibi", name:"بی‌بی روغن", emoji:"👵", desc:"متعادل", speed:1.0, damage:1.0, health:1.0 },
+  { id:"bibi_super", name:"بی‌بی قهرمان", emoji:"🦸", desc:"قوی ولی کند", speed:0.85, damage:1.3, health:1.2 },
+  { id:"bibi_ninja", name:"بی‌بی نینجا", emoji:"🥷", desc:"سریع ولی ضعیف", speed:1.35, damage:0.85, health:0.85 }
 ];
 
-const FURNITURE = [
-  { x:120, y:120, w:200, h:60, color:"#8a4a2a", label:"مبل" },
-  { x:500, y:200, w:80, h:180, color:"#3a3a3a", label:"TV" },
-  { x:920, y:100, w:400, h:70, color:"#8b5a2b", label:"کابینت" },
-  { x:1700, y:120, w:100, h:100, color:"#d8e8e8", label:"توالت" },
-  { x:120, y:750, w:250, h:130, color:"#ff9ac8", label:"تخت" },
-  { x:800, y:700, w:200, h:100, color:"#3a5a78", label:"مشت" },
-  { x:1500, y:750, w:200, h:150, color:"#8a6ac8", label:"قفسه" },
-  { x:120, y:1350, w:200, h:150, color:"#ffcc66", label:"تخت" },
-  { x:1000, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
-  { x:1150, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" }
+// ============ ACHIEVEMENTS ============
+const ACHIEVEMENTS = [
+  { id:"first_kill", name:"اولین کشتار", desc:"اولین دشمن رو روغن‌کاری کن", icon:"🎯", check: s => s.kills >= 1 },
+  { id:"killer_10", name:"قاتل ۱۰", desc:"۱۰ دشمن رو نابود کن", icon:"⚔️", check: s => s.kills >= 10 },
+  { id:"killer_50", name:"قاتل ۵۰", desc:"۵۰ دشمن رو نابود کن", icon:"💀", check: s => s.kills >= 50 },
+  { id:"killer_100", name:"قاتل ۱۰۰", desc:"۱۰۰ دشمن رو نابود کن", icon:"🔪", check: s => s.kills >= 100 },
+  { id:"rich", name:"پولدار", desc:"۱۰۰۰ سکه جمع کن", icon:"💰", check: s => s.totalCoins >= 1000 },
+  { id:"very_rich", name:"خیلی پولدار", desc:"۵۰۰۰ سکه جمع کن", icon:"💎", check: s => s.totalCoins >= 5000 },
+  { id:"level_5", name:"مبتدی", desc:"به مرحله ۵ برس", icon:"🌟", check: s => s.maxLevel >= 5 },
+  { id:"level_10", name:"حرفه‌ای", desc:"به مرحله ۱۰ برس", icon:"⭐", check: s => s.maxLevel >= 10 },
+  { id:"level_20", name:"قهرمان", desc:"به مرحله ۲۰ برس", icon:"🏅", check: s => s.maxLevel >= 20 },
+  { id:"level_30", name:"افسانه‌ای", desc:"به مرحله ۳۰ برس", icon:"👑", check: s => s.maxLevel >= 30 },
+  { id:"boss_killer", name:"اژدهاکش", desc:"اژدهای روغن رو شکست بده", icon:"🐉", check: s => s.bossDefeated },
+  { id:"combo_20", name:"کمبوکار", desc:"کمبو ۲۰ رو بزن", icon:"🔥", check: s => s.maxCombo >= 20 },
+  { id:"all_weapons", name:"جنگ‌افزارفروش", desc:"همه سلاح‌ها رو بخر", icon:"🗡️", check: s => s.ownedWeapons.length >= 10 },
+  { id:"all_skins", name:"مدگرا", desc:"همه اسکین‌ها رو بخر", icon:"👗", check: s => s.ownedSkins.length >= 7 },
+  { id:"no_damage", name:"بی‌آسیب", desc:"یه مرحله رو بدون آسیب بگذرون", icon:"🛡️", check: s => s.perfectLevel }
 ];
 
-const ENEMY_NAMES = ["مریم گلی","زهرا کماندو","اسماع روغن‌خور","حنانه بدترکیب","بچه‌خور","مگس","دایی جواد","خاله سوسن","عمو رحیم","ننه صغری","پسر عمو","دختر خاله"];
-const ENEMY_COLORS = ["#ff8ac4","#3a8ac8","#68c890","#ffb700","#8a6ac8","#4a4a4a","#e74c3c","#9b59b6","#f39c12","#16a085","#c0392b","#8e44ad"];
-const ENEMY_DIALOGUES = ["بیا بگیرم! 🏃","تو نمی‌تونی منو بزنی! 😎","روغن نده به من! 😱","کمک! بی‌بی دیوونه شده! 😂","آخه چرا من؟ 🥺","برو خونت رو بچسب! 😤","مامان! داره تعقیبم می‌کنه! 😭","اِ اِ اِ... 🥶","نکن! من خوشم نمیاد! 🤢","بگیر منو خودت می‌سوزی! 🔥"];
-
-let currentLevel = 1;
-let levelConfig = null;
-let npcs = [];
-
-function buildLevel(num){
-  const idx = num - 1;
-  rooms = LAYOUTS[idx % LAYOUTS.length];
-  levelConfig = {
-    level: num,
-    enemyCount: Math.min(3 + Math.floor(idx * 0.7), 12),
-    enemyHealth: 60 + idx * 15,
-    enemySpeed: 0.6 + idx * 0.05,
-    enemyDamage: 1 + Math.floor(idx / 4),
-    enemyHasWeapon: idx >= 4
-  };
-  
-  const walls = [];
-  walls.push({ x:0, y:0, w:WORLD.w, h:30 });
-  walls.push({ x:0, y:WORLD.h-30, w:WORLD.w, h:30 });
-  walls.push({ x:0, y:0, w:30, h:WORLD.h });
-  walls.push({ x:WORLD.w-30, y:0, w:30, h:WORLD.h });
-  
-  for (let i = 0; i < rooms.length; i++){
-    for (let j = i + 1; j < rooms.length; j++){
-      const r1 = rooms[i], r2 = rooms[j];
-      if (Math.abs(r1.x + r1.w - r2.x) < 5 || Math.abs(r2.x + r2.w - r1.x) < 5){
-        const oY1 = Math.max(r1.y, r2.y), oY2 = Math.min(r1.y + r1.h, r2.y + r2.h);
-        if (oY2 > oY1 + 100){
-          const mid = (oY1 + oY2) / 2, ds = 120;
-          const x = r1.x < r2.x ? r1.x + r1.w : r2.x + r2.w;
-          walls.push({ x, y:oY1, w:30, h:(mid - ds/2) - oY1 });
-          walls.push({ x, y:mid + ds/2, w:30, h:oY2 - (mid + ds/2) });
-        }
-      }
-      if (Math.abs(r1.y + r1.h - r2.y) < 5 || Math.abs(r2.y + r2.h - r1.y) < 5){
-        const oX1 = Math.max(r1.x, r2.x), oX2 = Math.min(r1.x + r1.w, r2.x + r2.w);
-        if (oX2 > oX1 + 100){
-          const mid = (oX1 + oX2) / 2, ds = 120;
-          const y = r1.y < r2.y ? r1.y + r1.h : r2.y + r2.h;
-          walls.push({ x:oX1, y, w:(mid - ds/2) - oX1, h:30 });
-          walls.push({ x:mid + ds/2, y, w:oX2 - (mid + ds/2), h:30 });
-        }
-      }
-    }
-  }
-  obstacles = walls.concat(FURNITURE);
-}
-
-function circleRectCollide(cx, cy, r, rect){
-  const nx = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
-  const ny = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
-  const dx = cx - nx, dy = cy - ny;
-  return dx*dx + dy*dy < r*r;
-}
-function collides(x, y, r){
-  for (let i = 0; i < obstacles.length; i++){
-    if (circleRectCollide(x, y, r, obstacles[i])) return true;
-  }
-  return false;
-}
-
-// ============ SAVE / SHOP DATA ============
+// ============ SHOP DATA ============
 const SHOP_WEAPONS = [
   { id:"oil", icon:"🛢️", name:"قوطی روغن", price:0, damage:15, range:90, desc:"سلاح پیش‌فرض" },
   { id:"kafgir", icon:"🥄", name:"کفگیر", price:100, damage:22, range:100, desc:"ضربه کفگیری" },
@@ -327,55 +307,228 @@ const SHOP_POWERUPS = [
   { id:"double", icon:"💰", name:"سکه دوبل", price:1000, desc:"۲ برابر سکه" },
   { id:"crit", icon:"💥", name:"ضربه کاری", price:1500, desc:"ضربه‌های قوی‌تر" }
 ];
+const SHOP_CONSUMABLES = [
+  { id:"potion_health", icon:"❤️", name:"معجون شفا", price:50, desc:"فوری ۵۰ جون" },
+  { id:"potion_speed", icon:"⚡", name:"معجون سرعت", price:75, desc:"۱۵ ثانیه سرعت" },
+  { id:"potion_shield", icon:"🛡️", name:"معجون سپر", price:100, desc:"۱۰ ثانیه سپر" },
+  { id:"bomb", icon:"💣", name:"بمب", price:150, desc:"همه دشمن‌های نزدیک" }
+];
 
+// ============ SAVE ============
 const gameState = {
-  coins: 0, currentLevel: 1, maxLevel: 1,
+  coins: 0, totalCoins: 0, currentLevel: 1, maxLevel: 1,
+  kills: 0, maxCombo: 0, bossDefeated: false, perfectLevel: false,
   ownedWeapons: ["oil"], ownedArmors: ["none"], ownedSkins: ["bibi"], ownedPowerups: [],
-  equippedWeapon: "oil", equippedArmor: "none", equippedSkin: "bibi"
+  consumables: { potion_health: 0, potion_speed: 0, potion_shield: 0, bomb: 0 },
+  equippedWeapon: "oil", equippedArmor: "none", equippedSkin: "bibi",
+  selectedCharacter: "bibi",
+  unlockedAchievements: [],
+  highScores: []
 };
-function saveGame(){ try { localStorage.setItem("bibiRoghansSave", JSON.stringify(gameState)); } catch(e){} }
-function loadGame(){ try { const s = localStorage.getItem("bibiRoghansSave"); if (s) Object.assign(gameState, JSON.parse(s)); } catch(e){} }
+
+function saveGame(){ try { localStorage.setItem("bibiSaveFinal", JSON.stringify(gameState)); } catch(e){} }
+function loadGame(){
+  try {
+    const s = localStorage.getItem("bibiSaveFinal");
+    if (s) Object.assign(gameState, JSON.parse(s));
+  } catch(e){}
+}
 loadGame();
 
 function getWeapon(){ return SHOP_WEAPONS.find(w => w.id === gameState.equippedWeapon) || SHOP_WEAPONS[0]; }
 function getArmor(){ return SHOP_ARMOR.find(a => a.id === gameState.equippedArmor) || SHOP_ARMOR[0]; }
 function getSkin(){ return SHOP_SKINS.find(s => s.id === gameState.equippedSkin) || SHOP_SKINS[0]; }
+function getCharacter(){ return CHARACTERS.find(c => c.id === gameState.selectedCharacter) || CHARACTERS[0]; }
+
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a => {
+    if (!gameState.unlockedAchievements.includes(a.id)){
+      if (a.check(gameState)){
+        gameState.unlockedAchievements.push(a.id);
+        showDialog("🎖️ دستاورد جدید: " + a.name, 3000, 1.5, 1);
+      }
+    }
+  });
+  saveGame();
+}
+
+// ============ WORLD ============
+const WORLD = { w: 2400, h: 1800 };
+let rooms = [], obstacles = [];
+
+const LAYOUTS = [
+  // خانه بی‌بی
+  [
+    { name:"پذیرایی", x:50, y:50, w:750, h:550, floor:"#c9a06a", deco:"tv" },
+    { name:"آشپزخانه", x:850, y:50, w:750, h:550, floor:"#d8b880", deco:"kitchen" },
+    { name:"دستشویی", x:1650, y:50, w:700, h:450, floor:"#a8d8d8", deco:"bath" },
+    { name:"اتاق مریم", x:50, y:650, w:650, h:550, floor:"#f0c8d8", deco:"bed" },
+    { name:"سالن", x:750, y:650, w:650, h:550, floor:"#7fc4d8", deco:"gym" },
+    { name:"اتاق اسماع", x:1450, y:650, w:900, h:550, floor:"#c8e0b8", deco:"oil" },
+    { name:"اتاق کوچیکا", x:50, y:1250, w:850, h:500, floor:"#ffe8c0", deco:"kids" },
+    { name:"انبار", x:950, y:1250, w:750, h:500, floor:"#e0c090", deco:"storage" },
+    { name:"حیاط", x:1750, y:1250, w:600, h:500, floor:"#5a8a3a", deco:"yard" }
+  ],
+  // کوچه
+  [
+    { name:"کوچه", x:50, y:50, w:1100, h:800, floor:"#a8c8d8", deco:"tv" },
+    { name:"مغازه", x:1200, y:50, w:1150, h:800, floor:"#d8b880", deco:"kitchen" },
+    { name:"زیرزمین", x:50, y:900, w:750, h:850, floor:"#5a4a3a", deco:"storage" },
+    { name:"پشت‌بام", x:850, y:900, w:750, h:850, floor:"#8a8a8a", deco:"yard" },
+    { name:"باغ", x:1650, y:900, w:700, h:850, floor:"#5a8a3a", deco:"yard" }
+  ],
+  // جنگل
+  [
+    { name:"جنگل", x:50, y:50, w:1100, h:800, floor:"#3a6a2a", deco:"yard" },
+    { name:"غار", x:1200, y:50, w:1150, h:800, floor:"#4a3a2a", deco:"storage" },
+    { name:"رودخانه", x:50, y:900, w:2300, h:400, floor:"#3a8ab8", deco:"yard" },
+    { name:"کمپ", x:50, y:1350, w:1100, h:400, floor:"#6a5a3a", deco:"kids" },
+    { name:"قبرستان", x:1200, y:1350, w:1150, h:400, floor:"#3a2a3a", deco:"bed" }
+  ],
+  // قلعه آتش
+  [
+    { name:"تالار", x:50, y:50, w:1900, h:600, floor:"#8a3a1a", deco:"tv" },
+    { name:"سیاه‌چال", x:50, y:700, w:900, h:1050, floor:"#3a1a0a", deco:"storage" },
+    { name:"اتاق پادشاه", x:1000, y:700, w:900, h:500, floor:"#6a2a1a", deco:"bed" },
+    { name:"برج", x:1000, y:1250, w:900, h:500, floor:"#5a2a1a", deco:"gym" }
+  ],
+  // جزیره اژدها
+  [
+    { name:"ساحل", x:50, y:50, w:1900, h:400, floor:"#c8a878", deco:"yard" },
+    { name:"جنگل جادویی", x:50, y:500, w:1100, h:650, floor:"#3a5a3a", deco:"yard" },
+    { name:"معبد اژدها", x:1200, y:500, w:1150, h:650, floor:"#5a2a2a", deco:"bed" },
+    { name:"لانه اژدها", x:50, y:1200, w:2300, h:550, floor:"#3a1a1a", deco:"storage" }
+  ],
+  // شهر شلوغ
+  [
+    { name:"خیابان اصلی", x:50, y:50, w:2300, h:400, floor:"#6a6a6a", deco:"yard" },
+    { name:"میدان", x:50, y:500, w:1100, h:650, floor:"#8a8a8a", deco:"tv" },
+    { name:"بازار", x:1200, y:500, w:1150, h:650, floor:"#a87048", deco:"kitchen" },
+    { name:"پارک", x:50, y:1200, w:1100, h:550, floor:"#5a8a3a", deco:"yard" },
+    { name:"ایستگاه", x:1200, y:1200, w:1150, h:550, floor:"#4a4a4a", deco:"gym" }
+  ],
+  // فضا
+  [
+    { name:"سفینه", x:50, y:50, w:1100, h:800, floor:"#2a2a4a", deco:"tv" },
+    { name:"ایستگاه فضایی", x:1200, y:50, w:1150, h:800, floor:"#3a3a5a", deco:"storage" },
+    { name:"سیاره سرخ", x:50, y:900, w:1100, h:850, floor:"#8a3a2a", deco:"yard" },
+    { name:"حلقه زحل", x:1200, y:900, w:1150, h:850, floor:"#5a4a3a", deco:"bed" }
+  ]
+];
+
+const FURNITURE = [
+  { x:120, y:120, w:200, h:60, color:"#8a4a2a", label:"مبل" },
+  { x:500, y:200, w:80, h:180, color:"#3a3a3a", label:"TV" },
+  { x:920, y:100, w:400, h:70, color:"#8b5a2b", label:"کابینت" },
+  { x:1700, y:120, w:100, h:100, color:"#d8e8e8", label:"توالت" },
+  { x:120, y:750, w:250, h:130, color:"#ff9ac8", label:"تخت" },
+  { x:800, y:700, w:200, h:100, color:"#3a5a78", label:"مشت" },
+  { x:1500, y:750, w:200, h:150, color:"#8a6ac8", label:"قفسه" },
+  { x:120, y:1350, w:200, h:150, color:"#ffcc66", label:"تخت" },
+  { x:1000, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
+  { x:1150, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
+  { x:1300, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" }
+];
+
+function buildLevel(num){
+  const idx = num - 1;
+  rooms = LAYOUTS[idx % LAYOUTS.length];
+  const walls = [];
+  walls.push({ x:0, y:0, w:WORLD.w, h:30 });
+  walls.push({ x:0, y:WORLD.h-30, w:WORLD.w, h:30 });
+  walls.push({ x:0, y:0, w:30, h:WORLD.h });
+  walls.push({ x:WORLD.w-30, y:0, w:30, h:WORLD.h });
+  for (let i = 0; i < rooms.length; i++){
+    for (let j = i + 1; j < rooms.length; j++){
+      const r1 = rooms[i], r2 = rooms[j];
+      if (Math.abs(r1.x + r1.w - r2.x) < 5 || Math.abs(r2.x + r2.w - r1.x) < 5){
+        const oY1 = Math.max(r1.y, r2.y), oY2 = Math.min(r1.y + r1.h, r2.y + r2.h);
+        if (oY2 > oY1 + 100){
+          const mid = (oY1 + oY2) / 2, ds = 130;
+          const x = r1.x < r2.x ? r1.x + r1.w : r2.x + r2.w;
+          walls.push({ x, y:oY1, w:30, h:(mid - ds/2) - oY1 });
+          walls.push({ x, y:mid + ds/2, w:30, h:oY2 - (mid + ds/2) });
+        }
+      }
+      if (Math.abs(r1.y + r1.h - r2.y) < 5 || Math.abs(r2.y + r2.h - r1.y) < 5){
+        const oX1 = Math.max(r1.x, r2.x), oX2 = Math.min(r1.x + r1.w, r2.x + r2.w);
+        if (oX2 > oX1 + 100){
+          const mid = (oX1 + oX2) / 2, ds = 130;
+          const y = r1.y < r2.y ? r1.y + r1.h : r2.y + r2.h;
+          walls.push({ x:oX1, y, w:(mid - ds/2) - oX1, h:30 });
+          walls.push({ x:mid + ds/2, y, w:oX2 - (mid + ds/2), h:30 });
+        }
+      }
+    }
+  }
+  obstacles = walls.concat(FURNITURE);
+}
+
+function circleRectCollide(cx, cy, r, rect){
+  const nx = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
+  const ny = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
+  const dx = cx - nx, dy = cy - ny;
+  return dx*dx + dy*dy < r*r;
+}
+function collides(x, y, r){
+  for (let i = 0; i < obstacles.length; i++){
+    if (circleRectCollide(x, y, r, obstacles[i])) return true;
+  }
+  return false;
+}
 
 // ============ PLAYER ============
 const player = {
-  x: 400, y: 400, r: 22,
-  vx: 0, vy: 0, dir: 0, walkFrame: 0,
+  x: 400, y: 400, r: 22, vx: 0, vy: 0,
+  dir: 0, walkFrame: 0,
   health: 100, maxHealth: 100,
   mana: 100, maxMana: 100,
-  attackCooldown: 0, hitFlash: 0, hideTimer: 0
+  attackCooldown: 0, hitFlash: 0, hideTimer: 0,
+  speedBoostTimer: 0, shieldTimer: 0, invulnerable: false
 };
+
 function updatePlayerStats(){
   const a = getArmor();
-  player.maxHealth = 100 + a.health;
+  const ch = getCharacter();
+  player.maxHealth = Math.round((100 + a.health) * ch.health);
   player.health = Math.min(player.health, player.maxHealth);
 }
 
 // ============ EFFECTS ============
-const particles = [], damageNumbers = [], bullets = [];
+const particles = [], damageNumbers = [], bullets = [], prizeBoxes = [], items = [];
 function spawnParticles(x, y, color, count){
   for (let i = 0; i < count; i++){
-    particles.push({ x, y, vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6-2, life:1, color, size:3+Math.random()*5 });
+    particles.push({
+      x, y,
+      vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6-2,
+      life:1, color, size:3+Math.random()*5
+    });
   }
 }
 function spawnBullet(x, y, dx, dy, owner, damage){
   bullets.push({ x, y, vx:dx*5, vy:dy*5, owner, damage, life:120 });
 }
 
+// ============ CAMERA SHAKE ============
+let shakeAmount = 0;
+function shakeScreen(amount){ shakeAmount = Math.max(shakeAmount, amount); }
+
 // ============ CAMERA ============
-const camera = { x: 0, y: 0 };
+const camera = { x: 0, y: 0, shakeX: 0, shakeY: 0 };
 function updateCamera(){
   const tx = player.x - W/2, ty = player.y - H/2;
-  camera.x += (tx - camera.x) * 0.1;
-  camera.y += (ty - camera.y) * 0.1;
+  camera.x += (tx - camera.x) * 0.12;
+  camera.y += (ty - camera.y) * 0.12;
   if (camera.x < 0) camera.x = 0;
   if (camera.y < 0) camera.y = 0;
   if (camera.x > WORLD.w - W) camera.x = WORLD.w - W;
   if (camera.y > WORLD.h - H) camera.y = WORLD.h - H;
+  if (shakeAmount > 0){
+    camera.shakeX = (Math.random() - 0.5) * shakeAmount;
+    camera.shakeY = (Math.random() - 0.5) * shakeAmount;
+    shakeAmount *= 0.85;
+    if (shakeAmount < 0.3) shakeAmount = 0;
+  } else { camera.shakeX = 0; camera.shakeY = 0; }
 }
 
 // ============ INPUT ============
@@ -383,19 +536,61 @@ const keys = {};
 document.addEventListener("keydown", e => {
   keys[e.key.toLowerCase()] = true;
   if (e.key === " ") { e.preventDefault(); attack(); }
+  if (e.key === "e" || e.key === "E") { usePotion(); }
 });
 document.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
 
+let joyActive = false, joyPointerId = null;
+let joyOriginX = 0, joyOriginY = 0, joyX = 0, joyY = 0;
+const joyRadius = 55;
 const joystickEl = document.getElementById("joystick");
 const joyKnob = document.getElementById("joyKnob");
-let joyActive = false, joyId = null;
-let joyOriginX = 0, joyOriginY = 0, joyX = 0, joyY = 0;
-const joyRadius = 60;
+
+canvas.addEventListener("pointerdown", e => {
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  if (joyPointerId !== null) return;
+  if (e.clientX >= W / 2) return;
+  joyPointerId = e.pointerId;
+  joyActive = true;
+  joyOriginX = e.clientX; joyOriginY = e.clientY;
+  joyX = e.clientX; joyY = e.clientY;
+  joystickEl.style.left = (joyOriginX - 55) + "px";
+  joystickEl.style.top = (joyOriginY - 55) + "px";
+  joystickEl.classList.add("active");
+  joyKnob.style.transform = "translate(-50%,-50%)";
+});
+
+canvas.addEventListener("pointermove", e => {
+  if (e.pointerId !== joyPointerId) return;
+  joyX = e.clientX; joyY = e.clientY;
+  const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
+  const dist = Math.hypot(dx, dy);
+  if (dist > joyRadius){
+    joyOriginX = joyX - (dx / dist) * joyRadius;
+    joyOriginY = joyY - (dy / dist) * joyRadius;
+    joystickEl.style.left = (joyOriginX - 55) + "px";
+    joystickEl.style.top = (joyOriginY - 55) + "px";
+  }
+  const ndx = joyX - joyOriginX, ndy = joyY - joyOriginY;
+  joyKnob.style.transform = `translate(calc(-50% + ${ndx}px), calc(-50% + ${ndy}px))`;
+}, { passive: true });
+
+function endPointer(e){
+  if (e.pointerId !== joyPointerId) return;
+  joyPointerId = null; joyActive = false;
+  joyKnob.style.transform = "translate(-50%,-50%)";
+  joystickEl.classList.remove("active");
+}
+canvas.addEventListener("pointerup", endPointer);
+canvas.addEventListener("pointercancel", endPointer);
+canvas.addEventListener("pointerleave", endPointer);
+canvas.addEventListener("contextmenu", e => e.preventDefault());
 
 function getInputVec(){
-  if (joyActive){
+  if (joyActive && joyPointerId !== null){
     const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
-    const dist = Math.hypot(dx, dy) || 1;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 5) return { x:0, y:0 };
     const norm = Math.min(dist, joyRadius) / joyRadius;
     return { x:(dx/dist)*norm, y:(dy/dist)*norm };
   }
@@ -409,84 +604,49 @@ function getInputVec(){
   return { x:vx, y:vy };
 }
 
-canvas.addEventListener("touchstart", e => {
-  for (const t of e.changedTouches){
-    if (joyId === null && t.clientX < W/2){
-      joyId = t.identifier;
-      joyActive = true;
-      joyOriginX = t.clientX; joyOriginY = t.clientY;
-      joyX = t.clientX; joyY = t.clientY;
-      joystickEl.style.left = (joyOriginX - 60) + "px";
-      joystickEl.style.top = (joyOriginY - 60) + "px";
-      joystickEl.classList.add("active");
-    }
-  }
-}, { passive: true });
-
-canvas.addEventListener("touchmove", e => {
-  for (const t of e.changedTouches){
-    if (t.identifier === joyId){
-      joyX = t.clientX; joyY = t.clientY;
-      const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
-      const dist = Math.hypot(dx, dy) || 1;
-      const norm = Math.min(dist, joyRadius) / joyRadius;
-      const kx = (dx/dist)*norm*joyRadius, ky = (dy/dist)*norm*joyRadius;
-      joyKnob.style.transform = `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
-    }
-  }
-}, { passive: true });
-
-function endJoy(e){
-  for (const t of e.changedTouches){
-    if (t.identifier === joyId){
-      joyId = null; joyActive = false;
-      joyKnob.style.transform = "translate(-50%,-50%)";
-      joystickEl.classList.remove("active");
-    }
-  }
-}
-canvas.addEventListener("touchend", endJoy);
-canvas.addEventListener("touchcancel", endJoy);
-
-let mouseDown = false;
-canvas.addEventListener("mousedown", e => {
-  if (e.clientX < W/2){
-    mouseDown = true; joyActive = true;
-    joyOriginX = e.clientX; joyOriginY = e.clientY;
-    joyX = e.clientX; joyY = e.clientY;
-    joystickEl.style.left = (joyOriginX - 60) + "px";
-    joystickEl.style.top = (joyOriginY - 60) + "px";
-    joystickEl.classList.add("active");
-  }
-});
-window.addEventListener("mousemove", e => {
-  if (!mouseDown) return;
-  joyX = e.clientX; joyY = e.clientY;
-  const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
-  const dist = Math.hypot(dx, dy) || 1;
-  const norm = Math.min(dist, joyRadius) / joyRadius;
-  const kx = (dx/dist)*norm*joyRadius, ky = (dy/dist)*norm*joyRadius;
-  joyKnob.style.transform = `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
-});
-window.addEventListener("mouseup", () => {
-  if (mouseDown){
-    mouseDown = false; joyActive = false;
-    joyKnob.style.transform = "translate(-50%,-50%)";
-    joystickEl.classList.remove("active");
-  }
-});
-
-// ============ AUDIO & SPEECH ============
+// ============ AUDIO ============
 let soundOn = true;
 let audioCtx = null;
-let isListening = false;
-let recognition = null;
+let musicGain = null;
+let musicOsc = null;
 
 function initAudio(){
   if (!audioCtx){
     try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
   }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+}
+
+function startMusic(){
+  if (!audioCtx || musicOsc) return;
+  try {
+    musicGain = audioCtx.createGain();
+    musicGain.gain.value = 0.04;
+    musicGain.connect(audioCtx.destination);
+    const osc1 = audioCtx.createOscillator();
+    osc1.type = "sine";
+    osc1.frequency.value = 110;
+    const osc2 = audioCtx.createOscillator();
+    osc2.type = "sine";
+    osc2.frequency.value = 165;
+    const lfo = audioCtx.createOscillator();
+    lfo.frequency.value = 0.3;
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 20;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc1.frequency);
+    osc1.connect(musicGain);
+    osc2.connect(musicGain);
+    osc1.start(); osc2.start(); lfo.start();
+    musicOsc = { osc1, osc2, lfo };
+  } catch(e){}
+}
+
+function stopMusic(){
+  if (musicOsc){
+    try { musicOsc.osc1.stop(); musicOsc.osc2.stop(); musicOsc.lfo.stop(); } catch(e){}
+    musicOsc = null;
+  }
 }
 
 function findPersianVoice(){
@@ -498,8 +658,7 @@ function findPersianVoice(){
 }
 
 function speak(text, pitch, rate){
-  if (!soundOn) return;
-  if (!("speechSynthesis" in window)) return;
+  if (!soundOn || !("speechSynthesis" in window)) return;
   try {
     const u = new SpeechSynthesisUtterance(text);
     const voice = findPersianVoice();
@@ -507,7 +666,6 @@ function speak(text, pitch, rate){
     u.lang = voice ? voice.lang : "fa-IR";
     u.pitch = pitch || 1.3;
     u.rate = rate || 0.9;
-    u.volume = 1;
     speechSynthesis.speak(u);
   } catch(e){}
 }
@@ -524,42 +682,24 @@ function showDialog(text, duration, pitch, rate){
 function playBeep(type){
   if (!soundOn || !audioCtx) return;
   const now = audioCtx.currentTime;
-  if (type === "attack"){
+  const sounds = {
+    attack: { type:"sawtooth", freq:400, endFreq:800, dur:0.15, vol:0.1 },
+    hit:    { type:"square", freq:600, endFreq:200, dur:0.2, vol:0.15 },
+    hurt:   { type:"sawtooth", freq:200, endFreq:80, dur:0.25, vol:0.2 },
+    bullet: { type:"square", freq:800, endFreq:300, dur:0.1, vol:0.08 },
+    coin:   { type:"sine", freq:1200, endFreq:1600, dur:0.2, vol:0.1 },
+    boss:   { type:"sawtooth", freq:100, endFreq:50, dur:0.5, vol:0.3 }
+  };
+  if (sounds[type]){
+    const s = sounds[type];
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = "sawtooth";
-    o.frequency.setValueAtTime(400, now);
-    o.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-    g.gain.setValueAtTime(0.1, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    o.type = s.type;
+    o.frequency.setValueAtTime(s.freq, now);
+    o.frequency.exponentialRampToValueAtTime(s.endFreq, now + s.dur);
+    g.gain.setValueAtTime(s.vol, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + s.dur);
     o.connect(g); g.connect(audioCtx.destination);
-    o.start(now); o.stop(now + 0.15);
-  } else if (type === "hit"){
-    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = "square";
-    o.frequency.setValueAtTime(600, now);
-    o.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-    g.gain.setValueAtTime(0.15, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(now); o.stop(now + 0.2);
-  } else if (type === "hurt"){
-    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = "sawtooth";
-    o.frequency.setValueAtTime(200, now);
-    o.frequency.exponentialRampToValueAtTime(80, now + 0.2);
-    g.gain.setValueAtTime(0.2, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(now); o.stop(now + 0.25);
-  } else if (type === "bullet"){
-    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = "square";
-    o.frequency.setValueAtTime(800, now);
-    o.frequency.exponentialRampToValueAtTime(300, now + 0.08);
-    g.gain.setValueAtTime(0.08, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(now); o.stop(now + 0.1);
+    o.start(now); o.stop(now + s.dur);
   } else if (type === "win"){
     [500, 700, 900, 1200].forEach((f, i) => {
       const o = audioCtx.createOscillator(), g = audioCtx.createGain();
@@ -574,13 +714,14 @@ function playBeep(type){
   }
 }
 
+// ============ SPEECH ============
+let isListening = false, recognition = null;
+
 function initRecognition(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return null;
   const rec = new SR();
-  rec.lang = "fa-IR";
-  rec.continuous = true;
-  rec.interimResults = false;
+  rec.lang = "fa-IR"; rec.continuous = true; rec.interimResults = false;
   rec.onresult = (e) => {
     const last = e.results[e.results.length - 1];
     if (last.isFinal) handleVoiceCommand(last[0].transcript.trim());
@@ -602,7 +743,6 @@ function startListening(){
     document.getElementById("voiceBtn").classList.add("listening");
   } catch(e){}
 }
-
 function stopListening(){
   if (recognition && isListening){
     isListening = false;
@@ -622,12 +762,12 @@ function parsePersianCommand(text){
     raw:t
   };
   const verbPatterns = [
-    { verb:"attackAll", re:/همه.*(دشمن|دشمنان|اهالی|نفرات|مردم).*(نابود|بکش|نابود کن|بزن)|نابود کن همه|همه رو نابود کن|همه رو بکش|همه دشمنان|همه دشمنارو|تمام دشمنان|تموم دشمنان|همه رو از بین ببر/ },
+    { verb:"attackAll", re:/همه.*(دشمن|دشمنان|اهالی|نفرات|مردم).*(نابود|بکش|نابود کن|بزن)|نابود کن همه|همه رو نابود کن|همه رو بکش|همه دشمنان|همه دشمنارو|تمام دشمنان|تموم دشمنان/ },
+    { verb:"usePotion", re:/معجون|شفا|بخور|درمان|سپر بگیر|سرعت بگیر/ },
     { verb:"attack", re:/حمله|بزن|بزنی|شلیک|روغن بزن|روغن بده|بکش|نابود|منهدم|له کن/ },
     { verb:"seek", re:/بگرد|پیدا کن|پیداش کن|جستجو|دنبال|تعقیب|شکار|گرفتن|بیارش/ },
     { verb:"stop", re:/بایست|وایسا|توقف|بسه|بس کن|هیس|صبر|منتظر/ },
     { verb:"move", re:/برو|راه بیفت|راه بیا|حرکت کن|بیا|جلو برو|عقب برو|بدو/ },
-    { verb:"rest", re:/بخواب|استراحت|خسته|بخور|غذا بخور|نفس بگیر/ },
     { verb:"dance", re:/برقص|بشکن|اهتزاز|رقص/ },
     { verb:"hide", re:/قایم|پنهان|مخفی/ },
     { verb:"jump", re:/بپر|جهش|پرش/ },
@@ -635,12 +775,10 @@ function parsePersianCommand(text){
     { verb:"heal", re:/درمان|خودتو درمان|سلامتی بده|شفا/ }
   ];
   verbPatterns.forEach(p => { if (p.re.test(t)) parsed.verbs.push(p.verb); });
-  
   if (/بالا|شمال|جلو/.test(t)) parsed.directions.push("up");
   if (/پایین|جنوب|عقب/.test(t)) parsed.directions.push("down");
   if (/چپ|غرب/.test(t)) parsed.directions.push("left");
   if (/راست|شرق/.test(t)) parsed.directions.push("right");
-  
   if (/مریم|گلی/.test(t)) parsed.targets.push("مریم");
   if (/زهرا|کماندو/.test(t)) parsed.targets.push("زهرا");
   if (/اسماع|روغن خور/.test(t)) parsed.targets.push("اسماع");
@@ -650,7 +788,6 @@ function parsePersianCommand(text){
   if (/همه|تمام|همگی|اهالی/.test(t)) parsed.targets.push("all");
   if (/نزدیک/.test(t)) parsed.targets.push("nearest");
   if (/دورترین|دور/.test(t)) parsed.targets.push("farthest");
-  
   const counts = {"یک":1,"یه":1,"دو":2,"سه":3,"چهار":4,"پنج":5,"شش":6,"هفت":7,"هشت":8,"نه":9,"ده":10};
   for (const [w, n] of Object.entries(counts)){
     if (new RegExp("\\b" + w + "\\b").test(t)){ parsed.counts = n; break; }
@@ -658,10 +795,11 @@ function parsePersianCommand(text){
   return parsed;
 }
 
-// ============ MOVEMENT HELPERS ============
+// ============ MOVEMENT ============
 let autoMoveTarget = null, autoMoveTimer = 0;
 let voiceMoveVec = { x:0, y:0 }, voiceMoveTimer = 0;
 let autoHuntMode = false, autoHuntTimer = 0, autoHuntAttackTimer = 0;
+let combo = 0, comboTimer = 0;
 
 function moveTowards(nx, ny){ autoMoveTarget = { x:nx, y:ny }; autoMoveTimer = 300; }
 function getAliveNPCs(){ return npcs.filter(n => n.state !== "defeated"); }
@@ -680,48 +818,27 @@ function findFarthestNPC(){
   return best;
 }
 
-// ============ AUTO HUNT ============
 function startAutoHunt(){
   if (autoHuntMode) return;
   const alive = getAliveNPCs();
-  if (alive.length === 0){
-    showDialog("همه دشمنان نابود شدن! 🎉", 2500, 1.55, 0.9);
-    return;
-  }
-  autoHuntMode = true;
-  autoHuntTimer = 0;
-  autoHuntAttackTimer = 0;
+  if (alive.length === 0 && !boss){ showDialog("همه نابود شدن! 🎉", 2500, 1.55, 0.9); return; }
+  autoHuntMode = true; autoHuntTimer = 0; autoHuntAttackTimer = 0;
   document.getElementById("autoHuntIndicator").classList.add("show");
   showDialog("باشه! همه‌شون رو نابود می‌کنم! 🔥", 2500, 1.6, 1);
 }
-
 function stopAutoHunt(){
   autoHuntMode = false;
   document.getElementById("autoHuntIndicator").classList.remove("show");
 }
-
 function updateAutoHunt(){
   if (!autoHuntMode) return;
   autoHuntTimer++;
-  
-  if (autoHuntTimer > 3600){
-    stopAutoHunt();
-    showDialog("شکار خودکار تموم شد! ⏱️", 2000, 1.5, 0.9);
-    return;
-  }
-  
-  const target = findNearestNPC();
-  if (!target){
-    stopAutoHunt();
-    showDialog("همه نابود شدن! 🎉", 3000, 1.6, 1);
-    playBeep("win");
-    return;
-  }
-  
-  const dx = target.x - player.x;
-  const dy = target.y - player.y;
+  if (autoHuntTimer > 3600){ stopAutoHunt(); return; }
+  let target = findNearestNPC();
+  if (!target && boss && boss.state !== "defeated") target = boss;
+  if (!target){ stopAutoHunt(); return; }
+  const dx = target.x - player.x, dy = target.y - player.y;
   const dist = Math.hypot(dx, dy);
-  
   if (dist > 55){
     voiceMoveVec = { x: dx/dist, y: dy/dist };
     voiceMoveTimer = 5;
@@ -730,59 +847,101 @@ function updateAutoHunt(){
     if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
     else player.dir = Math.sin(ang) > 0 ? 0 : 2;
     voiceMoveTimer = 0;
-    if (autoHuntAttackTimer <= 0){
-      attack();
-      autoHuntAttackTimer = 8;
-    }
+    if (autoHuntAttackTimer <= 0){ attack(); autoHuntAttackTimer = 8; }
   }
   if (autoHuntAttackTimer > 0) autoHuntAttackTimer--;
 }
 
-// ============ VOICE COMMAND HANDLER ============
-function handleVoiceCommand(text){
-  const cmd = parsePersianCommand(text);
-  
-  // 🔥 اول از همه دستور نابود کردن همه
-  if (cmd.verbs.includes("attackAll")){
-    startAutoHunt();
+// ============ CONSUMABLES ============
+function usePotion(){
+  const c = gameState.consumables;
+  if (c.potion_health > 0 && player.health < player.maxHealth){
+    c.potion_health--;
+    player.health = Math.min(player.maxHealth, player.health + 50);
+    spawnParticles(player.x, player.y, "#ff3030", 20);
+    showDialog("❤️ +50 جون!", 1500, 1.5, 1);
+    updateItemBtn(); updateHUD(); saveGame();
     return;
   }
-  
+  if (c.potion_speed > 0){
+    c.potion_speed--;
+    player.speedBoostTimer = 900;
+    spawnParticles(player.x, player.y, "#7fe3ff", 20);
+    showDialog("⚡ سرعت بیشتر!", 1500, 1.5, 1);
+    updateItemBtn(); saveGame();
+    return;
+  }
+  if (c.potion_shield > 0){
+    c.potion_shield--;
+    player.shieldTimer = 600;
+    spawnParticles(player.x, player.y, "#4ade80", 20);
+    showDialog("🛡️ سپر فعال!", 1500, 1.5, 1);
+    updateItemBtn(); saveGame();
+    return;
+  }
+  if (c.bomb > 0){
+    c.bomb--;
+    let killed = 0;
+    npcs.forEach(n => {
+      if (n.state === "defeated") return;
+      const d = Math.hypot(n.x - player.x, n.y - player.y);
+      if (d < 300){
+        n.health = 0; n.state = "defeated"; n.defeatedTimer = 90;
+        gameState.kills++; killed++;
+        spawnParticles(n.x, n.y, "#ff6b00", 20);
+        gameState.coins += 10;
+      }
+    });
+    shakeScreen(30);
+    showDialog("💣 بمب! " + killed + " دشمن نابود شد!", 2000, 1.5, 1);
+    updateItemBtn(); updateHUD(); saveGame();
+    return;
+  }
+  showDialog("هیچ آیتمی نداری! از فروشگاه بخر 💊", 2500, 1.5, 0.9);
+}
+
+function updateItemBtn(){
+  const c = gameState.consumables;
+  const total = c.potion_health + c.potion_speed + c.potion_shield + c.bomb;
+  document.getElementById("itemCount").textContent = total;
+  document.getElementById("itemBtn").classList.toggle("show", total > 0);
+}
+
+// ============ VOICE COMMAND ============
+function handleVoiceCommand(text){
+  const cmd = parsePersianCommand(text);
+  if (cmd.verbs.includes("attackAll")){ startAutoHunt(); return; }
+  if (cmd.verbs.includes("usePotion")){ usePotion(); return; }
   if (cmd.isGreeting){ showDialog("سلام عزیزم! روغن می‌خوای؟ 🛢️", 2500, 1.55, 0.85); return; }
   if (cmd.isThanks){ showDialog("خواهش می‌کنم عزیزم! 🌹", 2200, 1.55, 0.9); return; }
-  
   if (cmd.isQuestion && cmd.verbs.length === 0){
     if (/چند/.test(cmd.raw)){
       const a = getAliveNPCs().length;
-      showDialog(`${a} نفر موندن! بقیه روغن‌کاری شدن! 💪`, 3000, 1.5, 0.9);
+      showDialog(`${a} نفر موندن! 💪`, 3000, 1.5, 0.9);
       return;
     }
     if (/کجا|کدوم/.test(cmd.raw)){
       const n = findNearestNPC();
-      if (n){ const d = Math.round(Math.hypot(n.x - player.x, n.y - player.y)); showDialog(`${n.name} نزدیک‌ترینه! ${d} قدم اونوره! 🎯`, 3500, 1.5, 0.9); }
-      else showDialog("همه روغن‌کاری شدن! 🎉", 2000, 1.5, 0.9);
+      if (n){ const d = Math.round(Math.hypot(n.x-player.x, n.y-player.y)); showDialog(`${n.name} نزدیک‌ترینه! ${d} قدم! 🎯`, 3500, 1.5, 0.9); }
+      else showDialog("کسی نمونده! 🎉", 2000, 1.5, 0.9);
       return;
     }
-    showDialog("سؤالت رو نفهمیدم! واضح‌تر بپرس! 🤔", 2500, 1.5, 0.9);
+    showDialog("نفهمیدم! واضح‌تر بپرس! 🤔", 2500, 1.5, 0.9);
     return;
   }
-  
   if (cmd.verbs.length === 0 && cmd.targets.length === 0){
-    showDialog("نفهمیدم! مثلاً بگو: همه دشمنان رو نابود کن!", 3000, 1.5, 0.9);
+    showDialog("نفهمیدم! بگو: همه دشمنان رو نابود کن!", 3000, 1.5, 0.9);
     return;
   }
-  
   const hasSeek = cmd.verbs.includes("seek");
   const hasAttack = cmd.verbs.includes("attack");
   const hasMove = cmd.verbs.includes("move");
   const hasStop = cmd.verbs.includes("stop");
-  const hasRest = cmd.verbs.includes("rest");
   const hasDance = cmd.verbs.includes("dance");
   const hasHide = cmd.verbs.includes("hide");
   const hasJump = cmd.verbs.includes("jump");
   const hasTurn = cmd.verbs.includes("turn");
   const hasHeal = cmd.verbs.includes("heal");
-  
   if (hasStop){
     stopAutoHunt();
     autoMoveTimer = 0; autoMoveTarget = null; voiceMoveTimer = 0;
@@ -808,29 +967,19 @@ function handleVoiceCommand(text){
     showDialog("درمان کردم! 💚", 2500, 1.5, 0.9);
     return;
   }
-  if (hasRest){
-    player.health = Math.min(player.maxHealth, player.health + 30);
-    player.mana = player.maxMana; updateHUD();
-    showDialog("آخیش! 😌", 2500, 1.5, 0.9);
-    return;
-  }
   if (hasMove && cmd.directions.length > 0){
     const dir = cmd.directions[0];
     const dirVecs = { up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0} };
     if (dirVecs[dir]){
       voiceMoveVec = dirVecs[dir]; voiceMoveTimer = 120;
-      const dirNames = { up:"بالا", down:"پایین", left:"چپ", right:"راست" };
-      showDialog("دارم می‌رم " + dirNames[dir] + "! 🚶", 1800, 1.5, 0.9);
+      showDialog("دارم می‌رم!", 1800, 1.5, 0.9);
       return;
     }
   }
   if (hasSeek || (hasMove && cmd.targets.length > 0)){
     let target = null;
-    if (cmd.targets.includes("all")){
-      const a = getAliveNPCs();
-      if (!a.length){ showDialog("همه نابود شدن! 🎉", 2500, 1.5, 0.9); return; }
-      target = findNearestNPC();
-    } else if (cmd.targets.includes("nearest")) target = findNearestNPC();
+    if (cmd.targets.includes("all")){ target = findNearestNPC(); }
+    else if (cmd.targets.includes("nearest")) target = findNearestNPC();
     else if (cmd.targets.includes("farthest")) target = findFarthestNPC();
     else {
       for (const tid of cmd.targets){
@@ -842,39 +991,22 @@ function handleVoiceCommand(text){
     if (!target) target = findNearestNPC();
     if (!target){ showDialog("کسی نمونده! 🎉", 2500, 1.5, 0.9); return; }
     moveTowards(target.x, target.y);
-    target.state = "flee";
-    target.stateTimer = 240;
+    target.state = "flee"; target.stateTimer = 240;
     showDialog("دارم میام دنبال " + target.name + "! 🏃", 2200, 1.55, 0.9);
-    if (hasAttack){
-      setTimeout(() => {
-        const t2 = npcs.find(n => n.id === target.id);
-        if (t2 && Math.hypot(t2.x - player.x, t2.y - player.y) < 150){
-          const ang = Math.atan2(t2.y - player.y, t2.x - player.x);
-          if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
-          else player.dir = Math.sin(ang) > 0 ? 0 : 2;
-          attack();
-        }
-      }, 2500);
-    }
     return;
   }
   if (hasAttack){
     const nearest = findNearestNPC();
-    if (nearest && Math.hypot(nearest.x - player.x, nearest.y - player.y) < 200){
-      const ang = Math.atan2(nearest.y - player.y, nearest.x - player.x);
+    if (nearest && Math.hypot(nearest.x-player.x, nearest.y-player.y) < 200){
+      const ang = Math.atan2(nearest.y-player.y, nearest.x-player.x);
       if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
       else player.dir = Math.sin(ang) > 0 ? 0 : 2;
     }
-    const count = cmd.targets.includes("all") ? 5 : (cmd.counts || 1);
-    for (let i = 0; i < count; i++) setTimeout(() => attack(), i * 250);
+    for (let i = 0; i < 3; i++) setTimeout(() => attack(), i * 250);
     showDialog("روغن بخور! 🛢️", 2000, 1.6, 1);
     return;
   }
-  if (hasMove){
-    voiceMoveVec = { x:0, y:-1 }; voiceMoveTimer = 60;
-    showDialog("دارم می‌رم! 🚶", 1500, 1.5, 0.9);
-    return;
-  }
+  if (hasMove){ voiceMoveVec = { x:0, y:-1 }; voiceMoveTimer = 60; showDialog("دارم می‌رم! 🚶", 1500, 1.5, 0.9); return; }
   showDialog("نفهمیدم! مثلاً بگو: همه دشمنان رو نابود کن!", 3500, 1.4, 0.9);
 }
 
@@ -885,14 +1017,16 @@ function attack(){
   player.attackCooldown = 18;
   player.mana = Math.max(0, player.mana - 5);
   const weapon = getWeapon();
+  const ch = getCharacter();
   playBeep("attack");
-  
   const dirAngles = [Math.PI/2, Math.PI, -Math.PI/2, 0];
   const baseAngle = dirAngles[player.dir];
   const range = weapon.range;
   const angleSpread = Math.PI / 3;
   
-  npcs.forEach(n => {
+  const targets = npcs.concat(boss && boss.state !== "defeated" ? [boss] : []);
+  
+  targets.forEach(n => {
     if (n.state === "defeated") return;
     const dx = n.x - player.x, dy = n.y - player.y;
     const dist = Math.hypot(dx, dy);
@@ -901,28 +1035,39 @@ function attack(){
     let diff = Math.abs(ang - baseAngle);
     if (diff > Math.PI) diff = Math.PI * 2 - diff;
     if (diff < angleSpread/2 || dist < 40){
-      let dmg = weapon.damage + Math.floor(Math.random() * 10);
+      let dmg = Math.round((weapon.damage + Math.floor(Math.random() * 10)) * ch.damage);
       if (gameState.ownedPowerups.includes("crit") && Math.random() < 0.2) dmg *= 2;
       n.health -= dmg;
       n.hitFlash = 12;
-      n.oilLevel = Math.min(100, (1 - n.health/n.maxHealth) * 100);
+      if (!n.isBoss) n.oilLevel = Math.min(100, (1 - n.health/n.maxHealth) * 100);
       spawnParticles(n.x, n.y, "#ffb700", 10);
       damageNumbers.push({ x:n.x, y:n.y-20, value:dmg, life:60 });
       playBeep("hit");
-      if (Math.random() < 0.5 && n.health > 0) n.dialogueTimer = 0;
+      shakeScreen(5);
       if (n.health <= 0){
         n.state = "defeated";
         n.defeatedTimer = 90;
-        let pts = 10;
+        let pts = n.isBoss ? 500 : 10;
         if (gameState.ownedPowerups.includes("double")) pts *= 2;
         gameState.coins += pts;
-        updateHUD();
+        gameState.totalCoins += pts;
+        gameState.kills++;
+        combo++;
+        comboTimer = 90;
+        if (combo > gameState.maxCombo) gameState.maxCombo = combo;
         spawnParticles(n.x, n.y, "#7ed6a0", 25);
-        checkLevelComplete();
+        
+        // جعبه جایزه
+        if (!n.isBoss && Math.random() < 0.4) spawnPrizeBox(n.x, n.y);
+        if (n.isBoss){
+          gameState.bossDefeated = true;
+          showBossDefeated();
+        }
+        
+        updateHUD(); checkLevelComplete();
       }
     }
   });
-  
   const px = player.x + Math.cos(baseAngle) * 40;
   const py = player.y + Math.sin(baseAngle) * 40;
   for (let i = 0; i < 12; i++){
@@ -936,14 +1081,187 @@ function attack(){
   }
 }
 
+function spawnPrizeBox(x, y){
+  const types = ["health", "speed", "shield", "coin"];
+  prizeBoxes.push({
+    x, y, type: types[Math.floor(Math.random() * types.length)],
+    life: 600, anim: 0
+  });
+}
+
+function collectPrizeBox(box){
+  playBeep("coin");
+  spawnParticles(box.x, box.y, "#ffd700", 20);
+  if (box.type === "coin"){
+    gameState.coins += 25;
+    gameState.totalCoins += 25;
+    showDialog("💰 +25 سکه!", 1500, 1.5, 1);
+  } else if (box.type === "health"){
+    player.health = Math.min(player.maxHealth, player.health + 30);
+    showDialog("❤️ +30 جون!", 1500, 1.5, 1);
+  } else if (box.type === "speed"){
+    player.speedBoostTimer = 600;
+    showDialog("⚡ سرعت بیشتر!", 1500, 1.5, 1);
+  } else if (box.type === "shield"){
+    player.shieldTimer = 400;
+    showDialog("🛡️ سپر!", 1500, 1.5, 1);
+  }
+  updateHUD();
+}
+
+// ============ BOSS ============
+let boss = null;
+
+function spawnBoss(){
+  boss = {
+    id:"boss_dragon", name:"🐉 اژدهای روغن",
+    x: WORLD.w/2, y: WORLD.h/2,
+    r: 50, vx: 0, vy: 0,
+    dir: 0, walkFrame: 0,
+    health: 3000, maxHealth: 3000,
+    state: "chase",
+    hitFlash: 0, isBoss: true,
+    bulletCooldown: 0, slamCooldown: 0,
+    dialogueTimer: 100,
+    dialogueIndex: 0
+  };
+  document.getElementById("bossBar").classList.add("show");
+  showDialog("🐉 من اژدهای روغنم! اومدی منو بزنی؟", 4000, 0.6, 0.8);
+}
+
+function showBossDefeated(){
+  document.getElementById("bossBar").classList.remove("show");
+  playBeep("win");
+  shakeScreen(40);
+  showDialog("🎉 اژدها شکست خورد! تو قهرمان شدی! 🏆", 5000, 1.6, 1);
+}
+
+function updateBoss(){
+  if (!boss || boss.state === "defeated") return;
+  if (boss.hitFlash > 0) boss.hitFlash--;
+  
+  const dx = player.x - boss.x, dy = player.y - boss.y;
+  const dist = Math.hypot(dx, dy);
+  
+  // حرکت به سمت بازیکن
+  if (dist > 100){
+    const ang = Math.atan2(dy, dx);
+    const speed = 1.2;
+    let nx = boss.x + Math.cos(ang) * speed;
+    let ny = boss.y + Math.sin(ang) * speed;
+    if (!collides(nx, boss.y, boss.r)) boss.x = nx;
+    if (!collides(boss.x, ny, boss.r)) boss.y = ny;
+    boss.dir = Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))
+      ? (Math.cos(ang) > 0 ? 3 : 1) : (Math.sin(ang) > 0 ? 0 : 2);
+    boss.walkFrame += 0.4;
+  }
+  
+  // شلیک
+  if (boss.bulletCooldown <= 0 && dist < 500){
+    const baseAng = Math.atan2(dy, dx);
+    for (let i = -1; i <= 1; i++){
+      const a = baseAng + i * 0.3;
+      spawnBullet(boss.x, boss.y, Math.cos(a), Math.sin(a), "enemy", 4);
+    }
+    boss.bulletCooldown = 60;
+    playBeep("boss");
+  }
+  if (boss.bulletCooldown > 0) boss.bulletCooldown--;
+  
+  // اسلم
+  if (boss.slamCooldown <= 0 && dist < 100){
+    shakeScreen(30);
+    player.health -= 15;
+    player.hitFlash = 20;
+    playBeep("hurt");
+    boss.slamCooldown = 120;
+    updateHUD();
+    if (player.health <= 0){ gameStarted = false; showLevelEnd(false); return; }
+  }
+  if (boss.slamCooldown > 0) boss.slamCooldown--;
+  
+  // دیالوگ
+  boss.dialogueTimer--;
+  if (boss.dialogueTimer <= 0){
+    const dialogues = ["منو نمی‌تونی بزنی! 🐉", "غررر! 🔥", "مرگ توئه! 💀", "من ابدی‌ام! 👑"];
+    speak(dialogues[boss.dialogueIndex], 0.6, 0.8);
+    boss.dialogueIndex = (boss.dialogueIndex + 1) % dialogues.length;
+    boss.dialogueTimer = 300;
+  }
+  
+  // نوار سلامت
+  document.getElementById("bossFill").style.width = (boss.health / boss.maxHealth * 100) + "%";
+}
+
 // ============ LEVEL ============
-let gameStarted = false;
-let levelComplete = false;
+let gameStarted = false, levelComplete = false, levelStartTime = 0, levelTookDamage = false;
+const ENEMY_NAMES = ["مریم گلی","زهرا کماندو","اسماع روغن‌خور","حنانه بدترکیب","بچه‌خور","مگس","دایی جواد","خاله سوسن","عمو رحیم","ننه صغری","پسر عمو","دختر خاله"];
+const ENEMY_COLORS = ["#ff8ac4","#3a8ac8","#68c890","#ffb700","#8a6ac8","#4a4a4a","#e74c3c","#9b59b6","#f39c12","#16a085","#c0392b","#8e44ad"];
+const ENEMY_DIALOGUES = ["بیا بگیرم! 🏃","تو نمی‌تونی منو بزنی! 😎","روغن نده به من! 😱","کمک! بی‌بی دیوونه شده! 😂","آخه چرا من؟ 🥺","برو خونت رو بچسب! 😤","مامان! داره تعقیبم می‌کنه! 😭","اِ اِ اِ... 🥶","نکن! من خوشم نمیاد! 🤢","بگیر منو خودت می‌سوزی! 🔥"];
+
+let npcs = [];
+let currentLevel = 1;
+let levelConfig = null;
+
+function getLevelConfig(num){
+  const idx = num - 1;
+  return {
+    level: num,
+    enemyCount: Math.min(3 + Math.floor(idx * 0.5), 15),
+    enemyHealth: 50 + idx * 18,
+    enemySpeed: 0.55 + idx * 0.045,
+    enemyDamage: 1 + Math.floor(idx / 3),
+    enemyHasWeapon: idx >= 4,
+    hasBoss: num === 30
+  };
+}
+
+function spawnNPCsForLevel(){
+  npcs = [];
+  const count = levelConfig.enemyCount;
+  for (let i = 0; i < count; i++){
+    let placed = false, tries = 0, nx, ny;
+    while (!placed && tries < 50){
+      const room = rooms[Math.floor(Math.random() * rooms.length)];
+      nx = room.x + 80 + Math.random() * (room.w - 160);
+      ny = room.y + 80 + Math.random() * (room.h - 160);
+      if (!collides(nx, ny, 22)) placed = true;
+      tries++;
+    }
+    if (!placed){ nx = 300 + i * 100; ny = 300; }
+    const typeIdx = i % ENEMY_NAMES.length;
+    npcs.push({
+      id: "npc_" + i + "_" + Math.random().toString(36).substr(2,5),
+      name: ENEMY_NAMES[typeIdx],
+      color: ENEMY_COLORS[typeIdx], hair: "#3a1a0a",
+      x: nx, y: ny, r: 20, vx: 0, vy: 0,
+      dir: 0, walkFrame: 0,
+      health: levelConfig.enemyHealth, maxHealth: levelConfig.enemyHealth,
+      state: "wander", stateTimer: 60 + Math.random() * 100,
+      targetX: nx, targetY: ny,
+      defeatedTimer: 0, oilLevel: 0, hitFlash: 0,
+      hasWeapon: levelConfig.enemyHasWeapon && Math.random() < 0.7,
+      weaponCooldown: 0,
+      dialogueTimer: 100 + Math.random() * 200,
+      dialogueIndex: Math.floor(Math.random() * ENEMY_DIALOGUES.length)
+    });
+  }
+  // آیتم مخفی
+  const room = rooms[Math.floor(Math.random() * rooms.length)];
+  items.push({
+    x: room.x + 100 + Math.random() * (room.w - 200),
+    y: room.y + 100 + Math.random() * (room.h - 200),
+    type: "hidden", life: 99999
+  });
+  // باس
+  if (levelConfig.hasBoss) spawnBoss();
+  else { boss = null; document.getElementById("bossBar").classList.remove("show"); }
+}
 
 function checkLevelComplete(){
   const alive = getAliveNPCs().length;
   document.getElementById("levelGoal").textContent = (npcs.length - alive) + "/" + npcs.length;
-  if (alive === 0 && !levelComplete){
+  if (alive === 0 && (!boss || boss.state === "defeated") && !levelComplete){
     levelComplete = true;
     stopAutoHunt();
     setTimeout(() => showLevelEnd(true), 1200);
@@ -952,107 +1270,81 @@ function checkLevelComplete(){
 
 function showLevelEnd(victory){
   const screen = document.getElementById("levelEndScreen");
+  const elapsed = Math.round((Date.now() - levelStartTime) / 1000);
   document.getElementById("levelEndEmoji").textContent = victory ? "🎉" : "😵";
   document.getElementById("levelEndTitle").textContent = victory ? "مرحله " + currentLevel + " تموم شد!" : "بی‌بی خسته شد!";
   document.getElementById("levelEndMsg").textContent = victory ? "همه اهالی روغن‌کاری شدن!" : "دوباره امتحان کن!";
   document.getElementById("levelEndCoins").textContent = gameState.coins;
+  document.getElementById("levelEndTime").textContent = "⏱️ زمان: " + elapsed + " ثانیه";
+  
+  if (victory && !levelTookDamage){
+    gameState.perfectLevel = true;
+    checkAchievements();
+  }
+  
   const nextBtn = document.getElementById("nextLevelBtn");
   if (currentLevel >= 30){ nextBtn.textContent = "🎊 بازیت تموم شد!"; nextBtn.disabled = true; }
   else { nextBtn.textContent = "مرحله بعد ➡️"; nextBtn.disabled = false; }
-  screen.classList.add("show");
+  screen.style.display = "flex";
   saveGame();
+  checkAchievements();
 }
 
 function nextLevel(){
-  document.getElementById("levelEndScreen").classList.remove("show");
+  document.getElementById("levelEndScreen").style.display = "none";
   currentLevel++;
   gameState.currentLevel = currentLevel;
   if (currentLevel > gameState.maxLevel) gameState.maxLevel = currentLevel;
   saveGame();
+  checkAchievements();
   startLevel(currentLevel);
 }
 
 function startLevel(num){
   currentLevel = num;
   buildLevel(num);
+  levelConfig = getLevelConfig(num);
   spawnNPCsForLevel();
   const startRoom = rooms[0];
-  player.x = startRoom.x + 100;
-  player.y = startRoom.y + 100;
+  player.x = startRoom.x + 120; player.y = startRoom.y + 120;
   player.health = player.maxHealth;
   player.mana = player.maxMana;
   player.attackCooldown = 0;
+  player.speedBoostTimer = 0;
+  player.shieldTimer = 0;
   levelComplete = false;
+  levelTookDamage = false;
   autoMoveTarget = null; autoMoveTimer = 0; voiceMoveTimer = 0;
+  combo = 0; comboTimer = 0;
   stopAutoHunt();
   document.getElementById("levelNum").textContent = num;
   document.getElementById("levelGoal").textContent = "0/" + npcs.length;
   document.getElementById("levelInfo").classList.add("show");
+  levelStartTime = Date.now();
   updateHUD();
   updateCamera();
-  camera.x = player.x - W/2;
-  camera.y = player.y - H/2;
+  camera.x = player.x - W/2; camera.y = player.y - H/2;
   const intro = [`مرحله ${num}! آماده‌ای؟ 🛢️`, `بزن بریم مرحله ${num}! 💪`, `مرحله ${num} شروع شد! ⚔️`];
   showDialog(intro[Math.floor(Math.random()*intro.length)], 2500, 1.5, 0.9);
 }
 
 // ============ NPC ============
-function spawnNPCsForLevel(){
-  npcs = [];
-  const count = levelConfig.enemyCount;
-  for (let i = 0; i < count; i++){
-    let placed = false, tries = 0, nx, ny;
-    while (!placed && tries < 30){
-      const room = rooms[Math.floor(Math.random() * rooms.length)];
-      nx = room.x + 80 + Math.random() * (room.w - 160);
-      ny = room.y + 80 + Math.random() * (room.h - 160);
-      if (!collides(nx, ny, 22)) placed = true;
-      tries++;
-    }
-    const typeIdx = i % ENEMY_NAMES.length;
-    npcs.push({
-      id: "npc_" + i + "_" + Math.random().toString(36).substr(2,5),
-      name: ENEMY_NAMES[typeIdx],
-      color: ENEMY_COLORS[typeIdx],
-      hair: "#3a1a0a",
-      x: nx, y: ny, r: 20,
-      vx: 0, vy: 0, dir: 0, walkFrame: 0,
-      health: levelConfig.enemyHealth,
-      maxHealth: levelConfig.enemyHealth,
-      state: "wander",
-      stateTimer: 60 + Math.random() * 100,
-      targetX: nx, targetY: ny,
-      defeatedTimer: 0, oilLevel: 0, hitFlash: 0,
-      hasWeapon: levelConfig.enemyHasWeapon && Math.random() < 0.6,
-      weaponCooldown: 0,
-      dialogueTimer: 100 + Math.random() * 200,
-      dialogueIndex: Math.floor(Math.random() * ENEMY_DIALOGUES.length)
-    });
-  }
-}
-
 function updateNPC(n){
   if (n.state === "defeated"){
     if (n.defeatedTimer > 0){ n.defeatedTimer--; n.y += 1; }
     return;
   }
   if (n.hitFlash > 0) n.hitFlash--;
-  
   n.dialogueTimer--;
   if (n.dialogueTimer <= 0){
-    if (Math.hypot(n.x - player.x, n.y - player.y) < 300){
+    if (Math.hypot(n.x - player.x, n.y - player.y) < 300)
       speak(ENEMY_DIALOGUES[n.dialogueIndex], 1.4, 0.95);
-    }
     n.dialogueTimer = 200 + Math.random()*200;
     n.dialogueIndex = (n.dialogueIndex + 1) % ENEMY_DIALOGUES.length;
   }
-  
   const dx = player.x - n.x, dy = player.y - n.y;
   const distToPlayer = Math.hypot(dx, dy);
-  
   if (distToPlayer < 220 && n.state !== "chase"){ n.state = "flee"; n.stateTimer = 60; }
-  
-  // دشمن مسلح شلیک کنه
   if (n.hasWeapon && n.weaponCooldown <= 0 && distToPlayer < 350 && distToPlayer > 60){
     const angle = Math.atan2(dy, dx);
     spawnBullet(n.x, n.y, Math.cos(angle), Math.sin(angle), "enemy", levelConfig.enemyDamage);
@@ -1061,7 +1353,6 @@ function updateNPC(n){
     n.state = "wander";
   }
   if (n.weaponCooldown > 0) n.weaponCooldown--;
-  
   if (n.state === "flee"){
     n.stateTimer--;
     if (n.stateTimer <= 0) n.state = "wander";
@@ -1076,7 +1367,6 @@ function updateNPC(n){
     n.y = Math.max(40, Math.min(WORLD.h-40, n.y));
     return;
   }
-  
   n.stateTimer--;
   if (n.stateTimer <= 0){
     const room = rooms[Math.floor(Math.random()*rooms.length)];
@@ -1100,7 +1390,6 @@ function updateNPC(n){
 // ============ UPDATE ============
 function update(){
   if (!gameStarted) return;
-  
   const input = getInputVec();
   if (voiceMoveTimer > 0){ voiceMoveTimer--; input.x = voiceMoveVec.x; input.y = voiceMoveVec.y; }
   if (autoMoveTimer > 0 && autoMoveTarget){
@@ -1110,36 +1399,39 @@ function update(){
     if (dist > 30){ input.x = dx/dist; input.y = dy/dist; }
     else { autoMoveTimer = 0; autoMoveTarget = null; }
   }
-  
-  let speed = 3.5;
+  const ch = getCharacter();
+  let speed = 3.5 * ch.speed;
   if (gameState.ownedPowerups.includes("speed")) speed *= 1.3;
   if (getSkin().id === "ninja") speed *= 1.2;
+  if (player.speedBoostTimer > 0){ speed *= 1.5; player.speedBoostTimer--; }
   
   let vx = input.x * speed, vy = input.y * speed;
-  
   if (Math.abs(input.x) > 0.1 || Math.abs(input.y) > 0.1){
     if (Math.abs(input.x) > Math.abs(input.y)) player.dir = input.x > 0 ? 3 : 1;
     else player.dir = input.y > 0 ? 0 : 2;
     player.walkFrame += 0.5;
   }
-  
   let nx = player.x + vx, ny = player.y + vy;
   if (!collides(nx, player.y, player.r)) player.x = nx;
   if (!collides(player.x, ny, player.r)) player.y = ny;
   player.x = Math.max(40, Math.min(WORLD.w-40, player.x));
   player.y = Math.max(40, Math.min(WORLD.h-40, player.y));
-  
   if (player.attackCooldown > 0) player.attackCooldown--;
   if (player.hitFlash > 0) player.hitFlash--;
   if (player.hideTimer > 0) player.hideTimer--;
-  
+  if (player.shieldTimer > 0) player.shieldTimer--;
   if (player.mana < player.maxMana) player.mana = Math.min(player.maxMana, player.mana + 0.2);
   if (gameState.ownedPowerups.includes("regen") && player.health < player.maxHealth)
     player.health = Math.min(player.maxHealth, player.health + 0.03);
   
   npcs.forEach(updateNPC);
+  updateBoss();
   updateAutoHunt();
   
+  // کمبو
+  if (comboTimer > 0){ comboTimer--; if (comboTimer <= 0) combo = 0; }
+  
+  // گلوله‌ها
   for (let i = bullets.length - 1; i >= 0; i--){
     const b = bullets[i];
     b.x += b.vx; b.y += b.vy; b.life--;
@@ -1148,16 +1440,47 @@ function update(){
       if (Math.hypot(b.x - player.x, b.y - player.y) < player.r + 6){
         let dmg = b.damage;
         if (gameState.ownedPowerups.includes("shield")) dmg *= 0.5;
-        player.health -= dmg;
-        player.hitFlash = 8;
-        playBeep("hurt");
-        spawnParticles(player.x, player.y, "#ff6b6b", 8);
+        if (player.shieldTimer > 0) dmg = 0;
+        if (dmg > 0){
+          player.health -= dmg;
+          player.hitFlash = 8;
+          playBeep("hurt");
+          spawnParticles(player.x, player.y, "#ff6b6b", 8);
+          shakeScreen(15);
+          levelTookDamage = true;
+        }
         updateHUD();
         bullets.splice(i, 1);
         if (player.health <= 0){ gameStarted = false; showLevelEnd(false); return; }
       }
     }
     if (collides(b.x, b.y, 4)) bullets.splice(i, 1);
+  }
+  
+  // جعبه‌های جایزه
+  for (let i = prizeBoxes.length - 1; i >= 0; i--){
+    const b = prizeBoxes[i];
+    b.life--; b.anim += 0.1;
+    if (b.life <= 0){ prizeBoxes.splice(i, 1); continue; }
+    if (Math.hypot(b.x - player.x, b.y - player.y) < player.r + 25){
+      collectPrizeBox(b);
+      prizeBoxes.splice(i, 1);
+    }
+  }
+  
+  // آیتم‌های مخفی
+  for (let i = items.length - 1; i >= 0; i--){
+    const it = items[i];
+    if (Math.hypot(it.x - player.x, it.y - player.y) < player.r + 20){
+      gameState.coins += 100;
+      gameState.totalCoins += 100;
+      playBeep("coin");
+      spawnParticles(it.x, it.y, "#ffd700", 30);
+      showDialog("💎 آیتم مخفی! +100 سکه!", 2500, 1.6, 1);
+      items.splice(i, 1);
+      updateHUD();
+      break;
+    }
   }
   
   for (let i = particles.length - 1; i >= 0; i--){
@@ -1169,31 +1492,24 @@ function update(){
     damageNumbers[i].y -= 0.8; damageNumbers[i].life--;
     if (damageNumbers[i].life <= 0) damageNumbers.splice(i, 1);
   }
-  
   updateCamera();
   updateHUD();
 }
 
 // ============ RENDER ============
 function drawCharacter(x, y, r, npc, dir, walkFrame, hitFlash, isPlayer){
-  const cx = x - camera.x, cy = y - camera.y;
+  const cx = x - camera.x + camera.shakeX, cy = y - camera.y + camera.shakeY;
   if (cx < -100 || cx > W+100 || cy < -100 || cy > H+100) return;
   const bob = Math.sin(walkFrame) * 3;
   const py = cy + bob;
-  
   ctx.save();
   ctx.fillStyle = "rgba(0,0,0,.3)";
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + r*0.9, r*0.9, r*0.4, 0, 0, Math.PI*2);
-  ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx, cy + r*0.9, r*0.9, r*0.4, 0, 0, Math.PI*2); ctx.fill();
   ctx.restore();
-  
   let bodyColor, hairColor, skinColor = "#ffd8b0";
   if (isPlayer){
     const skin = getSkin();
-    bodyColor = skin.id === "superhero" ? "#e74c3c" :
-                skin.id === "ninja" ? "#1a1a2a" :
-                skin.id === "pirate" ? "#2c3e50" : "#8a4858";
+    bodyColor = skin.id === "superhero" ? "#e74c3c" : skin.id === "ninja" ? "#1a1a2a" : skin.id === "pirate" ? "#2c3e50" : "#8a4858";
     hairColor = skin.id === "superhero" ? "#2c3e50" : "#5a3a5a";
     skinColor = "#e8b088";
   } else {
@@ -1201,35 +1517,40 @@ function drawCharacter(x, y, r, npc, dir, walkFrame, hitFlash, isPlayer){
     hairColor = npc ? npc.hair : "#3a1a0a";
   }
   if (hitFlash > 0){ bodyColor = "#fff"; hairColor = "#ff6666"; }
-  
   ctx.save();
   ctx.translate(cx, py);
-  
   const legOff = Math.sin(walkFrame) * 5;
   ctx.fillStyle = "#5a3a1a";
   ctx.beginPath(); ctx.ellipse(-r*0.35, r*0.6 + legOff*0.2, r*0.2, r*0.35, 0, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(r*0.35, r*0.6 - legOff*0.2, r*0.2, r*0.35, 0, 0, Math.PI*2); ctx.fill();
-  
   ctx.fillStyle = bodyColor;
   ctx.beginPath(); ctx.ellipse(0, r*0.15, r*0.65, r*0.75, 0, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 2; ctx.stroke();
-  
   if (isPlayer){
     const armor = getArmor();
     if (armor.id !== "none"){
       ctx.strokeStyle = "#c0c0c0"; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.ellipse(0, r*0.15, r*0.7, r*0.8, 0, 0, Math.PI*2); ctx.stroke();
     }
+    if (player.shieldTimer > 0){
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = "#4ade80"; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(0, 0, r*1.4, 0, Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    if (player.speedBoostTimer > 0){
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = "#7fe3ff"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(0, 0, r*1.6, 0, Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
   }
-  
   ctx.fillStyle = skinColor;
   ctx.beginPath(); ctx.ellipse(-r*0.75, r*0.1 + legOff*0.3, r*0.18, r*0.35, 0, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(r*0.75, r*0.1 - legOff*0.3, r*0.18, r*0.35, 0, 0, Math.PI*2); ctx.fill();
-  
   ctx.fillStyle = skinColor;
   ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.7, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.stroke();
-  
   ctx.fillStyle = hairColor;
   if (isPlayer){
     ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.72, Math.PI, Math.PI*2); ctx.fill();
@@ -1239,134 +1560,102 @@ function drawCharacter(x, y, r, npc, dir, walkFrame, hitFlash, isPlayer){
     ctx.beginPath(); ctx.arc(-r*0.28, -r*0.55, r*0.22, 0, Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(r*0.28, -r*0.55, r*0.22, 0, Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(-r*0.06, -r*0.55); ctx.lineTo(r*0.06, -r*0.55); ctx.stroke();
+  } else if (npc && npc.isBoss){
+    ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.75, Math.PI, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#8a0000";
+    ctx.beginPath(); ctx.arc(-r*0.3, -r*0.3, r*0.3, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(r*0.3, -r*0.3, r*0.3, 0, Math.PI*2); ctx.fill();
   } else {
     ctx.beginPath(); ctx.arc(0, -r*0.7, r*0.7, Math.PI, Math.PI*2); ctx.fill();
   }
-  
   let ex1 = -r*0.22, ex2 = r*0.22, ey = -r*0.55;
   if (dir === 1){ ex1 = -r*0.35; ex2 = -r*0.05; }
   if (dir === 3){ ex1 = r*0.05; ex2 = r*0.35; }
   if (dir === 2){ ey = -r*0.65; }
-  
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(ex1, ey, r*0.13, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.arc(ex2, ey, r*0.13, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = npc && npc.isBoss ? "#ff0000" : "#000";
   ctx.beginPath(); ctx.arc(ex1, ey, r*0.06, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.arc(ex2, ey, r*0.06, 0, Math.PI*2); ctx.fill();
-  
   ctx.strokeStyle = "#7a1a10"; ctx.lineWidth = 2;
   ctx.beginPath();
   if (isPlayer && player.attackCooldown > 12){
     ctx.fillStyle = "#7a1a10";
-    ctx.ellipse(0, -r*0.32, r*0.18, r*0.12, 0, 0, Math.PI*2);
-    ctx.fill();
-  } else {
-    ctx.arc(0, -r*0.35, r*0.15, 0, Math.PI);
-  }
+    ctx.ellipse(0, -r*0.32, r*0.18, r*0.12, 0, 0, Math.PI*2); ctx.fill();
+  } else { ctx.arc(0, -r*0.35, r*0.15, 0, Math.PI); }
   ctx.stroke();
-  
   if (isPlayer){
     const weapon = getWeapon();
     ctx.save();
     ctx.translate(r*0.7, r*0.15);
-    if (weapon.id === "oil"){
-      ctx.fillStyle = "#ffb700";
-      ctx.fillRect(-r*0.18, -r*0.35, r*0.36, r*0.7);
-    } else {
-      ctx.font = r*0.9 + "px serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(weapon.icon, 0, 0);
-    }
+    if (weapon.id === "oil"){ ctx.fillStyle = "#ffb700"; ctx.fillRect(-r*0.18, -r*0.35, r*0.36, r*0.7); }
+    else { ctx.font = r*0.9 + "px serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(weapon.icon, 0, 0); }
     ctx.restore();
   }
-  
   if (!isPlayer && npc && npc.hasWeapon){
     ctx.save();
     ctx.translate(r*0.7, r*0.15);
-    ctx.font = r*0.7 + "px serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctx.font = r*0.7 + "px serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText("🔫", 0, 0);
     ctx.restore();
   }
-  
   if (isPlayer && player.hideTimer > 0){
-    ctx.globalAlpha = 0.3;
-    ctx.fillStyle = "#7fd4f0";
+    ctx.globalAlpha = 0.3; ctx.fillStyle = "#7fd4f0";
     ctx.beginPath(); ctx.arc(0, 0, r*1.5, 0, Math.PI*2); ctx.fill();
     ctx.globalAlpha = 1;
   }
-  
   ctx.restore();
-  
-  if (!isPlayer && npc && npc.health !== undefined){
+  if (!isPlayer && npc && npc.health !== undefined && !npc.isBoss){
     const bw = r*2, bh = 5;
     const bx = cx - r, by = py - r*1.9;
-    ctx.fillStyle = "rgba(0,0,0,.7)";
-    ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = "rgba(0,0,0,.7)"; ctx.fillRect(bx, by, bw, bh);
     const hp = Math.max(0, npc.health / npc.maxHealth);
     ctx.fillStyle = hp > 0.5 ? "#4ade80" : hp > 0.25 ? "#ffd700" : "#ff3030";
     ctx.fillRect(bx, by, bw * hp, bh);
     ctx.fillStyle = "#ffb700";
     ctx.fillRect(bx, by + bh + 1, bw * (npc.oilLevel/100), 3);
     ctx.fillStyle = "rgba(255,255,255,.9)";
-    ctx.font = "bold 10px Tahoma";
-    ctx.textAlign = "center";
+    ctx.font = "bold 10px Tahoma"; ctx.textAlign = "center";
     ctx.fillText(npc.name, cx, by - 4);
   }
 }
 
 function drawRooms(){
   rooms.forEach(room => {
-    const rx = room.x - camera.x, ry = room.y - camera.y;
+    const rx = room.x - camera.x + camera.shakeX, ry = room.y - camera.y + camera.shakeY;
     if (rx > W || ry > H || rx + room.w < 0 || ry + room.h < 0) return;
     ctx.fillStyle = room.floor;
     ctx.fillRect(rx, ry, room.w, room.h);
-    ctx.strokeStyle = "rgba(0,0,0,.05)";
-    ctx.lineWidth = 1;
-    for (let x = 0; x < room.w; x += 60){
-      ctx.beginPath(); ctx.moveTo(rx+x, ry); ctx.lineTo(rx+x, ry+room.h); ctx.stroke();
-    }
-    for (let y = 0; y < room.h; y += 60){
-      ctx.beginPath(); ctx.moveTo(rx, ry+y); ctx.lineTo(rx+room.w, ry+y); ctx.stroke();
-    }
-    ctx.fillStyle = "rgba(0,0,0,.6)";
-    ctx.font = "bold 16px Tahoma";
-    ctx.textAlign = "center";
+    ctx.strokeStyle = "rgba(0,0,0,.05)"; ctx.lineWidth = 1;
+    for (let x = 0; x < room.w; x += 60){ ctx.beginPath(); ctx.moveTo(rx+x, ry); ctx.lineTo(rx+x, ry+room.h); ctx.stroke(); }
+    for (let y = 0; y < room.h; y += 60){ ctx.beginPath(); ctx.moveTo(rx, ry+y); ctx.lineTo(rx+room.w, ry+y); ctx.stroke(); }
+    ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.font = "bold 16px Tahoma"; ctx.textAlign = "center";
     ctx.fillText(room.name, rx + room.w/2, ry + 25);
     const decoIcons = { tv:"📺", kitchen:"🍳", bath:"🚽", bed:"💐", gym:"🥋", oil:"🛢️", kids:"🧸", storage:"📦", yard:"🌳" };
-    if (decoIcons[room.deco]){
-      ctx.font = "40px serif";
-      ctx.fillText(decoIcons[room.deco], rx + room.w/2, ry + room.h/2 + 15);
-    }
+    if (decoIcons[room.deco]){ ctx.font = "40px serif"; ctx.fillText(decoIcons[room.deco], rx + room.w/2, ry + room.h/2 + 15); }
   });
 }
 
 function drawObstacles(){
   obstacles.forEach(o => {
-    const ox = o.x - camera.x, oy = o.y - camera.y;
+    const ox = o.x - camera.x + camera.shakeX, oy = o.y - camera.y + camera.shakeY;
     if (ox > W || oy > H || ox + o.w < 0 || oy + o.h < 0) return;
     if (o.color){
-      ctx.fillStyle = o.color;
-      ctx.fillRect(ox, oy, o.w, o.h);
+      ctx.fillStyle = o.color; ctx.fillRect(ox, oy, o.w, o.h);
       ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 2;
       ctx.strokeRect(ox, oy, o.w, o.h);
     } else {
-      ctx.fillStyle = "#5a3a1a";
-      ctx.fillRect(ox, oy, o.w, o.h);
-      ctx.fillStyle = "rgba(255,255,255,.08)";
-      ctx.fillRect(ox+3, oy+3, o.w-6, 6);
-      ctx.fillStyle = "rgba(0,0,0,.3)";
-      ctx.fillRect(ox, oy+o.h-6, o.w, 6);
+      ctx.fillStyle = "#5a3a1a"; ctx.fillRect(ox, oy, o.w, o.h);
+      ctx.fillStyle = "rgba(255,255,255,.08)"; ctx.fillRect(ox+3, oy+3, o.w-6, 6);
+      ctx.fillStyle = "rgba(0,0,0,.3)"; ctx.fillRect(ox, oy+o.h-6, o.w, 6);
     }
   });
 }
 
 function drawParticles(){
   particles.forEach(p => {
-    const px = p.x - camera.x, py = p.y - camera.y;
+    const px = p.x - camera.x + camera.shakeX, py = p.y - camera.y + camera.shakeY;
     ctx.globalAlpha = p.life;
     ctx.fillStyle = p.color;
     ctx.beginPath(); ctx.arc(px, py, p.size * p.life, 0, Math.PI*2); ctx.fill();
@@ -1375,13 +1664,11 @@ function drawParticles(){
 }
 
 function drawDamageNumbers(){
-  ctx.font = "bold 20px Tahoma";
-  ctx.textAlign = "center";
+  ctx.font = "bold 20px Tahoma"; ctx.textAlign = "center";
   damageNumbers.forEach(d => {
-    const dx = d.x - camera.x, dy = d.y - camera.y;
+    const dx = d.x - camera.x + camera.shakeX, dy = d.y - camera.y + camera.shakeY;
     ctx.globalAlpha = d.life / 60;
-    ctx.fillStyle = "#ffd700";
-    ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 3;
+    ctx.fillStyle = "#ffd700"; ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 3;
     ctx.strokeText("-" + d.value, dx, dy);
     ctx.fillText("-" + d.value, dx, dy);
   });
@@ -1390,15 +1677,45 @@ function drawDamageNumbers(){
 
 function drawBullets(){
   bullets.forEach(b => {
-    const bx = b.x - camera.x, by = b.y - camera.y;
+    const bx = b.x - camera.x + camera.shakeX, by = b.y - camera.y + camera.shakeY;
     ctx.fillStyle = b.owner === "enemy" ? "#ff6b6b" : "#7fe3ff";
     ctx.beginPath(); ctx.arc(bx, by, 5, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
   });
 }
 
+function drawPrizeBoxes(){
+  prizeBoxes.forEach(b => {
+    const bx = b.x - camera.x + camera.shakeX, by = b.y - camera.y + camera.shakeY + Math.sin(b.anim) * 3;
+    if (bx < -50 || bx > W + 50 || by < -50 || by > H + 50) return;
+    const grad = ctx.createRadialGradient(bx, by, 0, bx, by, 30);
+    grad.addColorStop(0, "rgba(255,215,0,.9)");
+    grad.addColorStop(1, "rgba(255,215,0,0)");
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(bx, by, 30, 0, Math.PI*2); ctx.fill();
+    const icons = { health:"❤️", speed:"⚡", shield:"🛡️", coin:"💰" };
+    ctx.font = "30px serif"; ctx.textAlign = "center";
+    ctx.fillText(icons[b.type] || "🎁", bx, by + 10);
+  });
+}
+
+function drawItems(){
+  items.forEach(it => {
+    const ix = it.x - camera.x + camera.shakeX, iy = it.y - camera.y + camera.shakeY;
+    if (ix < -50 || ix > W + 50 || iy < -50 || iy > H + 50) return;
+    const grad = ctx.createRadialGradient(ix, iy, 0, ix, iy, 40);
+    grad.addColorStop(0, "rgba(127,227,255,.9)");
+    grad.addColorStop(1, "rgba(127,227,255,0)");
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(ix, iy, 40, 0, Math.PI*2); ctx.fill();
+    ctx.font = "36px serif"; ctx.textAlign = "center";
+    ctx.fillText("💎", ix, iy + 12);
+  });
+}
+
 function drawCrosshair(){
-  const cx = player.x - camera.x, cy = player.y - camera.y;
+  const cx = player.x - camera.x + camera.shakeX;
+  const cy = player.y - camera.y + camera.shakeY;
   const dirAngles = [Math.PI/2, Math.PI, -Math.PI/2, 0];
   const ang = dirAngles[player.dir];
   const weapon = getWeapon();
@@ -1408,20 +1725,23 @@ function drawCrosshair(){
   ctx.beginPath();
   ctx.moveTo(cx, cy);
   ctx.arc(cx, cy, weapon.range, ang - Math.PI/7, ang + Math.PI/7);
-  ctx.closePath();
-  ctx.fill();
+  ctx.closePath(); ctx.fill();
   ctx.restore();
 }
 
 function render(){
-  ctx.fillStyle = "#1a1a2a";
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#1a1a2a"; ctx.fillRect(0, 0, W, H);
   drawRooms();
+  drawItems();
   drawObstacles();
+  drawPrizeBoxes();
   npcs.forEach(n => {
     if (n.state === "defeated" && n.defeatedTimer <= 0) return;
     drawCharacter(n.x, n.y, n.r, n, n.dir, n.walkFrame, n.hitFlash, false);
   });
+  if (boss && boss.state !== "defeated"){
+    drawCharacter(boss.x, boss.y, boss.r, boss, boss.dir, boss.walkFrame, boss.hitFlash, false);
+  }
   drawCharacter(player.x, player.y, player.r, null, player.dir, player.walkFrame, player.hitFlash, true);
   drawBullets();
   drawCrosshair();
@@ -1436,28 +1756,43 @@ function render(){
     ctx.lineWidth = 6;
     ctx.strokeRect(3, 3, W-6, H-6);
   }
+  if (combo > 1){
+    ctx.font = "bold 32px Tahoma";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ffd700";
+    ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 4;
+    ctx.strokeText("کمبو x" + combo, W/2, 140);
+    ctx.fillText("کمبو x" + combo, W/2, 140);
+  }
 }
 
 // ============ MINIMAP ============
 const mmCanvas = document.getElementById("minimapCanvas");
 const mctx = mmCanvas.getContext("2d");
-const MM_W = 220, MM_H = 180;
+const MM_W = 200, MM_H = 160;
 
 function drawMinimap(){
-  mctx.fillStyle = "rgba(0,0,0,.85)";
-  mctx.fillRect(0, 0, MM_W, MM_H);
+  mctx.fillStyle = "rgba(0,0,0,.85)"; mctx.fillRect(0, 0, MM_W, MM_H);
   const sx = MM_W / WORLD.w, sy = MM_H / WORLD.h;
   rooms.forEach(r => {
     mctx.fillStyle = "rgba(120,80,40,.6)";
     mctx.fillRect(r.x*sx, r.y*sy, r.w*sx, r.h*sy);
-    mctx.strokeStyle = "rgba(255,215,0,.4)";
-    mctx.lineWidth = 1;
+    mctx.strokeStyle = "rgba(255,215,0,.4)"; mctx.lineWidth = 1;
     mctx.strokeRect(r.x*sx, r.y*sy, r.w*sx, r.h*sy);
   });
   npcs.forEach(n => {
     if (n.state === "defeated") return;
     mctx.fillStyle = autoHuntMode ? "#ff6b00" : "#ff6b6b";
     mctx.beginPath(); mctx.arc(n.x*sx, n.y*sy, 3, 0, Math.PI*2); mctx.fill();
+  });
+  if (boss && boss.state !== "defeated"){
+    mctx.fillStyle = "#8a0000";
+    mctx.beginPath(); mctx.arc(boss.x*sx, boss.y*sy, 6, 0, Math.PI*2); mctx.fill();
+    mctx.strokeStyle = "#ffd700"; mctx.lineWidth = 2; mctx.stroke();
+  }
+  prizeBoxes.forEach(b => {
+    mctx.fillStyle = "#ffd700";
+    mctx.beginPath(); mctx.arc(b.x*sx, b.y*sy, 2, 0, Math.PI*2); mctx.fill();
   });
   mctx.fillStyle = "#ffd700";
   mctx.beginPath(); mctx.arc(player.x*sx, player.y*sy, 4, 0, Math.PI*2); mctx.fill();
@@ -1485,21 +1820,34 @@ function renderShop(){
   if (currentShopTab === "weapons"){ items = SHOP_WEAPONS; owned = gameState.ownedWeapons; equipped = gameState.equippedWeapon; }
   else if (currentShopTab === "armor"){ items = SHOP_ARMOR; owned = gameState.ownedArmors; equipped = gameState.equippedArmor; }
   else if (currentShopTab === "skins"){ items = SHOP_SKINS; owned = gameState.ownedSkins; equipped = gameState.equippedSkin; }
-  else { items = SHOP_POWERUPS; owned = gameState.ownedPowerups; equipped = ""; }
+  else if (currentShopTab === "powerups"){ items = SHOP_POWERUPS; owned = gameState.ownedPowerups; equipped = ""; }
+  else { items = SHOP_CONSUMABLES; owned = []; equipped = ""; }
   
   items.forEach(item => {
-    const isOwned = owned.includes(item.id);
-    const isEquipped = equipped === item.id;
+    const isConsumable = currentShopTab === "consumables";
+    const isOwned = isConsumable ? (gameState.consumables[item.id] || 0) > 0 : owned.includes(item.id);
+    const isEquipped = !isConsumable && equipped === item.id;
     const card = document.createElement("div");
-    card.className = "shop-item" + (isOwned ? " owned" : "") + (isEquipped ? " equipped" : "");
+    card.className = "shop-item" + (isOwned && !isConsumable ? " owned" : "") + (isEquipped ? " equipped" : "");
     card.innerHTML = `
       <div class="icon">${item.icon}</div>
       <div class="name">${item.name}</div>
       <div class="desc">${item.desc}</div>
-      ${item.price > 0 ? `<div class="price">🪙 ${item.price}</div>` : ""}
+      ${item.price > 0 ? `<div class="price">🪙 ${item.price}${isConsumable && isOwned ? ' (دارید: ' + gameState.consumables[item.id] + ')' : ''}</div>` : ""}
     `;
     const btn = document.createElement("button");
-    if (isOwned && currentShopTab !== "powerups"){
+    if (isConsumable){
+      btn.textContent = gameState.coins >= item.price ? "بخر" : "سکه کمه";
+      btn.disabled = gameState.coins < item.price;
+      btn.onclick = () => {
+        if (gameState.coins >= item.price){
+          gameState.coins -= item.price;
+          gameState.consumables[item.id] = (gameState.consumables[item.id] || 0) + 1;
+          saveGame(); renderShop(); updateHUD(); updateItemBtn();
+          showDialog("خریداری شد! " + item.icon + " " + item.name, 2000, 1.5, 1);
+        }
+      };
+    } else if (isOwned && currentShopTab !== "powerups"){
       if (isEquipped){ btn.textContent = "✓ انتخاب شده"; btn.disabled = true; }
       else {
         btn.textContent = "انتخاب کن";
@@ -1510,8 +1858,9 @@ function renderShop(){
           saveGame(); renderShop(); updateHUD();
         };
       }
-    } else if (isOwned){ btn.textContent = "✓ خریداری شده"; btn.disabled = true; }
-    else {
+    } else if (isOwned){
+      btn.textContent = "✓ خریداری شده"; btn.disabled = true;
+    } else {
       btn.textContent = gameState.coins >= item.price ? "بخر" : "سکه کمه";
       btn.disabled = gameState.coins < item.price;
       btn.onclick = () => {
@@ -1521,7 +1870,7 @@ function renderShop(){
           if (currentShopTab === "armor") gameState.ownedArmors.push(item.id);
           if (currentShopTab === "skins") gameState.ownedSkins.push(item.id);
           if (currentShopTab === "powerups") gameState.ownedPowerups.push(item.id);
-          saveGame(); renderShop(); updateHUD();
+          saveGame(); renderShop(); updateHUD(); checkAchievements();
           showDialog("خریداری شد! " + item.icon + " " + item.name, 2000, 1.5, 1);
         }
       };
@@ -1531,73 +1880,227 @@ function renderShop(){
   });
 }
 
+// ============ ACHIEVEMENTS UI ============
+function renderAchievements(){
+  const container = document.getElementById("achList");
+  container.innerHTML = "";
+  ACHIEVEMENTS.forEach(a => {
+    const unlocked = gameState.unlockedAchievements.includes(a.id);
+    const item = document.createElement("div");
+    item.className = "achievement-item " + (unlocked ? "unlocked" : "locked");
+    item.innerHTML = `
+      <div class="ach-icon">${unlocked ? a.icon : "🔒"}</div>
+      <div class="ach-info">
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+      </div>
+      <div class="ach-status">${unlocked ? "✓" : "قفل"}</div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+// ============ SCOREBOARD UI ============
+function renderScoreboard(){
+  const container = document.getElementById("scoreList");
+  container.innerHTML = "";
+  if (gameState.highScores.length === 0){
+    container.innerHTML = '<div style="text-align:center;color:#888;padding:20px">هنوز امتیازی ثبت نشده</div>';
+    return;
+  }
+  const sorted = [...gameState.highScores].sort((a,b) => b.score - a.score);
+  sorted.slice(0, 20).forEach((s, i) => {
+    const item = document.createElement("div");
+    item.className = "score-item";
+    item.innerHTML = `
+      <div class="rank">${i+1}</div>
+      <div class="info">
+        <div style="font-size:11px;color:#bbb">مرحله ${s.level} - ${s.date}</div>
+      </div>
+      <div class="val">${s.score} 🪙</div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function addScoreEntry(score, level){
+  gameState.highScores.push({ score, level, date: new Date().toLocaleDateString('fa-IR') });
+  if (gameState.highScores.length > 50) gameState.highScores.shift();
+  saveGame();
+}
+
+// ============ STORY ============
+const STORY_LINES = [
+  { emoji:"📖", title:"داستان بی‌بی روغن", text:"روزی روزگاری در شهر بیکینی باتم، بی‌بی روغنی زندگی می‌کرد که عاشق روغن بود... 🛢️" },
+  { emoji:"👵", title:"ماموریت بی‌بی", text:"بی‌بی می‌خواست به همه اهالی خونه روغن بده تا استخوناشون قوی بشه! 💪" },
+  { emoji:"🏃", title:"فرار اهالی", text:"ولی اهالی از ترس فرار می‌کردن! حالا بی‌بی باید خودش دنبالشون بره! 🏃💨" },
+  { emoji:"⚔️", title:"سلاح بی‌بی", text:"بی‌بی با قوطی روغن جادوییش می‌تونه همه رو روغن‌کاری کنه! 🛢️✨" },
+  { emoji:"🐉", title:"تهدید بزرگ", text:"اما در مرحله ۳۰، اژدهای روغن انتظارش رو می‌کشه! 🐉 باید اون رو هم شکست بده!" }
+];
+
+let storyIndex = 0;
+function showStory(){
+  storyIndex = 0;
+  document.getElementById("storyScreen").classList.add("show");
+  updateStoryView();
+}
+function updateStoryView(){
+  const line = STORY_LINES[storyIndex];
+  document.getElementById("storyEmoji").textContent = line.emoji;
+  document.getElementById("storyTitle").textContent = line.title;
+  document.getElementById("storyText").textContent = line.text;
+  speak(line.text, 1.4, 0.9);
+}
+document.getElementById("storyNextBtn").onclick = () => {
+  storyIndex++;
+  if (storyIndex >= STORY_LINES.length){
+    document.getElementById("storyScreen").classList.remove("show");
+    startGameActual();
+  } else {
+    updateStoryView();
+  }
+};
+
+// ============ CHARACTER SELECTION ============
+function renderCharSelect(){
+  const container = document.getElementById("charSelect");
+  container.innerHTML = "";
+  CHARACTERS.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "char-card" + (gameState.selectedCharacter === c.id ? " selected" : "");
+    card.innerHTML = `
+      <div class="emoji">${c.emoji}</div>
+      <div class="name">${c.name}</div>
+      <div class="desc">${c.desc}</div>
+    `;
+    card.onclick = () => {
+      gameState.selectedCharacter = c.id;
+      saveGame();
+      renderCharSelect();
+    };
+    container.appendChild(card);
+  });
+}
+
+// ============ EVENT LISTENERS ============
 document.querySelectorAll(".tab").forEach(tab => {
-  tab.onclick = () => {
+  tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
     currentShopTab = tab.dataset.tab;
     renderShop();
-  };
+  });
 });
 
-// ============ EVENT LISTENERS ============
-document.getElementById("attackBtn").onclick = attack;
-document.getElementById("attackBtn").addEventListener("touchstart", e => { e.preventDefault(); attack(); }, { passive: false });
-
-const voiceBtn = document.getElementById("voiceBtn");
-voiceBtn.onclick = () => { if (isListening) stopListening(); else startListening(); };
-
-document.getElementById("soundBtn").onclick = () => {
+document.getElementById("attackBtn").addEventListener("pointerdown", e => {
+  e.preventDefault(); e.stopPropagation(); attack();
+});
+document.getElementById("voiceBtn").addEventListener("pointerdown", e => {
+  e.preventDefault(); e.stopPropagation();
+  if (isListening) stopListening(); else startListening();
+});
+document.getElementById("itemBtn").addEventListener("pointerdown", e => {
+  e.preventDefault(); e.stopPropagation(); usePotion();
+});
+document.getElementById("soundBtn").addEventListener("click", e => {
+  e.stopPropagation();
   soundOn = !soundOn;
   document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
   document.getElementById("soundBtn").classList.toggle("off", !soundOn);
+  if (!soundOn) stopMusic(); else startMusic();
   initAudio();
-};
-
-document.getElementById("menuBtn").onclick = () => {
+});
+document.getElementById("menuBtn").addEventListener("click", e => {
+  e.stopPropagation();
   document.getElementById("menuPanel").classList.toggle("show");
-};
+});
+document.getElementById("achBtn").addEventListener("click", e => {
+  e.stopPropagation();
+  renderAchievements();
+  document.getElementById("achScreen").classList.add("show");
+  document.getElementById("closeAch").style.display = "block";
+});
+document.getElementById("scoreBtn").addEventListener("click", e => {
+  e.stopPropagation();
+  renderScoreboard();
+  document.getElementById("scoreScreen").classList.add("show");
+  document.getElementById("closeScore").style.display = "block";
+});
 
-document.getElementById("btnHelp").onclick = () => {
-  showDialog("جوی‌استیک: حرکت | 🛢️: حمله | 🎤: دستور صوتی | بگو: همه دشمنان رو نابود کن", 6000, 1.4, 0.9);
+document.getElementById("btnHelp").addEventListener("click", () => {
+  showDialog("جوی‌استیک: نیمه چپ | 🛢️: حمله | 🎤: دستور | 💊: آیتم | بگو: همه دشمنان رو نابود کن", 6000, 1.4, 0.9);
   document.getElementById("menuPanel").classList.remove("show");
-};
-
-document.getElementById("btnVoice").onclick = () => {
-  showDialog("مثال: همه دشمنان رو نابود کن | برو دنبال زهرا | حمله کن | توقف | بپر", 6000, 1.4, 0.9);
+});
+document.getElementById("btnVoiceCmd").addEventListener("click", () => {
+  showDialog("مثال: همه دشمنان رو نابود کن | معجون بخور | برو دنبال زهرا | توقف", 6000, 1.4, 0.9);
   document.getElementById("menuPanel").classList.remove("show");
-};
-
-document.getElementById("btnReset").onclick = () => {
+});
+document.getElementById("btnAch").addEventListener("click", () => {
+  renderAchievements();
+  document.getElementById("achScreen").classList.add("show");
+  document.getElementById("closeAch").style.display = "block";
+  document.getElementById("menuPanel").classList.remove("show");
+});
+document.getElementById("btnScore").addEventListener("click", () => {
+  renderScoreboard();
+  document.getElementById("scoreScreen").classList.add("show");
+  document.getElementById("closeScore").style.display = "block";
+  document.getElementById("menuPanel").classList.remove("show");
+});
+document.getElementById("btnReset").addEventListener("click", () => {
   if (confirm("مطمئنی؟ همه پیشرفتت پاک می‌شه!")){
-    localStorage.removeItem("bibiRoghansSave");
+    localStorage.removeItem("bibiSaveFinal");
     location.reload();
   }
-};
+});
 
-document.getElementById("shopBtn").onclick = () => {
+document.getElementById("shopBtn").addEventListener("pointerdown", e => {
+  e.preventDefault(); e.stopPropagation();
   document.getElementById("shopScreen").classList.add("show");
+  document.getElementById("closeShop").style.display = "block";
   renderShop();
-};
-document.getElementById("closeShop").onclick = () => {
+});
+document.getElementById("closeShop").addEventListener("click", () => {
   document.getElementById("shopScreen").classList.remove("show");
-};
-document.getElementById("shopFromEndBtn").onclick = () => {
-  document.getElementById("levelEndScreen").classList.remove("show");
-  document.getElementById("shopScreen").classList.add("show");
-  renderShop();
-};
+  document.getElementById("closeShop").style.display = "none";
+});
+document.getElementById("closeAch").addEventListener("click", () => {
+  document.getElementById("achScreen").classList.remove("show");
+  document.getElementById("closeAch").style.display = "none";
+});
+document.getElementById("closeScore").addEventListener("click", () => {
+  document.getElementById("scoreScreen").classList.remove("show");
+  document.getElementById("closeScore").style.display = "none";
+});
+document.getElementById("clearScores").addEventListener("click", () => {
+  if (confirm("همه امتیازات پاک بشه؟")){
+    gameState.highScores = [];
+    saveGame();
+    renderScoreboard();
+  }
+});
 
-document.getElementById("startBtn").onclick = () => {
+document.getElementById("shopFromEndBtn").addEventListener("click", () => {
+  document.getElementById("levelEndScreen").style.display = "none";
+  document.getElementById("shopScreen").classList.add("show");
+  document.getElementById("closeShop").style.display = "block";
+  renderShop();
+});
+document.getElementById("startBtn").addEventListener("click", () => {
   initAudio();
+  startMusic();
   document.getElementById("startScreen").classList.add("hide");
+  showStory();
+});
+document.getElementById("nextLevelBtn").addEventListener("click", nextLevel);
+
+function startGameActual(){
   gameStarted = true;
   updatePlayerStats();
   player.health = player.maxHealth;
+  checkAchievements();
   startLevel(gameState.currentLevel || 1);
-};
-
-document.getElementById("nextLevelBtn").onclick = nextLevel;
+}
 
 // ============ GAME LOOP ============
 let lastTime = performance.now();
@@ -1615,7 +2118,11 @@ if ("speechSynthesis" in window){
   speechSynthesis.onvoiceschanged = () => findPersianVoice();
   findPersianVoice();
 }
+buildLevel(1);
+updatePlayerStats();
 updateHUD();
+updateItemBtn();
+renderCharSelect();
 requestAnimationFrame(loop);
 
 })();
