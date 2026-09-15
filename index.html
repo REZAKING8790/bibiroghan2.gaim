@@ -3,21 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<title>🛢️ بی‌بی روغن - جهان باز</title>
+<title>🛢️ بی‌بی روغن - ۳۰ مرحله</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
   user-select:none;-webkit-user-select:none;touch-action:none;}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;
   font-family:Tahoma,sans-serif;overscroll-behavior:none;}
-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;image-rendering:optimizeSpeed;}
+canvas{display:block;position:absolute;inset:0;width:100%;height:100%;}
 
-/* ============ HUD ============ */
 #hud{position:absolute;top:0;left:0;right:0;padding:8px 10px;z-index:10;
-  display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;
-  font-size:13px;color:#fff;}
-.hud-box{background:rgba(0,0,0,.7);border:2px solid rgba(255,215,0,.5);
+  display:flex;justify-content:space-between;align-items:flex-start;
+  pointer-events:none;font-size:13px;color:#fff;}
+.hud-box{background:rgba(0,0,0,.75);border:2px solid rgba(255,215,0,.5);
   border-radius:10px;padding:6px 10px;backdrop-filter:blur(4px);
   box-shadow:0 4px 12px rgba(0,0,0,.5);}
 #healthWrap{width:130px;height:16px;background:rgba(0,0,0,.6);
@@ -26,88 +23,118 @@ canvas{display:block;position:absolute;inset:0;width:100%;height:100%;image-rend
   transition:width .2s;width:100%;}
 #healthText{position:absolute;inset:0;display:flex;align-items:center;
   justify-content:center;font-size:11px;font-weight:bold;text-shadow:0 1px 2px #000;}
-#scoreBox{font-size:15px;font-weight:bold;color:#ffd700;}
-#questBox{margin-top:6px;font-size:11px;color:#a8e6a0;max-width:180px;
-  line-height:1.4;}
-#energyWrap{width:130px;height:10px;background:rgba(0,0,0,.6);
+#manaWrap{width:130px;height:10px;background:rgba(0,0,0,.6);
   border:2px solid #1a5a8a;border-radius:6px;overflow:hidden;margin-top:4px;}
-#energyFill{height:100%;background:linear-gradient(90deg,#4aa8d0,#7fe3ff);
+#manaFill{height:100%;background:linear-gradient(90deg,#4aa8d0,#7fe3ff);
   width:100%;transition:width .2s;}
+.hud-num{color:#ffd700;font-weight:bold;}
 
-/* ============ Joystick ============ */
 #joystick{position:absolute;width:120px;height:120px;border-radius:50%;
   border:3px solid rgba(255,215,0,.5);background:rgba(0,0,0,.35);
   backdrop-filter:blur(4px);opacity:0;pointer-events:none;z-index:20;
-  transition:opacity .15s;box-shadow:0 0 20px rgba(255,215,0,.3);}
+  transition:opacity .15s;}
 #joystick.active{opacity:1;}
 #joyKnob{position:absolute;width:55px;height:55px;border-radius:50%;
   background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);
-  border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%);
-  box-shadow:0 4px 12px rgba(0,0,0,.5);}
+  border:3px solid #7a5228;left:50%;top:50%;transform:translate(-50%,-50%);}
 
-/* ============ دکمه‌ها ============ */
 .btn{position:absolute;z-index:30;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-size:26px;font-weight:bold;color:#fff;cursor:pointer;
   box-shadow:0 6px 16px rgba(0,0,0,.5);border:3px solid;
-  transition:transform .1s;user-select:none;}
+  transition:transform .1s;}
 .btn:active{transform:scale(.9);}
-
 #attackBtn{right:20px;bottom:130px;width:80px;height:80px;
   background:radial-gradient(circle at 30% 30%,#ff9e4a,#e67520);
   border-color:#7a3a00;}
 #attackBtn::after{content:'🛢️';font-size:38px;}
-
 #voiceBtn{right:20px;bottom:35px;width:70px;height:70px;
   background:radial-gradient(circle at 30% 30%,#7ed6a0,#3aa76d);
   border-color:#1a6a3a;}
 #voiceBtn::after{content:'🎤';font-size:32px;}
-#voiceBtn.listening{animation:pulseMic .8s ease-in-out infinite;
-  background:radial-gradient(circle at 30% 30%,#ff3030,#a00000);
-  border-color:#600;}
+#voiceBtn.listening{animation:pulseMic .8s infinite;
+  background:radial-gradient(circle at 30% 30%,#ff3030,#a00000);}
 @keyframes pulseMic{0%,100%{transform:scale(1);}
   50%{transform:scale(1.15);box-shadow:0 0 30px rgba(255,0,0,.9);}}
-
+#shopBtn{right:20px;bottom:210px;width:60px;height:60px;font-size:26px;
+  background:radial-gradient(circle at 30% 30%,#c8a8f0,#8a6ac8);
+  border-color:#3a1a5a;}
+#shopBtn::after{content:'🏪';}
 #soundBtn{top:12px;right:12px;width:44px;height:44px;font-size:20px;
   background:radial-gradient(circle at 30% 30%,#ffe066,#ffb700);
   border-color:#7a5228;z-index:40;}
-#soundBtn.off{background:radial-gradient(circle at 30% 30%,#888,#555);
-  border-color:#333;}
-
+#soundBtn.off{background:radial-gradient(circle at 30% 30%,#888,#555);}
 #menuBtn{top:12px;left:12px;width:44px;height:44px;font-size:20px;
   background:radial-gradient(circle at 30% 30%,#7fd4f0,#3a8ac8);
   border-color:#1a4a88;z-index:40;}
 
-/* ============ پنل منو ============ */
 #menuPanel{position:absolute;top:64px;left:12px;z-index:50;
   display:flex;flex-direction:column;gap:8px;
-  opacity:0;transform:translateY(-10px);pointer-events:none;
-  transition:all .3s;}
+  opacity:0;transform:translateY(-10px);pointer-events:none;transition:all .3s;}
 #menuPanel.show{opacity:1;transform:translateY(0);pointer-events:auto;}
 #menuPanel button{padding:10px 16px;font-family:inherit;font-size:14px;
   font-weight:bold;color:#fff;background:rgba(40,20,10,.95);
   border:2px solid rgba(255,200,100,.6);border-radius:10px;
   cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.5);white-space:nowrap;}
 
-/* ============ Dialog ============ */
 #dialog{position:absolute;left:50%;bottom:22%;transform:translateX(-50%);
   background:rgba(2,10,22,.95);border:3px solid #ffd700;
   border-radius:16px;padding:12px 20px;color:#fff;font-size:15px;
   font-weight:bold;text-align:center;max-width:90vw;min-width:200px;
   z-index:60;opacity:0;pointer-events:none;transition:opacity .3s;
-  box-shadow:0 0 30px rgba(255,215,0,.5);backdrop-filter:blur(6px);}
+  box-shadow:0 0 30px rgba(255,215,0,.5);}
 #dialog.show{opacity:1;}
 #dialog::before{content:attr(data-speaker);position:absolute;
   top:-14px;right:20px;background:#ffd700;color:#3a1a00;
   padding:3px 12px;border-radius:10px;font-size:12px;}
 
-/* ============ Minimap ============ */
 #minimap{position:absolute;top:80px;right:12px;width:110px;height:90px;
   background:rgba(0,0,0,.6);border:2px solid rgba(255,215,0,.5);
   border-radius:8px;z-index:15;overflow:hidden;}
 #minimapCanvas{width:100%;height:100%;display:block;}
 
-/* ============ Start Screen ============ */
+#levelInfo{position:absolute;top:64px;left:12px;z-index:11;
+  background:rgba(0,0,0,.7);border:2px solid rgba(255,215,0,.5);
+  border-radius:10px;padding:6px 12px;color:#fff;font-size:13px;
+  font-weight:bold;display:none;}
+#levelInfo.show{display:block;}
+
+/* Shop */
+#shopScreen{position:absolute;inset:0;background:rgba(0,0,0,.95);
+  z-index:150;display:none;flex-direction:column;padding:16px;
+  color:#fff;overflow-y:auto;}
+#shopScreen.show{display:flex;}
+#shopScreen h2{font-size:22px;text-align:center;color:#ffd700;
+  margin-bottom:10px;text-shadow:0 0 20px rgba(255,215,0,.7);}
+#shopCoins{text-align:center;font-size:18px;color:#ffe066;
+  margin-bottom:12px;font-weight:bold;}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;justify-content:center;}
+.tab{padding:8px 14px;background:rgba(60,40,20,.8);
+  border:2px solid rgba(255,200,100,.4);border-radius:8px;
+  cursor:pointer;font-size:13px;font-weight:bold;}
+.tab.active{background:linear-gradient(180deg,#ffe066,#ffb700);color:#3a1a00;}
+#shopItems{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:10px;padding-bottom:80px;}
+.shop-item{background:rgba(40,20,60,.85);border:2px solid rgba(255,200,100,.4);
+  border-radius:12px;padding:10px;text-align:center;position:relative;}
+.shop-item.owned{border-color:#4ade80;}
+.shop-item.equipped{border-color:#ffd700;box-shadow:0 0 20px rgba(255,215,0,.6);}
+.shop-item .icon{font-size:36px;margin-bottom:4px;}
+.shop-item .name{font-size:13px;font-weight:bold;margin-bottom:4px;}
+.shop-item .desc{font-size:10px;color:#bbb;margin-bottom:6px;line-height:1.4;}
+.shop-item .price{font-size:12px;color:#ffe066;font-weight:bold;margin-bottom:6px;}
+.shop-item button{width:100%;padding:6px;font-family:inherit;font-size:12px;
+  font-weight:bold;color:#fff;background:rgba(120,60,200,.9);
+  border:2px solid rgba(255,255,255,.3);border-radius:8px;cursor:pointer;}
+.shop-item button:disabled{background:rgba(60,60,60,.9);cursor:not-allowed;}
+.shop-item .lock-icon{position:absolute;top:6px;left:6px;font-size:14px;}
+
+#closeShop{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  padding:12px 40px;font-family:inherit;font-size:16px;font-weight:bold;
+  color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);
+  border:3px solid #7a5228;border-radius:14px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(255,180,0,.5);z-index:151;}
+
 #startScreen{position:absolute;inset:0;background:rgba(0,0,0,.95);
   z-index:100;display:flex;flex-direction:column;align-items:center;
   justify-content:center;padding:20px;text-align:center;color:#fff;
@@ -116,21 +143,31 @@ canvas{display:block;position:absolute;inset:0;width:100%;height:100%;image-rend
 #startScreen .big{font-size:80px;animation:bounce 1.5s infinite alternate;}
 @keyframes bounce{from{transform:translateY(0) rotate(-5deg);}
   to{transform:translateY(-15px) rotate(5deg);}}
-#startScreen h1{font-size:26px;
+#startScreen h1{font-size:24px;
   background:linear-gradient(45deg,#ffd700,#ff9e4a,#ff6b9d);
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;}
-#startScreen p{font-size:14px;color:#ccc;line-height:1.7;max-width:340px;}
+#startScreen p{font-size:13px;color:#ccc;line-height:1.7;max-width:340px;}
 #startBtn{padding:14px 45px;font-size:20px;font-weight:bold;
   font-family:inherit;color:#3a1a00;
   background:linear-gradient(180deg,#ffe066,#ffb700);
-  border:4px solid #7a5228;border-radius:20px;cursor:pointer;
-  box-shadow:0 6px 20px rgba(255,180,0,.5);}
-#startBtn:active{transform:scale(.95);}
+  border:4px solid #7a5228;border-radius:20px;cursor:pointer;}
+
+#levelEndScreen{position:absolute;inset:0;background:rgba(0,0,0,.95);
+  z-index:200;display:none;flex-direction:column;align-items:center;
+  justify-content:center;padding:20px;text-align:center;color:#fff;gap:16px;}
+#levelEndScreen.show{display:flex;}
+#levelEndScreen .big{font-size:80px;}
+#levelEndScreen h1{font-size:26px;color:#ffd700;}
+#levelEndScreen .stat{font-size:18px;margin:4px;}
+#levelEndScreen button{padding:14px 30px;font-family:inherit;font-size:16px;
+  font-weight:bold;color:#3a1a00;background:linear-gradient(180deg,#ffe066,#ffb700);
+  border:3px solid #7a5228;border-radius:14px;cursor:pointer;margin:4px;}
 
 @media (max-aspect-ratio:3/4){
   #attackBtn{width:90px;height:90px;bottom:140px;}
   #voiceBtn{width:75px;height:75px;}
+  #shopBtn{bottom:220px;}
 }
 </style>
 </head>
@@ -138,7 +175,6 @@ canvas{display:block;position:absolute;inset:0;width:100%;height:100%;image-rend
 
 <canvas id="c"></canvas>
 
-<!-- HUD -->
 <div id="hud">
   <div>
     <div class="hud-box">
@@ -146,45 +182,67 @@ canvas{display:block;position:absolute;inset:0;width:100%;height:100%;image-rend
         <div id="healthFill"></div>
         <div id="healthText">❤️ 100/100</div>
       </div>
-      <div id="energyWrap"><div id="energyFill"></div></div>
-    </div>
-    <div class="hud-box" id="questBox" style="margin-top:6px;">
-      🎯 ماموریت: همه اهالی رو روغن‌کاری کن!
+      <div id="manaWrap"><div id="manaFill"></div></div>
     </div>
   </div>
-  <div class="hud-box" id="scoreBox">💰 <span id="scoreVal">0</span></div>
+  <div class="hud-box">🪙 <span class="hud-num" id="coinsVal">0</span></div>
 </div>
 
-<!-- Minimap -->
+<div id="levelInfo">مرحله <span id="levelNum">1</span> - <span id="levelGoal">0/6</span></div>
+
 <div id="minimap"><canvas id="minimapCanvas" width="220" height="180"></canvas></div>
 
-<!-- Joystick -->
 <div id="joystick"><div id="joyKnob"></div></div>
 
-<!-- Buttons -->
 <div class="btn" id="attackBtn"></div>
 <div class="btn" id="voiceBtn"></div>
+<div class="btn" id="shopBtn"></div>
 <div class="btn" id="soundBtn">🔊</div>
 <div class="btn" id="menuBtn">☰</div>
 
 <div id="menuPanel">
   <button id="btnHelp">📖 راهنما</button>
-  <button id="btnVoice">🎤 دستورات صوتی</button>
-  <button id="btnReset">🔄 شروع مجدد</button>
+  <button id="btnVoice">🎤 دستورات</button>
+  <button id="btnReset">🔄 ریست</button>
 </div>
 
 <div id="dialog" data-speaker="بی‌بی روغن"></div>
 
-<!-- Start Screen -->
+<!-- Shop -->
+<div id="shopScreen">
+  <h2>🏪 فروشگاه بی‌بی روغن</h2>
+  <div id="shopCoins">🪙 <span id="shopCoinsVal">0</span></div>
+  <div class="tabs">
+    <div class="tab active" data-tab="weapons">🗡️ سلاح</div>
+    <div class="tab" data-tab="armor">🛡️ زره</div>
+    <div class="tab" data-tab="skins">👗 اسکین</div>
+    <div class="tab" data-tab="powerups">⭐ قدرت</div>
+  </div>
+  <div id="shopItems"></div>
+  <button id="closeShop">بستن فروشگاه</button>
+</div>
+
+<div id="levelEndScreen">
+  <div class="big" id="levelEndEmoji">🎉</div>
+  <h1 id="levelEndTitle">آفرین!</h1>
+  <div class="stat" id="levelEndMsg"></div>
+  <div class="stat">🪙 سکه: <span id="levelEndCoins">0</span></div>
+  <div>
+    <button id="nextLevelBtn">مرحله بعد ➡️</button>
+    <button id="shopFromEndBtn">🏪 فروشگاه</button>
+  </div>
+</div>
+
 <div id="startScreen">
   <div class="big">🛢️</div>
-  <h1>بی‌بی روغن - جهان باز</h1>
+  <h1>بی‌بی روغن - ۳۰ مرحله</h1>
   <p>
     سلام! من بی‌بی روغنم! 👵<br>
-    همه اهالی خونه فرار کردن تا من بهشون روغن ندم!<br><br>
-    <b style="color:#ffd700;">🕹️ با جوی‌استیک حرکت کن</b><br>
-    <b style="color:#ff9e4a;">🛢️ با دکمه روغن حمله کن</b><br>
-    <b style="color:#7ed6a0;">🎤 با میکروفون دستور بده</b>
+    ۳۰ مرحله پیش رو داری تا همه اهالی رو روغن‌کاری کنی!<br><br>
+    <b style="color:#ffd700;">🕹️ جوی‌استیک: حرکت</b><br>
+    <b style="color:#ff9e4a;">🛢️ دکمه روغن: حمله</b><br>
+    <b style="color:#7ed6a0;">🎤 میکروفون: دستور صوتی</b><br>
+    <b style="color:#c8a8f0;">🏪 فروشگاه: خرید سلاح و زره</b>
   </p>
   <button id="startBtn">شروع ماجراجویی 🚀</button>
 </div>
@@ -193,9 +251,6 @@ canvas{display:block;position:absolute;inset:0;width:100%;height:100%;image-rend
 (function(){
 "use strict";
 
-/* ============================================================
-   ============ Setup Canvas ============
-   ============================================================ */
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d", { alpha: false });
 let W = 0, H = 0, DPR = 1;
@@ -214,229 +269,332 @@ window.addEventListener("resize", resize);
 resize();
 
 /* ============================================================
-   ============ World ============
+   ============ WORLD ============
    ============================================================ */
 const WORLD = { w: 2400, h: 1800 };
 
-// اتاق‌ها
-const rooms = [
-  { name:"پذیرایی",   x:50,   y:50,   w:750, h:550, floor:"#c9a06a", deco:"tv"     },
-  { name:"آشپزخانه",  x:850,  y:50,   w:750, h:550, floor:"#d8b880", deco:"kitchen"},
-  { name:"دستشویی",   x:1650, y:50,   w:700, h:450, floor:"#a8d8d8", deco:"bath"   },
-  { name:"اتاق مریم", x:50,   y:650,  w:650, h:550, floor:"#f0c8d8", deco:"bed"    },
-  { name:"سالن کاراته",x:750, y:650,  w:650, h:550, floor:"#7fc4d8", deco:"gym"    },
-  { name:"اتاق اسماع",x:1450, y:650,  w:900, h:550, floor:"#c8e0b8", deco:"oil"    },
-  { name:"اتاق کوچیکا",x:50, y:1250, w:850, h:500, floor:"#ffe8c0", deco:"kids"   },
-  { name:"انبار روغن",x:950,  y:1250, w:750, h:500, floor:"#e0c090", deco:"storage"},
-  { name:"حیاط",     x:1750, y:1250, w:600, h:500, floor:"#5a8a3a", deco:"yard"   }
-];
-
-// دیوارها (برای برخورد)
-const walls = [];
-// دیوارهای بیرونی
-walls.push({ x:0, y:0, w:WORLD.w, h:30 });
-walls.push({ x:0, y:WORLD.h-30, w:WORLD.w, h:30 });
-walls.push({ x:0, y:0, w:30, h:WORLD.h });
-walls.push({ x:WORLD.w-30, y:0, w:30, h:WORLD.h });
-
-// دیوارهای داخلی (با درز برای عبور)
-function addWall(x, y, w, h){ walls.push({ x, y, w, h }); }
-
-// دیوار بین پذیرایی و آشپزخانه (با درز)
-addWall(810, 50, 30, 200);
-addWall(810, 350, 30, 250);
-
-// بین آشپزخانه و دستشویی
-addWall(1610, 50, 30, 150);
-addWall(1610, 300, 30, 300);
-
-// دیوار افقی بین ردیف بالا و وسط
-addWall(50, 610, 200, 30);
-addWall(340, 610, 400, 30);
-addWall(850, 610, 100, 30);
-addWall(1050, 610, 300, 30);
-addWall(1450, 610, 100, 30);
-addWall(1640, 610, 300, 30);
-addWall(2040, 610, 300, 30);
-
-// بین مریم و سالن کاراته
-addWall(710, 650, 30, 200);
-addWall(710, 950, 30, 250);
-
-// بین کاراته و اسماع
-addWall(1410, 650, 30, 200);
-addWall(1410, 950, 30, 250);
-
-// دیوار افقی بین ردیف وسط و پایین
-addWall(50, 1210, 300, 30);
-addWall(440, 1210, 400, 30);
-addWall(950, 1210, 200, 30);
-addWall(1250, 1210, 300, 30);
-addWall(1650, 1210, 200, 30);
-addWall(1950, 1210, 400, 30);
-
-// بین کوچیکا و انبار
-addWall(910, 1250, 30, 200);
-addWall(910, 1540, 30, 200);
-
-// بین انبار و حیاط
-addWall(1710, 1250, 30, 200);
-addWall(1710, 1540, 30, 200);
-
-// مبلمان (برای برخورد)
-const furniture = [
-  // پذیرایی
-  { x:120, y:120, w:200, h:60, color:"#8a4a2a", label:"مبل" },
-  { x:500, y:200, w:80, h:180, color:"#3a3a3a", label:"TV" },
-  { x:280, y:450, w:120, h:80, color:"#a87048", label:"میز" },
-  // آشپزخانه
-  { x:920, y:100, w:500, h:70, color:"#8b5a2b", label:"کابینت" },
-  { x:1550, y:250, w:60, h:200, color:"#6a6a6a", label:"گاز" },
-  { x:1050, y:380, w:300, h:90, color:"#a87048", label:"میز" },
-  // دستشویی
-  { x:1700, y:120, w:100, h:100, color:"#d8e8e8", label:"توالت" },
-  { x:1950, y:120, w:120, h:80, color:"#fff", label:"سینک" },
-  // مریم
-  { x:120, y:750, w:250, h:130, color:"#ff9ac8", label:"تخت" },
-  { x:500, y:850, w:100, h:100, color:"#c89898", label:"آینه" },
-  // کاراته
-  { x:800, y:700, w:200, h:100, color:"#3a5a78", label:"مشت" },
-  { x:1200, y:1050, w:150, h:80, color:"#4a6a8a", label:"فرفره" },
-  // اسماع
-  { x:1500, y:750, w:200, h:150, color:"#8a6ac8", label:"قفسه روغن" },
-  { x:1900, y:850, w:250, h:120, color:"#5a3a88", label:"مبل" },
-  // کوچیکا
-  { x:120, y:1350, w:200, h:150, color:"#ffcc66", label:"تخت کوچیک" },
-  { x:400, y:1400, w:150, h:100, color:"#ff8ac4", label:"اسباب بازی" },
-  { x:650, y:1350, w:180, h:120, color:"#a8d8e8", label:"کمد" },
-  // انبار
-  { x:1000, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
-  { x:1150, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
-  { x:1300, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
-  { x:1450, y:1450, w:180, h:100, color:"#a87048", label:"جعبه" },
-  // حیاط
-  { x:1900, y:1350, w:60, h:60, color:"#8a5a30", label:"درخت" },
-  { x:2100, y:1550, w:80, h:80, color:"#3a7a2a", label:"گلدان" }
-];
-
-// ترکیب همه سد‌ها برای برخورد
-const obstacles = walls.concat(furniture);
-
-function circleRectCollide(cx, cy, r, rect){
-  const nx = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
-  const ny = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
-  const dx = cx - nx, dy = cy - ny;
-  return dx*dx + dy*dy < r*r;
+// 30 مرحله - هر مرحله یه layout داره
+const LEVEL_CONFIGS = [];
+for (let i = 0; i < 30; i++){
+  LEVEL_CONFIGS.push({
+    level: i + 1,
+    enemyCount: Math.min(3 + Math.floor(i * 0.7), 12), // 3 تا 12 دشمن
+    enemyHealth: 60 + i * 15,
+    enemySpeed: 0.6 + i * 0.05,
+    enemyDamage: 1 + Math.floor(i / 4),
+    enemyHasWeapon: i >= 4, // از مرحله ۵ به بعد
+    enemyWeaponRate: i >= 4 ? 0.02 + (i - 4) * 0.005 : 0,
+    rooms: getRoomsForLevel(i)
+  });
 }
 
-function collides(x, y, r){
-  for (let i = 0; i < obstacles.length; i++){
-    if (circleRectCollide(x, y, r, obstacles[i])) return true;
+function getRoomsForLevel(idx){
+  // انواع مختلف layout برای هر مرحله
+  const layouts = [
+    // layout 0
+    [
+      { name:"پذیرایی", x:50, y:50, w:750, h:550, floor:"#c9a06a", deco:"tv" },
+      { name:"آشپزخانه", x:850, y:50, w:750, h:550, floor:"#d8b880", deco:"kitchen" },
+      { name:"دستشویی", x:1650, y:50, w:700, h:450, floor:"#a8d8d8", deco:"bath" },
+      { name:"اتاق مریم", x:50, y:650, w:650, h:550, floor:"#f0c8d8", deco:"bed" },
+      { name:"سالن کاراته", x:750, y:650, w:650, h:550, floor:"#7fc4d8", deco:"gym" },
+      { name:"اتاق اسماع", x:1450, y:650, w:900, h:550, floor:"#c8e0b8", deco:"oil" },
+      { name:"اتاق کوچیکا", x:50, y:1250, w:850, h:500, floor:"#ffe8c0", deco:"kids" },
+      { name:"انبار روغن", x:950, y:1250, w:750, h:500, floor:"#e0c090", deco:"storage" },
+      { name:"حیاط", x:1750, y:1250, w:600, h:500, floor:"#5a8a3a", deco:"yard" }
+    ],
+    // layout 1 - split
+    [
+      { name:"اتاق بزرگ", x:50, y:50, w:1100, h:800, floor:"#c9a06a", deco:"tv" },
+      { name:"آشپزخانه", x:1200, y:50, w:1150, h:800, floor:"#d8b880", deco:"kitchen" },
+      { name:"اتاق بچه‌ها", x:50, y:900, w:750, h:850, floor:"#ffe8c0", deco:"kids" },
+      { name:"انبار", x:850, y:900, w:750, h:850, floor:"#e0c090", deco:"storage" },
+      { name:"حیاط", x:1650, y:900, w:700, h:850, floor:"#5a8a3a", deco:"yard" }
+    ],
+    // layout 2 - maze
+    [
+      { name:"اتاق ۱", x:50, y:50, w:500, h:400, floor:"#c9a06a", deco:"tv" },
+      { name:"اتاق ۲", x:600, y:50, w:500, h:400, floor:"#d8b880", deco:"kitchen" },
+      { name:"اتاق ۳", x:1150, y:50, w:500, h:400, floor:"#a8d8d8", deco:"bath" },
+      { name:"اتاق ۴", x:1700, y:50, w:650, h:400, floor:"#f0c8d8", deco:"bed" },
+      { name:"سالن", x:50, y:500, w:800, h:600, floor:"#7fc4d8", deco:"gym" },
+      { name:"اتاق ۵", x:900, y:500, w:700, h:600, floor:"#c8e0b8", deco:"oil" },
+      { name:"اتاق ۶", x:1650, y:500, w:700, h:600, floor:"#ffe8c0", deco:"kids" },
+      { name:"انبار", x:50, y:1150, w:900, h:600, floor:"#e0c090", deco:"storage" },
+      { name:"حیاط", x:1000, y:1150, w:600, h:600, floor:"#5a8a3a", deco:"yard" },
+      { name:"باغ", x:1650, y:1150, w:700, h:600, floor:"#6a9a4a", deco:"yard" }
+    ]
+  ];
+  // چرخش layouts
+  return layouts[idx % layouts.length];
+}
+
+let currentLevel = 1;
+let levelConfig = LEVEL_CONFIGS[0];
+let rooms = [];
+let walls = [];
+let furniture = [];
+let obstacles = [];
+
+function buildLevel(levelNum){
+  levelConfig = LEVEL_CONFIGS[levelNum - 1];
+  rooms = levelConfig.rooms;
+  
+  walls = [];
+  walls.push({ x:0, y:0, w:WORLD.w, h:30 });
+  walls.push({ x:0, y:WORLD.h-30, w:WORLD.w, h:30 });
+  walls.push({ x:0, y:0, w:30, h:WORLD.h });
+  walls.push({ x:WORLD.w-30, y:0, w:30, h:WORLD.h });
+  
+  // دیوارهای بین اتاق‌ها
+  for (let i = 0; i < rooms.length; i++){
+    for (let j = i + 1; j < rooms.length; j++){
+      const r1 = rooms[i], r2 = rooms[j];
+      // اگه چسبیده باشن افقی
+      if (Math.abs(r1.x + r1.w - r2.x) < 5 || Math.abs(r2.x + r2.w - r1.x) < 5){
+        const overlapY1 = Math.max(r1.y, r2.y);
+        const overlapY2 = Math.min(r1.y + r1.h, r2.y + r2.h);
+        if (overlapY2 > overlapY1 + 100){
+          // درز وسط
+          const doorSize = 120;
+          const mid = (overlapY1 + overlapY2) / 2;
+          const x = r1.x < r2.x ? r1.x + r1.w : r2.x + r2.w;
+          walls.push({ x, y:overlapY1, w:30, h:(mid - doorSize/2) - overlapY1 });
+          walls.push({ x, y:mid + doorSize/2, w:30, h:overlapY2 - (mid + doorSize/2) });
+        }
+      }
+      // چسبیده باشن عمودی
+      if (Math.abs(r1.y + r1.h - r2.y) < 5 || Math.abs(r2.y + r2.h - r1.y) < 5){
+        const overlapX1 = Math.max(r1.x, r2.x);
+        const overlapX2 = Math.min(r1.x + r1.w, r2.x + r2.w);
+        if (overlapX2 > overlapX1 + 100){
+          const doorSize = 120;
+          const mid = (overlapX1 + overlapX2) / 2;
+          const y = r1.y < r2.y ? r1.y + r1.h : r2.y + r2.h;
+          walls.push({ x:overlapX1, y, w:(mid - doorSize/2) - overlapX1, h:30 });
+          walls.push({ x:mid + doorSize/2, y, w:overlapX2 - (mid + doorSize/2), h:30 });
+        }
+      }
+    }
   }
-  return false;
+  
+  // مبلمان ثابت
+  furniture = [
+    { x:120, y:120, w:200, h:60, color:"#8a4a2a", label:"مبل" },
+    { x:500, y:200, w:80, h:180, color:"#3a3a3a", label:"TV" },
+    { x:920, y:100, w:400, h:70, color:"#8b5a2b", label:"کابینت" },
+    { x:1700, y:120, w:100, h:100, color:"#d8e8e8", label:"توالت" },
+    { x:120, y:750, w:250, h:130, color:"#ff9ac8", label:"تخت" },
+    { x:800, y:700, w:200, h:100, color:"#3a5a78", label:"مشت" },
+    { x:1500, y:750, w:200, h:150, color:"#8a6ac8", label:"قفسه" },
+    { x:120, y:1350, w:200, h:150, color:"#ffcc66", label:"تخت" },
+    { x:1000, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" },
+    { x:1150, y:1300, w:100, h:80, color:"#c9922f", label:"بشکه" }
+  ];
+  
+  obstacles = walls.concat(furniture);
 }
+
+buildLevel(1);
 
 /* ============================================================
-   ============ Entities ============
+   ============ SHOP DATA ============
+   ============================================================ */
+const SHOP_WEAPONS = [
+  { id:"oil",      icon:"🛢️", name:"قوطی روغن",     price:0,   damage:15, range:90,  desc:"سلاح پیش‌فرض" },
+  { id:"kafgir",   icon:"🥄", name:"کفگیر",         price:100, damage:22, range:100, desc:"ضربه کفگیری" },
+  { id:"mahitabe", icon:"🍳", name:"ماهیتابه",       price:250, damage:30, range:110, desc:"ضربه داغ" },
+  { id:"sosis",    icon:"🌭", name:"سوسیس",          price:400, damage:35, range:95,  desc:"سوسیس جادویی" },
+  { id:"lagan",    icon:"🪣", name:"لگن",            price:600, damage:45, range:120, desc:"لگن سنگین" },
+  { id:"jaroob",   icon:"🧹", name:"جارو",           price:900, damage:55, range:130, desc:"جاروی پرنده" },
+  { id:"tir",      icon:"🎯", name:"توپ",            price:1300, damage:70, range:150, desc:"توپ آتشین" },
+  { id:"toofan",   icon:"🌪️", name:"گردباد",         price:2000, damage:90, range:180, desc:"قدرت باد" },
+  { id:"atash",    icon:"🔥", name:"شعله",           price:3000, damage:120, range:200, desc:"آتش اژدها" },
+  { id:"seyl",     icon:"🌊", name:"سیل روغن",       price:5000, damage:180, range:250, desc:"قدرت نهایی" }
+];
+
+const SHOP_ARMOR = [
+  { id:"none",     icon:"👕", name:"لباس ساده",     price:0,    health:0,   desc:"بدون محافظت" },
+  { id:"pirahan",  icon:"👔", name:"پیراهن",         price:150,  health:20,  desc:"+20 جون" },
+  { id:"mantou",   icon:"🧥", name:"مانتو",          price:300,  health:50,  desc:"+50 جون" },
+  { id:"kapshan",  icon:"🧥", name:"کاپشن",          price:500,  health:80,  desc:"+80 جون" },
+  { id:"zere",     icon:"🛡️", name:"زره فولادی",     price:800,  health:150, desc:"+150 جون" },
+  { id:"chador",   icon:"🧕", name:"چادر ضدضربه",   price:1200, health:200, desc:"+200 جون" },
+  { id:"super",    icon:"⚔️", name:"زره قهرمانی",    price:2000, health:350, desc:"+350 جون" }
+];
+
+const SHOP_SKINS = [
+  { id:"bibi",     icon:"👵", name:"بی‌بی روغن",     price:0,   desc:"ظاهر پیش‌فرض" },
+  { id:"doktor",   icon:"🩺", name:"بی‌بی دکتر",     price:200, desc:"سریع‌تر درمان می‌شه" },
+  { id:"nurse",    icon:"💉", name:"بی‌بی پرستار",   price:400, desc:"جون بیشتر" },
+  { id:"moallem",  icon:"👩‍🏫", name:"بی‌بی معلم",   price:600, desc:"سکه بیشتر" },
+  { id:"superhero",icon:"🦸", name:"بی‌بی قهرمان",   price:1000, desc:"همه چیز بیشتر" },
+  { id:"ninja",    icon:"🥷", name:"بی‌بی نینجا",    price:1500, desc:"سریع‌تر" },
+  { id:"pirate",   icon:"🏴‍☠️", name:"بی‌بی دزد دریایی", price:2000, desc:"قدرت حمله" }
+];
+
+const SHOP_POWERUPS = [
+  { id:"speed",    icon:"⚡", name:"سرعت",          price:300,  desc:"+30% سرعت" },
+  { id:"regen",    icon:"💚", name:"درمان خودکار",   price:500,  desc:"جون خودش پر می‌شه" },
+  { id:"shield",   icon:"🛡️", name:"سپر",           price:700,  desc:"کمتر آسیب می‌بینی" },
+  { id:"double",   icon:"💰", name:"سکه دوبل",       price:1000, desc:"۲ برابر سکه" },
+  { id:"crit",     icon:"💥", name:"ضربه کاری",      price:1500, desc:"ضربه‌های قوی‌تر" }
+];
+
+/* ============================================================
+   ============ GAME STATE ============
+   ============================================================ */
+const gameState = {
+  coins: 0,
+  currentLevel: 1,
+  maxLevel: 1,
+  ownedWeapons: ["oil"],
+  ownedArmors: ["none"],
+  ownedSkins: ["bibi"],
+  ownedPowerups: [],
+  equippedWeapon: "oil",
+  equippedArmor: "none",
+  equippedSkin: "bibi"
+};
+
+// ذخیره و بازیابی
+function saveGame(){
+  try { localStorage.setItem("bibiRoghansSave", JSON.stringify(gameState)); }
+  catch(e){}
+}
+function loadGame(){
+  try {
+    const saved = localStorage.getItem("bibiRoghansSave");
+    if (saved){
+      const data = JSON.parse(saved);
+      Object.assign(gameState, data);
+    }
+  } catch(e){}
+}
+loadGame();
+
+/* ============================================================
+   ============ PLAYER ============
    ============================================================ */
 const player = {
   x: 400, y: 400, r: 22,
   vx: 0, vy: 0,
-  dir: 0, // 0=down, 1=left, 2=up, 3=right
+  dir: 0,
   walkFrame: 0,
   health: 100, maxHealth: 100,
-  energy: 100, maxEnergy: 100,
+  mana: 100, maxMana: 100,
   attackCooldown: 0,
-  hitFlash: 0
+  hitFlash: 0,
+  hideTimer: 0
 };
 
-const NPC_TYPES = [
-  { id:"maryam", name:"مریم گلی",    color:"#ff8ac4", hair:"#3a1a0a", points:15, health:80  },
-  { id:"zahra",  name:"زهرا کماندو", color:"#3a8ac8", hair:"#1a0a00", points:20, health:100 },
-  { id:"esma",   name:"اسماع روغن‌خور", color:"#68c890", hair:"#2a1a0a", points:15, health:80 },
-  { id:"hanane", name:"حنانه بدترکیب", color:"#ffb700", hair:"#3a1a0a", points:25, health:120 },
-  { id:"bache",  name:"بچه‌خور",     color:"#8a6ac8", hair:"#5a3a1a", points:20, health:90  },
-  { id:"magas",  name:"مگس",         color:"#4a4a4a", hair:"#000",    points:30, health:70  }
+function getWeapon(){ return SHOP_WEAPONS.find(w => w.id === gameState.equippedWeapon) || SHOP_WEAPONS[0]; }
+function getArmor(){ return SHOP_ARMOR.find(a => a.id === gameState.equippedArmor) || SHOP_ARMOR[0]; }
+function getSkin(){ return SHOP_SKINS.find(s => s.id === gameState.equippedSkin) || SHOP_SKINS[0]; }
+
+function updatePlayerStats(){
+  const armor = getArmor();
+  player.maxHealth = 100 + armor.health;
+  player.health = Math.min(player.health, player.maxHealth);
+}
+
+/* ============================================================
+   ============ NPC ============
+   ============================================================ */
+const ENEMY_NAMES = [
+  "مریم گلی", "زهرا کماندو", "اسماع روغن‌خور", "حنانه بدترکیب",
+  "بچه‌خور", "مگس", "دایی جواد", "خاله سوسن", "عمو رحیم",
+  "ننه صغری", "پسر عمو", "دختر خاله"
+];
+const ENEMY_COLORS = ["#ff8ac4","#3a8ac8","#68c890","#ffb700","#8a6ac8","#4a4a4a","#e74c3c","#9b59b6","#f39c12","#16a085","#c0392b","#8e44ad"];
+const ENEMY_DIALOGUES = [
+  "بیا بگیرم! 🏃", "تو نمی‌تونی منو بزنی! 😎",
+  "روغن نده به من! 😱", "کمک! بی‌بی دیوونه شده! 😂",
+  "آخه چرا من؟ 🥺", "برو خونت رو بچسب! 😤",
+  "مامان! یه نفر داره تعقیبم می‌کنه! 😭", "اِ اِ اِ... 🥶",
+  "نکن! من خوشم نمیاد! 🤢", "اگه بگیری منو، خودت می‌سوزی! 🔥"
 ];
 
-const npcs = [];
-function spawnNPCs(){
-  npcs.length = 0;
-  // پخش‌شونده در اتاق‌های مختلف
-  const roomIdx = [3, 4, 5, 6, 7, 8];
-  NPC_TYPES.forEach((t, i) => {
-    const room = rooms[roomIdx[i]];
-    const nx = room.x + 100 + Math.random() * (room.w - 200);
-    const ny = room.y + 100 + Math.random() * (room.h - 200);
+let npcs = [];
+
+function spawnNPCsForLevel(){
+  npcs = [];
+  const count = levelConfig.enemyCount;
+  const enemyTypes = Math.min(count, 12);
+  
+  for (let i = 0; i < count; i++){
+    // موقعیت تصادفی توی اتاق‌ها
+    let placed = false;
+    let tries = 0;
+    let nx, ny;
+    while (!placed && tries < 30){
+      const room = rooms[Math.floor(Math.random() * rooms.length)];
+      nx = room.x + 80 + Math.random() * (room.w - 160);
+      ny = room.y + 80 + Math.random() * (room.h - 160);
+      if (!collides(nx, ny, 22)) placed = true;
+      tries++;
+    }
+    
+    const typeIdx = i % ENEMY_NAMES.length;
+    const hasWeapon = levelConfig.enemyHasWeapon && Math.random() < 0.6;
+    
     npcs.push({
-      ...t,
+      id: "npc_" + i + "_" + Math.random().toString(36).substr(2,5),
+      name: ENEMY_NAMES[typeIdx],
+      color: ENEMY_COLORS[typeIdx],
+      hair: "#3a1a0a",
       x: nx, y: ny, r: 20,
       vx: 0, vy: 0,
       dir: 0, walkFrame: 0,
-      health: t.health, maxHealth: t.health,
-      state: "wander", // wander, flee, attack, defeated
-      stateTimer: 0,
+      health: levelConfig.enemyHealth,
+      maxHealth: levelConfig.enemyHealth,
+      state: "wander",
+      stateTimer: 60 + Math.random() * 100,
       targetX: nx, targetY: ny,
-      defeatTimer: 0,
-      oilLevel: 0, // چقدر روغن‌کاری شده
-      hitFlash: 0
-    });
-  });
-}
-
-// آیتم‌های قابل جمع کردن
-const items = [];
-function spawnItems(){
-  items.length = 0;
-  // بشقاب‌های بریانی
-  const foodRooms = [1, 2, 5, 6, 7];
-  for (let i = 0; i < 6; i++){
-    const room = rooms[foodRooms[i % foodRooms.length]];
-    items.push({
-      x: room.x + 150 + Math.random() * (room.w - 300),
-      y: room.y + 150 + Math.random() * (room.h - 300),
-      type: "birani", r: 15, anim: 0
-    });
-  }
-  // ارتقای روغن
-  const oilRooms = [5, 7];
-  for (let i = 0; i < 2; i++){
-    const room = rooms[oilRooms[i % oilRooms.length]];
-    items.push({
-      x: room.x + 150 + Math.random() * (room.w - 300),
-      y: room.y + 150 + Math.random() * (room.h - 300),
-      type: "oil", r: 15, anim: 0
+      defeatedTimer: 0,
+      oilLevel: 0,
+      hitFlash: 0,
+      hasWeapon: hasWeapon,
+      weaponCooldown: 0,
+      shootCooldown: 0,
+      dialogueTimer: 100 + Math.random() * 200,
+      dialogueIndex: Math.floor(Math.random() * ENEMY_DIALOGUES.length)
     });
   }
 }
 
-// افکت‌های بصری
+/* ============================================================
+   ============ PARTICLES / DAMAGE / BULLETS ============
+   ============================================================ */
 const particles = [];
+const damageNumbers = [];
+const bullets = [];
+
 function spawnParticles(x, y, color, count){
   for (let i = 0; i < count; i++){
     particles.push({
       x, y,
       vx: (Math.random() - 0.5) * 6,
       vy: (Math.random() - 0.5) * 6 - 2,
-      life: 1,
-      color,
+      life: 1, color,
       size: 3 + Math.random() * 5
     });
   }
 }
 
-const damageNumbers = [];
+function spawnBullet(x, y, dx, dy, owner, damage){
+  bullets.push({ x, y, vx: dx * 5, vy: dy * 5, owner, damage, life: 120 });
+}
 
 /* ============================================================
-   ============ Camera ============
+   ============ CAMERA ============
    ============================================================ */
 const camera = { x: 0, y: 0 };
 function updateCamera(){
-  const targetX = player.x - W / 2;
-  const targetY = player.y - H / 2;
-  camera.x += (targetX - camera.x) * 0.1;
-  camera.y += (targetY - camera.y) * 0.1;
-  // Clamp
+  const tx = player.x - W / 2;
+  const ty = player.y - H / 2;
+  camera.x += (tx - camera.x) * 0.1;
+  camera.y += (ty - camera.y) * 0.1;
   if (camera.x < 0) camera.x = 0;
   if (camera.y < 0) camera.y = 0;
   if (camera.x > WORLD.w - W) camera.x = WORLD.w - W;
@@ -444,7 +602,7 @@ function updateCamera(){
 }
 
 /* ============================================================
-   ============ Input ============
+   ============ INPUT ============
    ============================================================ */
 const keys = {};
 document.addEventListener("keydown", e => {
@@ -453,27 +611,18 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
 
-// Joystick
 const joystickEl = document.getElementById("joystick");
 const joyKnob = document.getElementById("joyKnob");
-let joyActive = false;
-let joyId = null;
-let joyOriginX = 0, joyOriginY = 0;
-let joyX = 0, joyY = 0;
-
+let joyActive = false, joyId = null;
+let joyOriginX = 0, joyOriginY = 0, joyX = 0, joyY = 0;
 const joyRadius = 60;
-
-function isTouchDevice(){
-  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-}
 
 function getInputVec(){
   if (joyActive){
     const dx = (joyX - joyOriginX);
     const dy = (joyY - joyOriginY);
     const dist = Math.hypot(dx, dy) || 1;
-    const maxDist = joyRadius;
-    const norm = Math.min(dist, maxDist) / maxDist;
+    const norm = Math.min(dist, joyRadius) / joyRadius;
     return { x: (dx / dist) * norm, y: (dy / dist) * norm };
   }
   let vx = 0, vy = 0;
@@ -486,16 +635,13 @@ function getInputVec(){
   return { x: vx, y: vy };
 }
 
-// Touch handler برای joystick (نیمه چپ صفحه)
 canvas.addEventListener("touchstart", e => {
   for (const t of e.changedTouches){
     if (joyId === null && t.clientX < W / 2){
       joyId = t.identifier;
       joyActive = true;
-      joyOriginX = t.clientX;
-      joyOriginY = t.clientY;
-      joyX = t.clientX;
-      joyY = t.clientY;
+      joyOriginX = t.clientX; joyOriginY = t.clientY;
+      joyX = t.clientX; joyY = t.clientY;
       joystickEl.style.left = (joyOriginX - 60) + "px";
       joystickEl.style.top = (joyOriginY - 60) + "px";
       joystickEl.classList.add("active");
@@ -506,15 +652,12 @@ canvas.addEventListener("touchstart", e => {
 canvas.addEventListener("touchmove", e => {
   for (const t of e.changedTouches){
     if (t.identifier === joyId){
-      joyX = t.clientX;
-      joyY = t.clientY;
-      const dx = joyX - joyOriginX;
-      const dy = joyY - joyOriginY;
+      joyX = t.clientX; joyY = t.clientY;
+      const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
       const dist = Math.hypot(dx, dy) || 1;
-      const maxDist = joyRadius;
-      const norm = Math.min(dist, maxDist) / maxDist;
-      const kx = (dx / dist) * norm * maxDist;
-      const ky = (dy / dist) * norm * maxDist;
+      const norm = Math.min(dist, joyRadius) / joyRadius;
+      const kx = (dx / dist) * norm * joyRadius;
+      const ky = (dy / dist) * norm * joyRadius;
       joyKnob.style.transform = `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
     }
   }
@@ -523,8 +666,7 @@ canvas.addEventListener("touchmove", e => {
 function endJoy(e){
   for (const t of e.changedTouches){
     if (t.identifier === joyId){
-      joyId = null;
-      joyActive = false;
+      joyId = null; joyActive = false;
       joyKnob.style.transform = "translate(-50%,-50%)";
       joystickEl.classList.remove("active");
     }
@@ -533,13 +675,10 @@ function endJoy(e){
 canvas.addEventListener("touchend", endJoy);
 canvas.addEventListener("touchcancel", endJoy);
 
-// Mouse joystick (برای تست روی دسکتاپ)
 let mouseDown = false;
 canvas.addEventListener("mousedown", e => {
-  if (e.button !== 0) return;
   if (e.clientX < W / 2){
-    mouseDown = true;
-    joyActive = true;
+    mouseDown = true; joyActive = true;
     joyOriginX = e.clientX; joyOriginY = e.clientY;
     joyX = e.clientX; joyY = e.clientY;
     joystickEl.style.left = (joyOriginX - 60) + "px";
@@ -550,47 +689,42 @@ canvas.addEventListener("mousedown", e => {
 window.addEventListener("mousemove", e => {
   if (!mouseDown) return;
   joyX = e.clientX; joyY = e.clientY;
-  const dx = joyX - joyOriginX;
-  const dy = joyY - joyOriginY;
+  const dx = joyX - joyOriginX, dy = joyY - joyOriginY;
   const dist = Math.hypot(dx, dy) || 1;
-  const maxDist = joyRadius;
-  const norm = Math.min(dist, maxDist) / maxDist;
-  const kx = (dx / dist) * norm * maxDist;
-  const ky = (dy / dist) * norm * maxDist;
+  const norm = Math.min(dist, joyRadius) / joyRadius;
+  const kx = (dx / dist) * norm * joyRadius;
+  const ky = (dy / dist) * norm * joyRadius;
   joyKnob.style.transform = `translate(calc(-50% + ${kx}px), calc(-50% + ${ky}px))`;
 });
 window.addEventListener("mouseup", () => {
   if (mouseDown){
-    mouseDown = false;
-    joyActive = false;
+    mouseDown = false; joyActive = false;
     joyKnob.style.transform = "translate(-50%,-50%)";
     joystickEl.classList.remove("active");
   }
 });
 
 /* ============================================================
-   ============ Speech ============
+   ============ SPEECH ============
    ============================================================ */
 let soundOn = true;
 let audioCtx = null;
-let speaking = false;
-let speechQueue = [];
-let currentUtterance = null;
+let isListening = false;
+let recognition = null;
 
 function initAudio(){
   if (!audioCtx){
-    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    catch(e){}
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
   }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
 
 function findPersianVoice(){
   if (!("speechSynthesis" in window)) return null;
-  const voices = speechSynthesis.getVoices();
-  return voices.find(v => v.lang && v.lang.toLowerCase().startsWith("fa"))
-      || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ar"))
-      || voices[0] || null;
+  const v = speechSynthesis.getVoices();
+  return v.find(x => x.lang && x.lang.toLowerCase().startsWith("fa"))
+      || v.find(x => x.lang && x.lang.toLowerCase().startsWith("ar"))
+      || v[0] || null;
 }
 
 function speak(text, pitch, rate){
@@ -607,68 +741,40 @@ function speak(text, pitch, rate){
 }
 
 function showDialog(text, duration, pitch, rate){
-  const dialog = document.getElementById("dialog");
-  dialog.textContent = text;
-  dialog.classList.add("show");
-  clearTimeout(dialog._timeout);
-  dialog._timeout = setTimeout(() => dialog.classList.remove("show"), duration || 3000);
+  const d = document.getElementById("dialog");
+  d.textContent = text;
+  d.classList.add("show");
+  clearTimeout(d._timeout);
+  d._timeout = setTimeout(() => d.classList.remove("show"), duration || 3000);
   speak(text, pitch, rate);
 }
-
-/* ============================================================
-   ============ Voice Recognition ============
-   ============================================================ */
-let recognition = null;
-let isListening = false;
 
 function initRecognition(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return null;
   const rec = new SR();
-  rec.lang = "fa-IR";
-  rec.continuous = true;
-  rec.interimResults = false;
-  rec.maxAlternatives = 1;
-  
+  rec.lang = "fa-IR"; rec.continuous = true; rec.interimResults = false;
   rec.onresult = (e) => {
     const last = e.results[e.results.length - 1];
-    if (last.isFinal){
-      const text = last[0].transcript.trim();
-      handleVoiceCommand(text);
-    }
+    if (last.isFinal) handleVoiceCommand(last[0].transcript.trim());
   };
-  
   rec.onerror = (e) => {
-    if (e.error === "not-allowed"){
-      showDialog("دسترسی به میکروفون داده نشد!", 2500, 1.5, 1);
-      stopListening();
-    } else if (e.error === "no-speech"){
-      // نادیده بگیر
-    } else {
-      console.warn("Speech error:", e.error);
-    }
+    if (e.error === "not-allowed"){ stopListening(); }
   };
-  
-  rec.onend = () => {
-    if (isListening){
-      try { rec.start(); } catch(e){}
-    }
-  };
-  
+  rec.onend = () => { if (isListening) try { rec.start(); } catch(e){} };
   return rec;
 }
 
 function startListening(){
   if (!recognition) recognition = initRecognition();
   if (!recognition){
-    showDialog("مرورگر شما از تشخیص صدا پشتیبانی نمی‌کنه! از Chrome استفاده کن!", 3500, 1.4, 0.95);
+    showDialog("مرورگر پشتیبانی نمی‌کنه! از Chrome استفاده کن!", 3500, 1.4, 0.95);
     return;
   }
   try {
     recognition.start();
     isListening = true;
     document.getElementById("voiceBtn").classList.add("listening");
-    showDialog("گوش می‌دم! بگو...", 2000, 1.4, 1);
   } catch(e){}
 }
 
@@ -680,131 +786,295 @@ function stopListening(){
   }
 }
 
-// دستورات صوتی
-function handleVoiceCommand(text){
-  const t = text.toLowerCase().trim();
-  // نرمال‌سازی
-  const norm = t.replace(/[،.,؟!]/g, "").replace(/\s+/g, " ");
+/* ============================================================
+   ============ PARSER ============
+   ============================================================ */
+function parsePersianCommand(text){
+  const t = text.replace(/[،.,؟!?؛;:]/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
+  const parsed = {
+    verbs:[], directions:[], targets:[], counts:null,
+    isQuestion:/[؟?]/.test(text) || /چیه|کیه|کجاست|چند|چطور|چرا|آیا|کدوم/.test(t),
+    isGreeting:/سلام|درود|صبح بخیر|شب بخیر|خوبی|چطوری|چه خبر/.test(t),
+    isThanks:/ممنون|مرسی|سپاس|دستت درد نکنه|لطف/.test(t),
+    raw:t
+  };
+  const verbPatterns = [
+    { verb:"attack",   re:/حمله|بزن|بزنی|شلیک|روغن بزن|روغن بده|بکش|نابود|منهدم|له کن/ },
+    { verb:"seek",     re:/بگرد|پیدا کن|پیداش کن|جستجو|دنبال|تعقیب|شکار|گرفتن|بیارش/ },
+    { verb:"stop",     re:/بایست|وایسا|توقف|بسه|بس کن|هیس|صبر|منتظر/ },
+    { verb:"move",     re:/برو|راه بیفت|راه بیا|حرکت کن|بیا|جلو برو|عقب برو|بدو/ },
+    { verb:"rest",     re:/بخواب|استراحت|خسته|بخور|غذا بخور|نفس بگیر/ },
+    { verb:"dance",    re:/برقص|بشکن|اهتزاز|رقص/ },
+    { verb:"hide",     re:/قایم|پنهان|مخفی/ },
+    { verb:"jump",     re:/بپر|جهش|پرش/ },
+    { verb:"turn",     re:/بچرخ|دور بزن|دور خودت/ },
+    { verb:"heal",     re:/درمان|خودتو درمان|سلامتی بده|شفا/ }
+  ];
+  verbPatterns.forEach(p => { if (p.re.test(t)) parsed.verbs.push(p.verb); });
   
-  // دستورات
-  if (/سلام|درود|هی/.test(norm)){
+  if (/بالا|شمال|جلو/.test(t)) parsed.directions.push("up");
+  if (/پایین|جنوب|عقب/.test(t)) parsed.directions.push("down");
+  if (/چپ|غرب/.test(t)) parsed.directions.push("left");
+  if (/راست|شرق/.test(t)) parsed.directions.push("right");
+  
+  if (/مریم|گلی/.test(t)) parsed.targets.push("maryam");
+  if (/زهرا|کماندو/.test(t)) parsed.targets.push("zahra");
+  if (/اسماع|روغن خور/.test(t)) parsed.targets.push("esma");
+  if (/حنانه|بدترکیب/.test(t)) parsed.targets.push("hanane");
+  if (/بچه|کوچیک/.test(t)) parsed.targets.push("bache");
+  if (/مگس/.test(t)) parsed.targets.push("magas");
+  if (/همه|تمام|همگی|اهالی/.test(t)) parsed.targets.push("all");
+  if (/نزدیک/.test(t)) parsed.targets.push("nearest");
+  if (/دورترین|دور/.test(t)) parsed.targets.push("farthest");
+  
+  const counts = {"یک":1,"یه":1,"دو":2,"سه":3,"چهار":4,"پنج":5,"شش":6,"هفت":7,"هشت":8,"نه":9,"ده":10};
+  for (const [w,n] of Object.entries(counts)){
+    if (new RegExp("\\b"+w+"\\b").test(t)){ parsed.counts = n; break; }
+  }
+  return parsed;
+}
+
+let autoMoveTarget = null;
+let autoMoveTimer = 0;
+let voiceMoveVec = { x:0, y:0 };
+let voiceMoveTimer = 0;
+
+function moveTowards(nx, ny){ autoMoveTarget = { x:nx, y:ny }; autoMoveTimer = 300; }
+
+function getAliveNPCs(){ return npcs.filter(n => n.state !== "defeated"); }
+function findNearestNPC(){
+  const a = getAliveNPCs();
+  if (!a.length) return null;
+  let best = a[0], bd = Infinity;
+  a.forEach(n => { const d = Math.hypot(n.x-player.x, n.y-player.y); if (d < bd){ bd = d; best = n; } });
+  return best;
+}
+function findFarthestNPC(){
+  const a = getAliveNPCs();
+  if (!a.length) return null;
+  let best = a[0], bd = 0;
+  a.forEach(n => { const d = Math.hypot(n.x-player.x, n.y-player.y); if (d > bd){ bd = d; best = n; } });
+  return best;
+}
+
+function handleVoiceCommand(text){
+  const cmd = parsePersianCommand(text);
+  
+  if (cmd.isGreeting){
     showDialog("سلام عزیزم! روغن می‌خوای؟ 🛢️", 2500, 1.55, 0.85);
     return;
   }
-  if (/روغن بده|حمله|بزن|شلیک/.test(norm)){
-    attack();
-    showDialog("بیا اینجا! روغن بزنم بهت! 🛢️💥", 2000, 1.5, 0.9);
+  if (cmd.isThanks){
+    showDialog("خواهش می‌کنم عزیزم! 🌹", 2200, 1.55, 0.9);
     return;
   }
-  if (/دنبال|تعقیب|برو دنبال/.test(norm)){
-    const nearest = findNearestNPC();
-    if (nearest && nearest.state !== "defeated"){
-      npcs.forEach(n => n.state = "wander");
-      nearest.state = "chase";
-      nearest.chaseTimer = 300;
-      showDialog("دارم میام دنبالت، " + nearest.name + "! 🏃", 2500, 1.5, 0.9);
+  if (cmd.isQuestion && cmd.verbs.length === 0){
+    if (/چند/.test(cmd.raw)){
+      const a = getAliveNPCs().length;
+      showDialog(`${a} نفر موندن! بقیه روغن‌کاری شدن! 💪`, 3000, 1.5, 0.9);
+      return;
+    }
+    if (/کجا|کدوم/.test(cmd.raw)){
+      const n = findNearestNPC();
+      if (n){
+        const d = Math.round(Math.hypot(n.x-player.x, n.y-player.y));
+        showDialog(`${n.name} نزدیک‌ترینه! ${d} قدم اونوره! 🎯`, 3500, 1.5, 0.9);
+      } else {
+        showDialog("همه روغن‌کاری شدن! 🎉", 2000, 1.5, 0.9);
+      }
+      return;
+    }
+    showDialog("سؤالت رو نفهمیدم! واضح‌تر بپرس! 🤔", 2500, 1.5, 0.9);
+    return;
+  }
+  if (cmd.verbs.length === 0 && cmd.targets.length === 0){
+    showDialog("نفهمیدم! مثلاً بگو: دنبال زهرا برو!", 3000, 1.5, 0.9);
+    return;
+  }
+  
+  const hasSeek = cmd.verbs.includes("seek");
+  const hasAttack = cmd.verbs.includes("attack");
+  const hasMove = cmd.verbs.includes("move");
+  const hasStop = cmd.verbs.includes("stop");
+  const hasRest = cmd.verbs.includes("rest");
+  const hasDance = cmd.verbs.includes("dance");
+  const hasHide = cmd.verbs.includes("hide");
+  const hasJump = cmd.verbs.includes("jump");
+  const hasTurn = cmd.verbs.includes("turn");
+  const hasHeal = cmd.verbs.includes("heal");
+  
+  if (hasStop){
+    autoMoveTimer = 0; autoMoveTarget = null; voiceMoveTimer = 0;
+    npcs.forEach(n => { n.state = "wander"; n.chaseTimer = 0; });
+    showDialog("باشه، وایسادم! 🛑", 1500, 1.5, 0.9);
+    return;
+  }
+  if (hasDance){
+    showDialog("واو! بزن بریم! 💃🕺", 2500, 1.6, 1);
+    for (let i = 0; i < 15; i++){
+      setTimeout(() => spawnParticles(player.x + (Math.random()-0.5)*80, player.y + (Math.random()-0.5)*80, "#ff6b9d", 3), i*100);
     }
     return;
   }
-  if (/بالا/.test(norm)){ moveDir(0, -1); showDialog("دارم می‌رم بالا!", 1500, 1.5, 0.9); return; }
-  if (/پایین/.test(norm)){ moveDir(0, 1); showDialog("دارم می‌رم پایین!", 1500, 1.5, 0.9); return; }
-  if (/چپ/.test(norm)){ moveDir(-1, 0); showDialog("دارم می‌رم چپ!", 1500, 1.5, 0.9); return; }
-  if (/راست/.test(norm)){ moveDir(1, 0); showDialog("دارم می‌رم راست!", 1500, 1.5, 0.9); return; }
-  if (/توقف|بسه|وایسا/.test(norm)){
-    npcs.forEach(n => n.state = "wander");
-    showDialog("باشه، وایسادم!", 1500, 1.5, 0.9);
+  if (hasHide){
+    showDialog("قایم شدم! 🤫", 2500, 1.4, 0.85);
+    player.hideTimer = 180;
     return;
   }
-  if (/کمک|راهنما/.test(norm)){
-    showDialog("با جوی‌استیک برو، با روغن حمله کن، به همه روغن بده! 🛢️", 4500, 1.4, 0.9);
+  if (hasJump){
+    showDialog("هووووپ! 🦘", 1500, 1.7, 1.2);
+    for (let i = 0; i < 8; i++) spawnParticles(player.x, player.y, "#7fd4f0", 2);
     return;
   }
-  if (/حالم|کیف|وضع|چخبر/.test(norm)){
-    showDialog(`سالمم! ${npcs.filter(n => n.state !== "defeated").length} نفر موندن! 💪`, 3000, 1.5, 0.9);
+  if (hasTurn){
+    player.dir = (player.dir + 1) % 4;
+    showDialog("چرخیدم! 🔄", 1500, 1.5, 1);
     return;
   }
-  if (/کوچیک|بچه/.test(norm)){
-    showDialog("بچه‌ها رو باید پیدا کنم! 🧒", 2000, 1.5, 0.9);
+  if (hasHeal){
+    player.health = player.maxHealth;
+    updateHUD();
+    spawnParticles(player.x, player.y, "#7ed6a0", 20);
+    showDialog("درمان کردم! 💚", 2500, 1.5, 0.9);
     return;
   }
-  if (/کی|چند تا|چند نفر/.test(norm)){
-    const remaining = npcs.filter(n => n.state !== "defeated").length;
-    showDialog(`${remaining} نفر موندن! عجله کن!`, 2500, 1.5, 0.9);
+  if (hasRest){
+    player.health = Math.min(player.maxHealth, player.health + 30);
+    player.mana = player.maxMana;
+    updateHUD();
+    showDialog("آخیش! 😌", 2500, 1.5, 0.9);
     return;
   }
-  
-  // پیش‌فرض
-  showDialog("نفهمیدم! بگو: حمله، دنبال کن، توقف، کمک", 3000, 1.4, 0.9);
-}
-
-// حالت حرکتی صوتی
-let voiceMoveTimer = 0;
-let voiceMoveVec = { x: 0, y: 0 };
-function moveDir(x, y){
-  voiceMoveVec = { x, y };
-  voiceMoveTimer = 60;
+  if (hasMove && cmd.directions.length > 0){
+    const dir = cmd.directions[0];
+    const dirVecs = { up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0} };
+    if (dirVecs[dir]){
+      voiceMoveVec = dirVecs[dir];
+      voiceMoveTimer = 120;
+      const dirNames = { up:"بالا", down:"پایین", left:"چپ", right:"راست" };
+      showDialog("دارم می‌رم " + dirNames[dir] + "! 🚶", 1800, 1.5, 0.9);
+      return;
+    }
+  }
+  if (hasSeek || (hasMove && cmd.targets.length > 0)){
+    let target = null;
+    if (cmd.targets.includes("all")){
+      const a = getAliveNPCs();
+      if (!a.length){ showDialog("همه روغن‌کاری شدن! 🎉", 2500, 1.5, 0.9); return; }
+      target = findNearestNPC();
+    } else if (cmd.targets.includes("nearest")) target = findNearestNPC();
+    else if (cmd.targets.includes("farthest")) target = findFarthestNPC();
+    else {
+      for (const tid of cmd.targets){
+        if (["nearest","farthest","all"].includes(tid)) continue;
+        target = npcs.find(n => n.name.includes(tid) && n.state !== "defeated");
+        if (target) break;
+      }
+    }
+    if (!target){ target = findNearestNPC(); }
+    if (!target){ showDialog("همه روغن‌کاری شدن! 🎉", 2500, 1.5, 0.9); return; }
+    moveTowards(target.x, target.y);
+    target.state = "flee";
+    target.stateTimer = 240;
+    showDialog("دارم میام دنبال " + target.name + "! 🏃", 2200, 1.55, 0.9);
+    if (hasAttack){
+      setTimeout(() => {
+        const t2 = npcs.find(n => n.id === target.id);
+        if (t2 && Math.hypot(t2.x-player.x, t2.y-player.y) < 150){
+          const ang = Math.atan2(t2.y-player.y, t2.x-player.x);
+          if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
+          else player.dir = Math.sin(ang) > 0 ? 0 : 2;
+          attack();
+        }
+      }, 2500);
+    }
+    return;
+  }
+  if (hasAttack){
+    const nearest = findNearestNPC();
+    if (nearest && Math.hypot(nearest.x-player.x, nearest.y-player.y) < 200){
+      const ang = Math.atan2(nearest.y-player.y, nearest.x-player.x);
+      if (Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))) player.dir = Math.cos(ang) > 0 ? 3 : 1;
+      else player.dir = Math.sin(ang) > 0 ? 0 : 2;
+    }
+    const count = cmd.targets.includes("all") ? 5 : (cmd.counts || 1);
+    for (let i = 0; i < count; i++) setTimeout(() => attack(), i * 250);
+    showDialog("روغن بخور! 🛢️", 2000, 1.6, 1);
+    return;
+  }
+  if (hasMove){
+    voiceMoveVec = { x:0, y:-1 };
+    voiceMoveTimer = 60;
+    showDialog("دارم می‌رم! 🚶", 1500, 1.5, 0.9);
+    return;
+  }
+  showDialog("نفهمیدم! مثلاً بگو: برو دنبال زهرا!", 3500, 1.4, 0.9);
 }
 
 /* ============================================================
-   ============ Combat ============
+   ============ ATTACK ============
    ============================================================ */
 function attack(){
   if (player.attackCooldown > 0) return;
-  if (player.energy < 10) return;
-  player.attackCooldown = 20;
-  player.energy = Math.max(0, player.energy - 8);
+  if (player.mana < 5) return;
+  player.attackCooldown = 18;
+  player.mana = Math.max(0, player.mana - 5);
   
-  // صدای حمله
+  const weapon = getWeapon();
   playSound("attack");
   
-  // جهت مخالف زاویه
-  const dirAngles = [Math.PI / 2, Math.PI, -Math.PI / 2, 0]; // down, left, up, right
+  const dirAngles = [Math.PI/2, Math.PI, -Math.PI/2, 0];
   const baseAngle = dirAngles[player.dir];
-  const range = 90;
-  const angleSpread = Math.PI / 3.5;
+  const range = weapon.range;
+  const angleSpread = Math.PI / 3;
   
-  // آسیب به NPCها
+  // آسیب به NPC
   npcs.forEach(n => {
     if (n.state === "defeated") return;
-    const dx = n.x - player.x;
-    const dy = n.y - player.y;
+    const dx = n.x - player.x, dy = n.y - player.y;
     const dist = Math.hypot(dx, dy);
     if (dist > range) return;
     const ang = Math.atan2(dy, dx);
     let diff = Math.abs(ang - baseAngle);
     if (diff > Math.PI) diff = Math.PI * 2 - diff;
-    if (diff < angleSpread / 2 || dist < 40){
-      // ضربه!
-      const dmg = 15 + Math.floor(Math.random() * 10);
+    if (diff < angleSpread/2 || dist < 40){
+      let dmg = weapon.damage + Math.floor(Math.random() * 10);
+      if (gameState.ownedPowerups.includes("crit") && Math.random() < 0.2) dmg *= 2;
       n.health -= dmg;
       n.hitFlash = 12;
-      n.oilLevel = Math.min(100, (1 - n.health / n.maxHealth) * 100);
+      n.oilLevel = Math.min(100, (1 - n.health/n.maxHealth) * 100);
       spawnParticles(n.x, n.y, "#ffb700", 10);
-      damageNumbers.push({ x: n.x, y: n.y - 20, value: dmg, life: 60 });
+      damageNumbers.push({ x:n.x, y:n.y-20, value:dmg, life:60 });
       playSound("hit");
+      
+      // عکس‌العمل دشمن
+      if (Math.random() < 0.5 && n.health > 0){
+        n.dialogueTimer = 0;
+      }
       
       if (n.health <= 0){
         n.state = "defeated";
-        n.defeatTimer = 90;
-        score += n.points;
+        n.defeatedTimer = 90;
+        let pts = 10;
+        if (gameState.ownedPowerups.includes("double")) pts *= 2;
+        gameState.coins += pts;
         updateHUD();
-        showDialog(`${n.name} روغن‌کاری شد! +${n.points} 💰`, 2000, 1.6, 1);
         spawnParticles(n.x, n.y, "#7ed6a0", 25);
-        checkVictory();
+        checkLevelComplete();
       }
     }
   });
   
-  // افکت بصری روغن
+  // افکت بصری
   const px = player.x + Math.cos(baseAngle) * 40;
   const py = player.y + Math.sin(baseAngle) * 40;
   for (let i = 0; i < 12; i++){
-    const a = baseAngle + (Math.random() - 0.5) * angleSpread;
+    const a = baseAngle + (Math.random()-0.5) * angleSpread;
     particles.push({
       x: px, y: py,
-      vx: Math.cos(a) * (3 + Math.random() * 3),
-      vy: Math.sin(a) * (3 + Math.random() * 3),
-      life: 1, color: "#ffd700", size: 4 + Math.random() * 4
+      vx: Math.cos(a) * (3 + Math.random()*3),
+      vy: Math.sin(a) * (3 + Math.random()*3),
+      life: 1, color:"#ffd700", size:4 + Math.random()*4
     });
   }
 }
@@ -813,619 +1083,517 @@ function playSound(type){
   if (!soundOn || !audioCtx) return;
   const now = audioCtx.currentTime;
   if (type === "attack"){
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(400, now);
-    osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-    gain.gain.setValueAtTime(0.1, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.15);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = "sawtooth";
+    o.frequency.setValueAtTime(400, now);
+    o.frequency.exponentialRampToValueAtTime(800, now+0.1);
+    g.gain.setValueAtTime(0.1, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.15);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now); o.stop(now+0.15);
   } else if (type === "hit"){
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "square";
-    osc.frequency.setValueAtTime(600, now);
-    osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-    gain.gain.setValueAtTime(0.15, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.2);
-  } else if (type === "pickup"){
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(800, now);
-    osc.frequency.exponentialRampToValueAtTime(1400, now + 0.15);
-    gain.gain.setValueAtTime(0.12, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.2);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = "square";
+    o.frequency.setValueAtTime(600, now);
+    o.frequency.exponentialRampToValueAtTime(200, now+0.15);
+    g.gain.setValueAtTime(0.15, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.2);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now); o.stop(now+0.2);
   } else if (type === "hurt"){
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(200, now);
-    osc.frequency.exponentialRampToValueAtTime(80, now + 0.2);
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.25);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = "sawtooth";
+    o.frequency.setValueAtTime(200, now);
+    o.frequency.exponentialRampToValueAtTime(80, now+0.2);
+    g.gain.setValueAtTime(0.2, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.25);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now); o.stop(now+0.25);
+  } else if (type === "bullet"){
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = "square";
+    o.frequency.setValueAtTime(800, now);
+    o.frequency.exponentialRampToValueAtTime(300, now+0.08);
+    g.gain.setValueAtTime(0.08, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.1);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now); o.stop(now+0.1);
   }
 }
 
-function checkVictory(){
-  const alive = npcs.filter(n => n.state !== "defeated").length;
-  if (alive === 0){
-    victory = true;
-    showDialog("🎉 آفرین! همه روغن‌کاری شدن! تو برنده‌ای! 🛢️", 6000, 1.5, 0.95);
-    setTimeout(() => {
-      speak("آفرین! همه روغن کاری شدن! تو برنده ای!", 1.5, 0.95);
-    }, 3000);
+/* ============================================================
+   ============ LEVEL ============
+   ============================================================ */
+let gameStarted = false;
+let levelComplete = false;
+
+function checkLevelComplete(){
+  const alive = getAliveNPCs().length;
+  document.getElementById("levelGoal").textContent = 
+    (npcs.length - alive) + "/" + npcs.length;
+  if (alive === 0 && !levelComplete){
+    levelComplete = true;
+    setTimeout(() => showLevelEnd(true), 1200);
   }
+}
+
+function showLevelEnd(victory){
+  const screen = document.getElementById("levelEndScreen");
+  document.getElementById("levelEndEmoji").textContent = victory ? "🎉" : "😵";
+  document.getElementById("levelEndTitle").textContent = victory 
+    ? "مرحله " + currentLevel + " تموم شد!" 
+    : "بی‌بی خسته شد!";
+  document.getElementById("levelEndMsg").textContent = victory 
+    ? "همه اهالی روغن‌کاری شدن!" 
+    : "دوباره امتحان کن!";
+  document.getElementById("levelEndCoins").textContent = gameState.coins;
+  
+  const nextBtn = document.getElementById("nextLevelBtn");
+  if (currentLevel >= 30){
+    nextBtn.textContent = "🎊 بازیت تموم شد!";
+    nextBtn.disabled = true;
+  } else {
+    nextBtn.textContent = "مرحله بعد ➡️";
+    nextBtn.disabled = false;
+  }
+  
+  screen.classList.add("show");
+  saveGame();
+}
+
+function nextLevel(){
+  document.getElementById("levelEndScreen").classList.remove("show");
+  currentLevel++;
+  gameState.currentLevel = currentLevel;
+  if (currentLevel > gameState.maxLevel) gameState.maxLevel = currentLevel;
+  saveGame();
+  startLevel(currentLevel);
+}
+
+function startLevel(num){
+  currentLevel = num;
+  buildLevel(num);
+  spawnNPCsForLevel();
+  
+  // قرار دادن بازیکن
+  const startRoom = rooms[0];
+  player.x = startRoom.x + 100;
+  player.y = startRoom.y + 100;
+  player.health = player.maxHealth;
+  player.mana = player.maxMana;
+  player.attackCooldown = 0;
+  levelComplete = false;
+  autoMoveTarget = null; autoMoveTimer = 0; voiceMoveTimer = 0;
+  
+  document.getElementById("levelNum").textContent = num;
+  document.getElementById("levelGoal").textContent = "0/" + npcs.length;
+  document.getElementById("levelInfo").classList.add("show");
+  
+  updateHUD();
+  updateCamera();
+  camera.x = player.x - W/2;
+  camera.y = player.y - H/2;
+  
+  const intro = [
+    `مرحله ${num}! آماده‌ای؟ 🛢️`,
+    `بزن بریم مرحله ${num}! 💪`,
+    `مرحله ${num} شروع شد! ⚔️`
+  ];
+  showDialog(intro[Math.floor(Math.random()*intro.length)], 2500, 1.5, 0.9);
+}
+
+/* ============================================================
+   ============ HUD ============
+   ============================================================ */
+function updateHUD(){
+  const hp = (player.health / player.maxHealth) * 100;
+  document.getElementById("healthFill").style.width = hp + "%";
+  document.getElementById("healthText").textContent = `❤️ ${Math.round(player.health)}/${player.maxHealth}`;
+  const mp = (player.mana / player.maxMana) * 100;
+  document.getElementById("manaFill").style.width = mp + "%";
+  document.getElementById("coinsVal").textContent = gameState.coins;
 }
 
 /* ============================================================
    ============ NPC AI ============
    ============================================================ */
-function updateNPC(n, dt){
+function updateNPC(n){
   if (n.state === "defeated"){
-    if (n.defeatTimer > 0){
-      n.defeatTimer--;
-      n.y += 1;
-    }
+    if (n.defeatedTimer > 0) { n.defeatedTimer--; n.y += 1; }
     return;
   }
-  
   if (n.hitFlash > 0) n.hitFlash--;
   
-  const dx = player.x - n.x;
-  const dy = player.y - n.y;
+  // زمان صحبت
+  n.dialogueTimer--;
+  if (n.dialogueTimer <= 0){
+    if (Math.hypot(n.x - player.x, n.y - player.y) < 300){
+      speak(ENEMY_DIALOGUES[n.dialogueIndex], 1.4, 0.95);
+    }
+    n.dialogueTimer = 200 + Math.random() * 200;
+    n.dialogueIndex = (n.dialogueIndex + 1) % ENEMY_DIALOGUES.length;
+  }
+  
+  const dx = player.x - n.x, dy = player.y - n.y;
   const distToPlayer = Math.hypot(dx, dy);
   
-  // اگه بازیکن نزدیک باشه، فرار کن
-  if (distToPlayer < 200 && n.state !== "chase"){
+  if (distToPlayer < 220 && n.state !== "chase"){
     n.state = "flee";
     n.stateTimer = 60;
   }
   
-  if (n.state === "chase"){
-    n.chaseTimer--;
-    if (n.chaseTimer <= 0){
-      n.state = "wander";
-    }
+  // دشمن مسلح شلیک کنه
+  if (n.hasWeapon && n.weaponCooldown <= 0 && distToPlayer < 350 && distToPlayer > 60){
+    const angle = Math.atan2(dy, dx);
+    spawnBullet(n.x, n.y, Math.cos(angle), Math.sin(angle), "enemy", levelConfig.enemyDamage);
+    n.weaponCooldown = 120 - Math.min(60, currentLevel * 3);
+    playSound("bullet");
+    // زمان حرکت کم
+    n.state = "wander";
   }
+  if (n.weaponCooldown > 0) n.weaponCooldown--;
   
   if (n.state === "flee"){
     n.stateTimer--;
     if (n.stateTimer <= 0) n.state = "wander";
-    // فرار از بازیکن
     const ang = Math.atan2(-dy, -dx);
-    const speed = 1.8;
+    const speed = levelConfig.enemySpeed + 1.2;
     let nx = n.x + Math.cos(ang) * speed;
     let ny = n.y + Math.sin(ang) * speed;
     if (!collides(nx, n.y, n.r)) n.x = nx;
     if (!collides(n.x, ny, n.r)) n.y = ny;
     n.dir = Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))
-      ? (Math.cos(ang) > 0 ? 3 : 1)
-      : (Math.sin(ang) > 0 ? 0 : 2);
+      ? (Math.cos(ang) > 0 ? 3 : 1) : (Math.sin(ang) > 0 ? 0 : 2);
     n.walkFrame += 0.4;
-    // مانع از فرار از نقشه
-    n.x = Math.max(40, Math.min(WORLD.w - 40, n.x));
-    n.y = Math.max(40, Math.min(WORLD.h - 40, n.y));
-    return;
-  }
-  
-  if (n.state === "chase"){
-    // دنبال بازیکن
-    const ang = Math.atan2(dy, dx);
-    const speed = 1.5;
-    let nx = n.x + Math.cos(ang) * speed;
-    let ny = n.y + Math.sin(ang) * speed;
-    if (!collides(nx, n.y, n.r)) n.x = nx;
-    if (!collides(n.x, ny, n.r)) n.y = ny;
-    n.dir = Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))
-      ? (Math.cos(ang) > 0 ? 3 : 1)
-      : (Math.sin(ang) > 0 ? 0 : 2);
-    n.walkFrame += 0.4;
+    n.x = Math.max(40, Math.min(WORLD.w-40, n.x));
+    n.y = Math.max(40, Math.min(WORLD.h-40, n.y));
     return;
   }
   
   // wander
   n.stateTimer--;
   if (n.stateTimer <= 0){
-    // هدف جدید
     const room = rooms[Math.floor(Math.random() * rooms.length)];
-    n.targetX = room.x + 100 + Math.random() * (room.w - 200);
-    n.targetY = room.y + 100 + Math.random() * (room.h - 200);
+    n.targetX = room.x + 80 + Math.random() * (room.w - 160);
+    n.targetY = room.y + 80 + Math.random() * (room.h - 160);
     n.stateTimer = 120 + Math.random() * 120;
   }
-  
-  const tdx = n.targetX - n.x;
-  const tdy = n.targetY - n.y;
+  const tdx = n.targetX - n.x, tdy = n.targetY - n.y;
   const tdist = Math.hypot(tdx, tdy);
   if (tdist > 10){
     const ang = Math.atan2(tdy, tdx);
-    const speed = 0.8;
+    const speed = levelConfig.enemySpeed;
     let nx = n.x + Math.cos(ang) * speed;
     let ny = n.y + Math.sin(ang) * speed;
-    if (!collides(nx, n.y, n.r)) n.x = nx;
-    else n.targetX = n.x + (Math.random() - 0.5) * 200;
-    if (!collides(n.x, ny, n.r)) n.y = ny;
-    else n.targetY = n.y + (Math.random() - 0.5) * 200;
+    if (!collides(nx, n.y, n.r)) n.x = nx; else n.targetX = n.x + (Math.random()-0.5)*200;
+    if (!collides(n.x, ny, n.r)) n.y = ny; else n.targetY = n.y + (Math.random()-0.5)*200;
     n.dir = Math.abs(Math.cos(ang)) > Math.abs(Math.sin(ang))
-      ? (Math.cos(ang) > 0 ? 3 : 1)
-      : (Math.sin(ang) > 0 ? 0 : 2);
+      ? (Math.cos(ang) > 0 ? 3 : 1) : (Math.sin(ang) > 0 ? 0 : 2);
     n.walkFrame += 0.25;
   }
 }
 
 /* ============================================================
-   ============ Update ============
+   ============ UPDATE ============
    ============================================================ */
-let score = 0;
-let victory = false;
-let gameStarted = false;
-let gameTime = 0;
-
-function updateHUD(){
-  document.getElementById("scoreVal").textContent = score;
-  const hpPercent = (player.health / player.maxHealth) * 100;
-  document.getElementById("healthFill").style.width = hpPercent + "%";
-  document.getElementById("healthText").textContent = `❤️ ${Math.round(player.health)}/${player.maxHealth}`;
-  const epPercent = (player.energy / player.maxEnergy) * 100;
-  document.getElementById("energyFill").style.width = epPercent + "%";
-}
-
-function update(dt){
+function update(){
   if (!gameStarted) return;
   
-  gameTime += dt;
-  
-  // Input
   const input = getInputVec();
-  if (voiceMoveTimer > 0){
-    voiceMoveTimer--;
-    input.x = voiceMoveVec.x;
-    input.y = voiceMoveVec.y;
+  if (voiceMoveTimer > 0){ voiceMoveTimer--; input.x = voiceMoveVec.x; input.y = voiceMoveVec.y; }
+  if (autoMoveTimer > 0 && autoMoveTarget){
+    autoMoveTimer--;
+    const dx = autoMoveTarget.x - player.x;
+    const dy = autoMoveTarget.y - player.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist > 30){ input.x = (dx/dist); input.y = (dy/dist); }
+    else { autoMoveTimer = 0; autoMoveTarget = null; }
   }
   
-  const speed = 3.5;
-  let vx = input.x * speed;
-  let vy = input.y * speed;
+  let speed = 3.5;
+  if (gameState.ownedPowerups.includes("speed")) speed *= 1.3;
+  const skin = getSkin();
+  if (skin.id === "ninja") speed *= 1.2;
   
-  // جهت
+  let vx = input.x * speed, vy = input.y * speed;
+  
   if (Math.abs(input.x) > 0.1 || Math.abs(input.y) > 0.1){
-    if (Math.abs(input.x) > Math.abs(input.y)){
-      player.dir = input.x > 0 ? 3 : 1;
-    } else {
-      player.dir = input.y > 0 ? 0 : 2;
-    }
+    if (Math.abs(input.x) > Math.abs(input.y)) player.dir = input.x > 0 ? 3 : 1;
+    else player.dir = input.y > 0 ? 0 : 2;
     player.walkFrame += 0.5;
   }
   
-  // حرکت با برخورد
-  let nx = player.x + vx;
-  let ny = player.y + vy;
+  let nx = player.x + vx, ny = player.y + vy;
   if (!collides(nx, player.y, player.r)) player.x = nx;
   if (!collides(player.x, ny, player.r)) player.y = ny;
+  player.x = Math.max(40, Math.min(WORLD.w-40, player.x));
+  player.y = Math.max(40, Math.min(WORLD.h-40, player.y));
   
-  player.x = Math.max(40, Math.min(WORLD.w - 40, player.x));
-  player.y = Math.max(40, Math.min(WORLD.h - 40, player.y));
-  
-  // Cooldowns
   if (player.attackCooldown > 0) player.attackCooldown--;
   if (player.hitFlash > 0) player.hitFlash--;
+  if (player.hideTimer > 0) player.hideTimer--;
   
-  // Regen انرژی
-  if (player.energy < player.maxEnergy){
-    player.energy = Math.min(player.maxEnergy, player.energy + 0.15);
-  }
-  if (player.health < player.maxHealth){
-    player.health = Math.min(player.maxHealth, player.health + 0.02);
+  if (player.mana < player.maxMana) player.mana = Math.min(player.maxMana, player.mana + 0.2);
+  if (gameState.ownedPowerups.includes("regen") && player.health < player.maxHealth){
+    player.health = Math.min(player.maxHealth, player.health + 0.03);
   }
   
-  // NPC
-  npcs.forEach(n => updateNPC(n, dt));
+  npcs.forEach(updateNPC);
   
-  // آیتم‌ها
-  for (let i = items.length - 1; i >= 0; i--){
-    const it = items[i];
-    it.anim += 0.1;
-    const dx = it.x - player.x;
-    const dy = it.y - player.y;
-    if (Math.hypot(dx, dy) < player.r + it.r){
-      if (it.type === "birani"){
-        player.health = Math.min(player.maxHealth, player.health + 30);
-        showDialog("آخ! بریانی خوشمزه! +30 سلامتی ❤️", 2000, 1.5, 0.95);
-        playSound("pickup");
-      } else if (it.type === "oil"){
-        player.maxHealth += 10;
-        player.health = player.maxHealth;
-        showDialog("روغن جادویی! سلامتی بیشتر شد! 🛢️", 2500, 1.5, 0.95);
-        playSound("pickup");
+  // گلوله‌ها
+  for (let i = bullets.length - 1; i >= 0; i--){
+    const b = bullets[i];
+    b.x += b.vx; b.y += b.vy;
+    b.life--;
+    if (b.life <= 0){ bullets.splice(i, 1); continue; }
+    if (b.owner === "enemy"){
+      if (Math.hypot(b.x - player.x, b.y - player.y) < player.r + 6){
+        let dmg = b.damage;
+        if (gameState.ownedPowerups.includes("shield")) dmg *= 0.5;
+        player.health -= dmg;
+        player.hitFlash = 8;
+        playSound("hurt");
+        spawnParticles(player.x, player.y, "#ff6b6b", 8);
+        updateHUD();
+        bullets.splice(i, 1);
+        if (player.health <= 0){
+          gameStarted = false;
+          showLevelEnd(false);
+          return;
+        }
       }
-      items.splice(i, 1);
-      updateHUD();
     }
+    if (collides(b.x, b.y, 4)) bullets.splice(i, 1);
   }
   
   // ذرات
   for (let i = particles.length - 1; i >= 0; i--){
     const p = particles[i];
-    p.x += p.vx; p.y += p.vy;
-    p.vy += 0.2;
-    p.life -= 0.025;
+    p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.025;
     if (p.life <= 0) particles.splice(i, 1);
   }
-  
-  // اعداد آسیب
   for (let i = damageNumbers.length - 1; i >= 0; i--){
-    const d = damageNumbers[i];
-    d.y -= 0.8;
-    d.life--;
-    if (d.life <= 0) damageNumbers.splice(i, 1);
+    damageNumbers[i].y -= 0.8; damageNumbers[i].life--;
+    if (damageNumbers[i].life <= 0) damageNumbers.splice(i, 1);
   }
-  
-  // رویدادها
-  if (Math.random() < 0.001 && !victory){
-    const taunts = [
-      "بیا اینجا! روغن بخور! 🛢️",
-      "کجا فرار می‌کنی؟! 😤",
-      "روغن خوبه برات! 💪",
-      "الهی خشتکت دوتا بشه! 😂",
-      "استخونت خشک می‌شه اگه روغن نخوری! 🦴",
-      "بیا مادرجان! فقط یه قاشق! 🥄"
-    ];
-    speak(taunts[Math.floor(Math.random() * taunts.length)], 1.55, 0.85);
-  }
-  
-  // حمله خودکار NPCها اگه نزدیک
-  npcs.forEach(n => {
-    if (n.state === "defeated") return;
-    const d = Math.hypot(n.x - player.x, n.y - player.y);
-    if (d < 35 && Math.random() < 0.05){
-      // NPC به بازیکن ضربه بزنه (خفيف)
-      player.health -= 2;
-      player.hitFlash = 8;
-      playSound("hurt");
-      spawnParticles(player.x, player.y, "#ff6b6b", 8);
-      if (player.health <= 0){
-        player.health = 0;
-        gameOver();
-      }
-      updateHUD();
-    }
-  });
   
   updateCamera();
-}
-
-function gameOver(){
-  gameStarted = false;
-  showDialog("😵 بی‌بی خسته شد! دوباره امتحان کن! 🔄", 5000, 1.5, 0.85);
-  setTimeout(() => {
-    if (confirm("بازی تموم شد! دوباره بازی کنی؟")) location.reload();
-  }, 2000);
+  updateHUD();
 }
 
 /* ============================================================
-   ============ Render ============
+   ============ RENDER ============
    ============================================================ */
-function drawCharacter(x, y, r, type, dir, walkFrame, hitFlash, isPlayer, oilLevel){
-  const canvasX = x - camera.x;
-  const canvasY = y - camera.y;
-  
-  // اگه خارج از صفحه، صرف‌نظر
-  if (canvasX < -100 || canvasX > W + 100 || canvasY < -100 || canvasY > H + 100) return;
+function drawCharacter(x, y, r, npc, dir, walkFrame, hitFlash, isPlayer, oilLevel){
+  const cx = x - camera.x, cy = y - camera.y;
+  if (cx < -100 || cx > W+100 || cy < -100 || cy > H+100) return;
   
   const bob = Math.sin(walkFrame) * 3;
-  const py = canvasY + bob;
+  const py = cy + bob;
   
-  // سایه
   ctx.save();
   ctx.fillStyle = "rgba(0,0,0,.3)";
   ctx.beginPath();
-  ctx.ellipse(canvasX, canvasY + r * 0.9, r * 0.9, r * 0.4, 0, 0, Math.PI * 2);
+  ctx.ellipse(cx, cy + r*0.9, r*0.9, r*0.4, 0, 0, Math.PI*2);
   ctx.fill();
   ctx.restore();
   
-  // رنگ‌ها
   let bodyColor, hairColor, skinColor = "#ffd8b0";
   if (isPlayer){
-    bodyColor = "#8a4858";
-    hairColor = "#5a3a5a";
+    const skin = getSkin();
+    bodyColor = skin.id === "superhero" ? "#e74c3c" :
+                skin.id === "ninja" ? "#1a1a2a" :
+                skin.id === "pirate" ? "#2c3e50" : "#8a4858";
+    hairColor = skin.id === "superhero" ? "#2c3e50" : "#5a3a5a";
     skinColor = "#e8b088";
   } else {
-    bodyColor = type.color || "#8a4858";
-    hairColor = type.hair || "#3a1a0a";
+    bodyColor = npc ? npc.color : "#8a4858";
+    hairColor = npc ? npc.hair : "#3a1a0a";
   }
-  
-  // رنگ اگه hit
-  if (hitFlash > 0){
-    bodyColor = "#fff";
-    hairColor = "#ff6666";
-  }
+  if (hitFlash > 0){ bodyColor = "#fff"; hairColor = "#ff6666"; }
   
   ctx.save();
-  ctx.translate(canvasX, py);
+  ctx.translate(cx, py);
   
   // پاها
   const legOff = Math.sin(walkFrame) * 5;
   ctx.fillStyle = "#5a3a1a";
-  ctx.beginPath();
-  ctx.ellipse(-r * 0.35, r * 0.6 + legOff * 0.2, r * 0.2, r * 0.35, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.ellipse(r * 0.35, r * 0.6 - legOff * 0.2, r * 0.2, r * 0.35, 0, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.beginPath(); ctx.ellipse(-r*0.35, r*0.6 + legOff*0.2, r*0.2, r*0.35, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(r*0.35, r*0.6 - legOff*0.2, r*0.2, r*0.35, 0, 0, Math.PI*2); ctx.fill();
   
   // بدن
   ctx.fillStyle = bodyColor;
-  ctx.beginPath();
-  ctx.ellipse(0, r * 0.15, r * 0.65, r * 0.75, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(0,0,0,.5)";
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(0, r*0.15, r*0.65, r*0.75, 0, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 2; ctx.stroke();
+  
+  // زره اضافی
+  if (isPlayer){
+    const armor = getArmor();
+    if (armor.id !== "none"){
+      ctx.strokeStyle = "#c0c0c0"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.ellipse(0, r*0.15, r*0.7, r*0.8, 0, 0, Math.PI*2); ctx.stroke();
+    }
+  }
   
   // دست‌ها
   ctx.fillStyle = skinColor;
-  const armY = r * 0.1;
-  ctx.beginPath();
-  ctx.ellipse(-r * 0.75, armY + legOff * 0.3, r * 0.18, r * 0.35, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.ellipse(r * 0.75, armY - legOff * 0.3, r * 0.18, r * 0.35, 0, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.beginPath(); ctx.ellipse(-r*0.75, r*0.1 + legOff*0.3, r*0.18, r*0.35, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(r*0.75, r*0.1 - legOff*0.3, r*0.18, r*0.35, 0, 0, Math.PI*2); ctx.fill();
   
   // سر
   ctx.fillStyle = skinColor;
-  ctx.beginPath();
-  ctx.arc(0, -r * 0.55, r * 0.7, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(0,0,0,.5)";
-  ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.7, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.stroke();
   
-  // مو / روسری
+  // روسری/مو
   ctx.fillStyle = hairColor;
   if (isPlayer){
-    // روسری بی‌بی
-    ctx.beginPath();
-    ctx.arc(0, -r * 0.55, r * 0.72, Math.PI, Math.PI * 2);
-    ctx.fill();
-    ctx.fillRect(-r * 0.72, -r * 0.55, r * 0.2, r * 0.9);
-    ctx.fillRect(r * 0.52, -r * 0.55, r * 0.2, r * 0.9);
+    ctx.beginPath(); ctx.arc(0, -r*0.55, r*0.72, Math.PI, Math.PI*2); ctx.fill();
+    ctx.fillRect(-r*0.72, -r*0.55, r*0.2, r*0.9);
+    ctx.fillRect(r*0.52, -r*0.55, r*0.2, r*0.9);
     // عینک
-    ctx.strokeStyle = "#3a1a00";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(-r * 0.28, -r * 0.55, r * 0.22, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(r * 0.28, -r * 0.55, r * 0.22, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(-r * 0.06, -r * 0.55);
-    ctx.lineTo(r * 0.06, -r * 0.55);
-    ctx.stroke();
+    ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(-r*0.28, -r*0.55, r*0.22, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(r*0.28, -r*0.55, r*0.22, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-r*0.06, -r*0.55); ctx.lineTo(r*0.06, -r*0.55); ctx.stroke();
   } else {
-    ctx.beginPath();
-    ctx.arc(0, -r * 0.7, r * 0.7, Math.PI, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(0, -r*0.7, r*0.7, Math.PI, Math.PI*2); ctx.fill();
   }
   
-  // چشم‌ها (جهت بر اساس dir)
-  const eyeOffset = 2;
-  let ex1 = -r * 0.22, ex2 = r * 0.22;
-  let ey = -r * 0.55;
-  if (dir === 1) { ex1 = -r * 0.35; ex2 = -r * 0.05; }
-  if (dir === 3) { ex1 = r * 0.05; ex2 = r * 0.35; }
-  if (dir === 2) { ey = -r * 0.65; }
+  // چشم‌ها
+  let ex1 = -r*0.22, ex2 = r*0.22, ey = -r*0.55;
+  if (dir === 1){ ex1 = -r*0.35; ex2 = -r*0.05; }
+  if (dir === 3){ ex1 = r*0.05; ex2 = r*0.35; }
+  if (dir === 2){ ey = -r*0.65; }
   
   ctx.fillStyle = "#fff";
-  ctx.beginPath();
-  ctx.arc(ex1, ey, r * 0.13, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(ex2, ey, r * 0.13, 0, Math.PI * 2);
-  ctx.fill();
-  
+  ctx.beginPath(); ctx.arc(ex1, ey, r*0.13, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(ex2, ey, r*0.13, 0, Math.PI*2); ctx.fill();
   ctx.fillStyle = "#000";
-  ctx.beginPath();
-  ctx.arc(ex1, ey, r * 0.06, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(ex2, ey, r * 0.06, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(ex1, ey, r*0.06, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(ex2, ey, r*0.06, 0, Math.PI*2); ctx.fill();
   
   // دهان
-  ctx.strokeStyle = "#7a1a10";
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = "#7a1a10"; ctx.lineWidth = 2;
   ctx.beginPath();
-  if (isPlayer && player.attackCooldown > 15){
-    // دهان باز هنگام حمله
-    ctx.ellipse(0, -r * 0.32, r * 0.18, r * 0.12, 0, 0, Math.PI * 2);
+  if (isPlayer && player.attackCooldown > 12){
     ctx.fillStyle = "#7a1a10";
-    ctx.fill();
+    ctx.ellipse(0, -r*0.32, r*0.18, r*0.12, 0, 0, Math.PI*2); ctx.fill();
   } else {
-    ctx.arc(0, -r * 0.35, r * 0.15, 0, Math.PI);
+    ctx.arc(0, -r*0.35, r*0.15, 0, Math.PI);
   }
   ctx.stroke();
   
-  // قوطی روغن برای بی‌بی
+  // سلاح بازیکن
   if (isPlayer){
+    const weapon = getWeapon();
     ctx.save();
-    ctx.translate(r * 0.7, r * 0.15);
-    ctx.fillStyle = "#ffb700";
-    ctx.fillRect(-r * 0.18, -r * 0.35, r * 0.36, r * 0.7);
-    ctx.strokeStyle = "#8a5a00";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(-r * 0.18, -r * 0.35, r * 0.36, r * 0.7);
+    ctx.translate(r*0.7, r*0.15);
+    if (weapon.id === "oil"){
+      ctx.fillStyle = "#ffb700";
+      ctx.fillRect(-r*0.18, -r*0.35, r*0.36, r*0.7);
+    } else {
+      ctx.font = r*0.9 + "px serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(weapon.icon, 0, 0);
+    }
     ctx.restore();
+  }
+  
+  // سلاح دشمن
+  if (!isPlayer && npc && npc.hasWeapon){
+    ctx.save();
+    ctx.translate(r*0.7, r*0.15);
+    ctx.font = r*0.7 + "px serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🔫", 0, 0);
+    ctx.restore();
+  }
+  
+  // هاله مخفی
+  if (isPlayer && player.hideTimer > 0){
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = "#7fd4f0";
+    ctx.beginPath(); ctx.arc(0, 0, r*1.5, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
   }
   
   ctx.restore();
   
   // نوار سلامتی NPC
-  if (!isPlayer && type.health !== undefined){
-    const bw = r * 2;
-    const bh = 5;
-    const bx = canvasX - r;
-    const by = py - r * 1.7;
-    ctx.fillStyle = "rgba(0,0,0,.7)";
-    ctx.fillRect(bx, by, bw, bh);
-    const hp = Math.max(0, type.health / type.maxHealth);
+  if (!isPlayer && npc && npc.health !== undefined){
+    const bw = r*2, bh = 5;
+    const bx = cx - r, by = py - r*1.9;
+    ctx.fillStyle = "rgba(0,0,0,.7)"; ctx.fillRect(bx, by, bw, bh);
+    const hp = Math.max(0, npc.health / npc.maxHealth);
     ctx.fillStyle = hp > 0.5 ? "#4ade80" : hp > 0.25 ? "#ffd700" : "#ff3030";
     ctx.fillRect(bx, by, bw * hp, bh);
-    // نوار روغن
     ctx.fillStyle = "#ffb700";
-    ctx.fillRect(bx, by + bh + 1, bw * (oilLevel / 100), 3);
+    ctx.fillRect(bx, by+bh+1, bw * (npc.oilLevel/100), 3);
+    // اسم
+    ctx.fillStyle = "rgba(255,255,255,.9)";
+    ctx.font = "bold 10px Tahoma";
+    ctx.textAlign = "center";
+    ctx.fillText(npc.name, cx, by - 4);
   }
 }
 
 function drawRooms(){
   rooms.forEach(room => {
-    const rx = room.x - camera.x;
-    const ry = room.y - camera.y;
+    const rx = room.x - camera.x, ry = room.y - camera.y;
     if (rx > W || ry > H || rx + room.w < 0 || ry + room.h < 0) return;
-    
-    // کف
     ctx.fillStyle = room.floor;
     ctx.fillRect(rx, ry, room.w, room.h);
-    
-    // الگوی کف
     ctx.strokeStyle = "rgba(0,0,0,.05)";
     ctx.lineWidth = 1;
     for (let x = 0; x < room.w; x += 60){
-      ctx.beginPath();
-      ctx.moveTo(rx + x, ry);
-      ctx.lineTo(rx + x, ry + room.h);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(rx+x, ry); ctx.lineTo(rx+x, ry+room.h); ctx.stroke();
     }
     for (let y = 0; y < room.h; y += 60){
-      ctx.beginPath();
-      ctx.moveTo(rx, ry + y);
-      ctx.lineTo(rx + room.w, ry + y);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(rx, ry+y); ctx.lineTo(rx+room.w, ry+y); ctx.stroke();
     }
-    
-    // تزئینات مخصوص اتاق
-    drawRoomDeco(room, rx, ry);
-    
-    // اسم اتاق
     ctx.fillStyle = "rgba(0,0,0,.6)";
     ctx.font = "bold 16px Tahoma";
     ctx.textAlign = "center";
-    ctx.fillText(room.name, rx + room.w / 2, ry + 25);
+    ctx.fillText(room.name, rx + room.w/2, ry + 25);
+    
+    // آیکون اتاق
+    const decoIcons = { tv:"📺", kitchen:"🍳", bath:"🚽", bed:"💐", gym:"🥋", oil:"🛢️", kids:"🧸", storage:"📦", yard:"🌳" };
+    if (decoIcons[room.deco]){
+      ctx.font = "40px serif";
+      ctx.fillText(decoIcons[room.deco], rx + room.w/2, ry + room.h/2 + 15);
+    }
   });
-}
-
-function drawRoomDeco(room, rx, ry){
-  const cx = rx + room.w / 2;
-  const cy = ry + room.h / 2;
-  ctx.save();
-  ctx.font = "40px serif";
-  ctx.textAlign = "center";
-  switch(room.deco){
-    case "tv":
-      ctx.fillText("📺", cx, cy + 20);
-      break;
-    case "kitchen":
-      ctx.fillText("🍳", cx, cy + 20);
-      break;
-    case "bath":
-      ctx.fillText("🚽", cx, cy + 20);
-      break;
-    case "bed":
-      ctx.fillText("💐", cx, cy + 20);
-      break;
-    case "gym":
-      ctx.fillText("🥋", cx, cy + 20);
-      break;
-    case "oil":
-      ctx.fillText("🛢️", cx, cy + 20);
-      break;
-    case "kids":
-      ctx.fillText("🧸", cx, cy + 20);
-      break;
-    case "storage":
-      ctx.fillText("📦", cx, cy + 20);
-      break;
-    case "yard":
-      ctx.fillText("🌳", cx, cy + 20);
-      break;
-  }
-  ctx.restore();
 }
 
 function drawObstacles(){
   obstacles.forEach(o => {
-    const ox = o.x - camera.x;
-    const oy = o.y - camera.y;
+    const ox = o.x - camera.x, oy = o.y - camera.y;
     if (ox > W || oy > H || ox + o.w < 0 || oy + o.h < 0) return;
     if (o.color){
       ctx.fillStyle = o.color;
       ctx.fillRect(ox, oy, o.w, o.h);
-      ctx.strokeStyle = "rgba(0,0,0,.5)";
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 2;
       ctx.strokeRect(ox, oy, o.w, o.h);
-      // برچسب
-      if (o.label && o.w > 60 && o.h > 40){
-        ctx.fillStyle = "rgba(255,255,255,.7)";
-        ctx.font = "bold 12px Tahoma";
-        ctx.textAlign = "center";
-        ctx.fillText(o.label, ox + o.w / 2, oy + o.h / 2 + 4);
-      }
     } else {
-      // دیوار معمولی
       ctx.fillStyle = "#5a3a1a";
       ctx.fillRect(ox, oy, o.w, o.h);
       ctx.fillStyle = "rgba(255,255,255,.08)";
-      ctx.fillRect(ox + 3, oy + 3, o.w - 6, 6);
+      ctx.fillRect(ox+3, oy+3, o.w-6, 6);
       ctx.fillStyle = "rgba(0,0,0,.3)";
-      ctx.fillRect(ox, oy + o.h - 6, o.w, 6);
+      ctx.fillRect(ox, oy+o.h-6, o.w, 6);
     }
-  });
-}
-
-function drawItems(){
-  items.forEach(it => {
-    const ix = it.x - camera.x;
-    const iy = it.y - camera.y + Math.sin(it.anim) * 3;
-    if (ix < -50 || ix > W + 50 || iy < -50 || iy > H + 50) return;
-    
-    // هاله نور
-    const grad = ctx.createRadialGradient(ix, iy, 0, ix, iy, 30);
-    if (it.type === "birani"){
-      grad.addColorStop(0, "rgba(255,200,100,.8)");
-      grad.addColorStop(1, "rgba(255,200,100,0)");
-    } else {
-      grad.addColorStop(0, "rgba(255,215,0,.8)");
-      grad.addColorStop(1, "rgba(255,215,0,0)");
-    }
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(ix, iy, 30, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // آیتم
-    ctx.font = "30px serif";
-    ctx.textAlign = "center";
-    ctx.fillText(it.type === "birani" ? "🍛" : "🛢️", ix, iy + 10);
   });
 }
 
 function drawParticles(){
   particles.forEach(p => {
-    const px = p.x - camera.x;
-    const py = p.y - camera.y;
+    const px = p.x - camera.x, py = p.y - camera.y;
     ctx.globalAlpha = p.life;
     ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(px, py, p.size * p.life, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(px, py, p.size * p.life, 0, Math.PI*2); ctx.fill();
   });
   ctx.globalAlpha = 1;
 }
@@ -1434,203 +1602,245 @@ function drawDamageNumbers(){
   ctx.font = "bold 20px Tahoma";
   ctx.textAlign = "center";
   damageNumbers.forEach(d => {
-    const dx = d.x - camera.x;
-    const dy = d.y - camera.y;
+    const dx = d.x - camera.x, dy = d.y - camera.y;
     ctx.globalAlpha = d.life / 60;
     ctx.fillStyle = "#ffd700";
-    ctx.strokeStyle = "#3a1a00";
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#3a1a00"; ctx.lineWidth = 3;
     ctx.strokeText("-" + d.value, dx, dy);
     ctx.fillText("-" + d.value, dx, dy);
   });
   ctx.globalAlpha = 1;
 }
 
+function drawBullets(){
+  bullets.forEach(b => {
+    const bx = b.x - camera.x, by = b.y - camera.y;
+    ctx.fillStyle = b.owner === "enemy" ? "#ff6b6b" : "#7fe3ff";
+    ctx.beginPath(); ctx.arc(bx, by, 5, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+  });
+}
+
 function drawCrosshair(){
-  // نشانگر جهت حمله
-  const cx = player.x - camera.x;
-  const cy = player.y - camera.y;
-  const dirAngles = [Math.PI / 2, Math.PI, -Math.PI / 2, 0];
+  const cx = player.x - camera.x, cy = player.y - camera.y;
+  const dirAngles = [Math.PI/2, Math.PI, -Math.PI/2, 0];
   const ang = dirAngles[player.dir];
-  const range = 90;
-  
+  const weapon = getWeapon();
   ctx.save();
   ctx.globalAlpha = 0.15;
   ctx.fillStyle = "#ffd700";
   ctx.beginPath();
   ctx.moveTo(cx, cy);
-  ctx.arc(cx, cy, range, ang - Math.PI / 7, ang + Math.PI / 7);
+  ctx.arc(cx, cy, weapon.range, ang - Math.PI/7, ang + Math.PI/7);
   ctx.closePath();
   ctx.fill();
   ctx.restore();
 }
 
 function render(){
-  // آسمان/پس‌زمینه
   ctx.fillStyle = "#1a1a2a";
   ctx.fillRect(0, 0, W, H);
-  
-  // کف اتاق‌ها
   drawRooms();
-  
-  // آیتم‌ها
-  drawItems();
-  
-  // مبلمان و دیوارها
   drawObstacles();
-  
-  // NPCها
   npcs.forEach(n => {
-    if (n.state === "defeated" && n.defeatTimer <= 0) return;
+    if (n.state === "defeated" && n.defeatedTimer <= 0) return;
     drawCharacter(n.x, n.y, n.r, n, n.dir, n.walkFrame, n.hitFlash, false, n.oilLevel);
   });
-  
-  // بازیکن
-  drawCharacter(player.x, player.y, player.r, player, player.dir, player.walkFrame, player.hitFlash, true, 0);
-  
-  // نشانگر حمله
+  drawCharacter(player.x, player.y, player.r, null, player.dir, player.walkFrame, player.hitFlash, true, 0);
+  drawBullets();
   drawCrosshair();
-  
-  // ذرات
   drawParticles();
-  
-  // اعداد آسیب
   drawDamageNumbers();
   
-  // فلاش قرمز اگه آسیب دید
   if (player.hitFlash > 0){
-    ctx.fillStyle = `rgba(255,0,0,${player.hitFlash / 40})`;
+    ctx.fillStyle = `rgba(255,0,0,${player.hitFlash/40})`;
     ctx.fillRect(0, 0, W, H);
   }
 }
 
 /* ============================================================
-   ============ Minimap ============
+   ============ MINIMAP ============
    ============================================================ */
-const minimapCanvas = document.getElementById("minimapCanvas");
-const mctx = minimapCanvas.getContext("2d");
-const MINI_W = 220;
-const MINI_H = 180;
+const mmCanvas = document.getElementById("minimapCanvas");
+const mctx = mmCanvas.getContext("2d");
+const MM_W = 220, MM_H = 180;
 
 function drawMinimap(){
   mctx.fillStyle = "rgba(0,0,0,.85)";
-  mctx.fillRect(0, 0, MINI_W, MINI_H);
-  
-  const scaleX = MINI_W / WORLD.w;
-  const scaleY = MINI_H / WORLD.h;
-  
-  // اتاق‌ها
+  mctx.fillRect(0, 0, MM_W, MM_H);
+  const sx = MM_W / WORLD.w, sy = MM_H / WORLD.h;
   rooms.forEach(r => {
     mctx.fillStyle = "rgba(120,80,40,.6)";
-    mctx.fillRect(r.x * scaleX, r.y * scaleY, r.w * scaleX, r.h * scaleY);
-    mctx.strokeStyle = "rgba(255,215,0,.4)";
-    mctx.lineWidth = 1;
-    mctx.strokeRect(r.x * scaleX, r.y * scaleY, r.w * scaleX, r.h * scaleY);
+    mctx.fillRect(r.x*sx, r.y*sy, r.w*sx, r.h*sy);
+    mctx.strokeStyle = "rgba(255,215,0,.4)"; mctx.lineWidth = 1;
+    mctx.strokeRect(r.x*sx, r.y*sy, r.w*sx, r.h*sy);
   });
-  
-  // NPCها
   npcs.forEach(n => {
     if (n.state === "defeated") return;
     mctx.fillStyle = "#ff6b6b";
-    mctx.beginPath();
-    mctx.arc(n.x * scaleX, n.y * scaleY, 3, 0, Math.PI * 2);
-    mctx.fill();
+    mctx.beginPath(); mctx.arc(n.x*sx, n.y*sy, 3, 0, Math.PI*2); mctx.fill();
   });
-  
-  // بازیکن
   mctx.fillStyle = "#ffd700";
-  mctx.beginPath();
-  mctx.arc(player.x * scaleX, player.y * scaleY, 4, 0, Math.PI * 2);
-  mctx.fill();
-  mctx.strokeStyle = "#fff";
-  mctx.lineWidth = 1;
-  mctx.stroke();
+  mctx.beginPath(); mctx.arc(player.x*sx, player.y*sy, 4, 0, Math.PI*2); mctx.fill();
+  mctx.strokeStyle = "#fff"; mctx.lineWidth = 1; mctx.stroke();
 }
 
 /* ============================================================
-   ============ Game Loop ============
+   ============ SHOP UI ============
+   ============================================================ */
+let currentShopTab = "weapons";
+
+function renderShop(){
+  document.getElementById("shopCoinsVal").textContent = gameState.coins;
+  const container = document.getElementById("shopItems");
+  container.innerHTML = "";
+  
+  let items = [];
+  let owned = [], equipped = "";
+  if (currentShopTab === "weapons"){ items = SHOP_WEAPONS; owned = gameState.ownedWeapons; equipped = gameState.equippedWeapon; }
+  else if (currentShopTab === "armor"){ items = SHOP_ARMOR; owned = gameState.ownedArmors; equipped = gameState.equippedArmor; }
+  else if (currentShopTab === "skins"){ items = SHOP_SKINS; owned = gameState.ownedSkins; equipped = gameState.equippedSkin; }
+  else { items = SHOP_POWERUPS; owned = gameState.ownedPowerups; equipped = ""; }
+  
+  items.forEach(item => {
+    const isOwned = owned.includes(item.id);
+    const isEquipped = equipped === item.id;
+    const card = document.createElement("div");
+    card.className = "shop-item" + (isOwned ? " owned" : "") + (isEquipped ? " equipped" : "");
+    card.innerHTML = `
+      <div class="icon">${item.icon}</div>
+      <div class="name">${item.name}</div>
+      <div class="desc">${item.desc}</div>
+      ${item.price > 0 ? `<div class="price">🪙 ${item.price}</div>` : ""}
+    `;
+    
+    const btn = document.createElement("button");
+    if (isOwned && currentShopTab !== "powerups"){
+      if (isEquipped){
+        btn.textContent = "✓ انتخاب شده";
+        btn.disabled = true;
+      } else {
+        btn.textContent = "انتخاب کن";
+        btn.onclick = () => {
+          if (currentShopTab === "weapons") gameState.equippedWeapon = item.id;
+          if (currentShopTab === "armor"){ gameState.equippedArmor = item.id; updatePlayerStats(); }
+          if (currentShopTab === "skins") gameState.equippedSkin = item.id;
+          saveGame();
+          renderShop();
+          updateHUD();
+        };
+      }
+    } else if (isOwned && currentShopTab === "powerups"){
+      btn.textContent = "✓ خریداری شده";
+      btn.disabled = true;
+    } else {
+      btn.textContent = gameState.coins >= item.price ? "بخر" : "سکه کمه";
+      btn.disabled = gameState.coins < item.price;
+      btn.onclick = () => {
+        if (gameState.coins >= item.price){
+          gameState.coins -= item.price;
+          if (currentShopTab === "weapons") gameState.ownedWeapons.push(item.id);
+          if (currentShopTab === "armor"){ gameState.ownedArmors.push(item.id); }
+          if (currentShopTab === "skins") gameState.ownedSkins.push(item.id);
+          if (currentShopTab === "powerups") gameState.ownedPowerups.push(item.id);
+          saveGame();
+          renderShop();
+          updateHUD();
+          showDialog("خریداری شد! " + item.icon + " " + item.name, 2000, 1.5, 1);
+        }
+      };
+    }
+    card.appendChild(btn);
+    container.appendChild(card);
+  });
+}
+
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    currentShopTab = tab.dataset.tab;
+    renderShop();
+  };
+});
+
+document.getElementById("shopBtn").onclick = () => {
+  document.getElementById("shopScreen").classList.add("show");
+  renderShop();
+};
+document.getElementById("closeShop").onclick = () => {
+  document.getElementById("shopScreen").classList.remove("show");
+};
+document.getElementById("shopFromEndBtn").onclick = () => {
+  document.getElementById("levelEndScreen").classList.remove("show");
+  document.getElementById("shopScreen").classList.add("show");
+  renderShop();
+};
+
+/* ============================================================
+   ============ BUTTONS ============
+   ============================================================ */
+document.getElementById("attackBtn").onclick = attack;
+document.getElementById("attackBtn").addEventListener("touchstart", e => { e.preventDefault(); attack(); }, { passive: false });
+
+const voiceBtn = document.getElementById("voiceBtn");
+voiceBtn.onclick = () => { if (isListening) stopListening(); else startListening(); };
+
+document.getElementById("soundBtn").onclick = () => {
+  soundOn = !soundOn;
+  document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+  document.getElementById("soundBtn").classList.toggle("off", !soundOn);
+  initAudio();
+};
+
+document.getElementById("menuBtn").onclick = () => {
+  document.getElementById("menuPanel").classList.toggle("show");
+};
+
+document.getElementById("btnHelp").onclick = () => {
+  showDialog("جوی‌استیک: حرکت | 🛢️: حمله | 🎤: دستور صوتی | 🏪: فروشگاه", 5000, 1.4, 0.9);
+  document.getElementById("menuPanel").classList.remove("show");
+};
+document.getElementById("btnVoice").onclick = () => {
+  showDialog("مثال‌ها: برو دنبال زهرا، حمله کن، توقف، همه رو بزن", 6000, 1.4, 0.9);
+  document.getElementById("menuPanel").classList.remove("show");
+};
+document.getElementById("btnReset").onclick = () => {
+  if (confirm("مطمئنی؟ همه پیشرفتت پاک می‌شه!")){
+    localStorage.removeItem("bibiRoghansSave");
+    location.reload();
+  }
+};
+
+document.getElementById("startBtn").onclick = () => {
+  initAudio();
+  document.getElementById("startScreen").classList.add("hide");
+  gameStarted = true;
+  updatePlayerStats();
+  player.health = player.maxHealth;
+  startLevel(gameState.currentLevel || 1);
+};
+document.getElementById("nextLevelBtn").onclick = nextLevel;
+
+/* ============================================================
+   ============ LOOP ============
    ============================================================ */
 let lastTime = performance.now();
 function loop(now){
   const dt = Math.min((now - lastTime) / 16.67, 2);
   lastTime = now;
-  
-  update(dt);
+  update();
   render();
   drawMinimap();
-  
   requestAnimationFrame(loop);
 }
 
-/* ============================================================
-   ============ Events ============
-   ============================================================ */
-document.getElementById("attackBtn").addEventListener("click", attack);
-document.getElementById("attackBtn").addEventListener("touchstart", e => {
-  e.preventDefault();
-  attack();
-}, { passive: false });
-
-const voiceBtn = document.getElementById("voiceBtn");
-voiceBtn.addEventListener("click", () => {
-  if (isListening) stopListening();
-  else startListening();
-});
-
-const soundBtn = document.getElementById("soundBtn");
-soundBtn.addEventListener("click", () => {
-  soundOn = !soundOn;
-  soundBtn.textContent = soundOn ? "🔊" : "🔇";
-  soundBtn.classList.toggle("off", !soundOn);
-  initAudio();
-});
-
-document.getElementById("menuBtn").addEventListener("click", () => {
-  document.getElementById("menuPanel").classList.toggle("show");
-});
-
-document.getElementById("btnHelp").addEventListener("click", () => {
-  showDialog("جوی‌استیک: حرکت | دکمه روغن: حمله | دکمه میکروفون: دستور صوتی | همه رو روغن‌کاری کن!", 6000, 1.4, 0.9);
-  document.getElementById("menuPanel").classList.remove("show");
-});
-
-document.getElementById("btnVoice").addEventListener("click", () => {
-  showDialog("دستورات: حمله، دنبال کن، توقف، بالا، پایین، چپ، راست، کمک، سلام", 7000, 1.4, 0.9);
-  document.getElementById("menuPanel").classList.remove("show");
-});
-
-document.getElementById("btnReset").addEventListener("click", () => {
-  if (confirm("مطمئنی می‌خوای از اول شروع کنی؟")) location.reload();
-});
-
-/* ============================================================
-   ============ Start ============
-   ============================================================ */
-document.getElementById("startBtn").addEventListener("click", () => {
-  initAudio();
-  document.getElementById("startScreen").classList.add("hide");
-  gameStarted = true;
-  spawnNPCs();
-  spawnItems();
-  updateHUD();
-  
-  // پیام شروع
-  setTimeout(() => {
-    showDialog("سلام! من بی‌بی روغنم! 👵 آماده‌ای؟ برو اهالی رو روغن‌کاری کن! 🛢️", 5000, 1.5, 0.85);
-  }, 500);
-  
-  setTimeout(() => {
-    speak("برو اهالی خونه رو پیدا کن و بهشون روغن بده!", 1.55, 0.9);
-  }, 4000);
-});
-
-// Load voices
 if ("speechSynthesis" in window){
   speechSynthesis.onvoiceschanged = () => findPersianVoice();
   findPersianVoice();
 }
 
-// شروع حلقه
+updateHUD();
 requestAnimationFrame(loop);
 
 })();
